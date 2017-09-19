@@ -1,0 +1,172 @@
+{extend name="./app/base" /}
+
+{block name="body"}
+{if condition="isset($addonInfo['name']) OR $menu_title neq ''"}
+<div id="rhaphp-app-title" class="content-hd">
+    <h2 style="margin-bottom: 0;"><img class="rhaphp-addon-admin-logo" src="{$addonInfo.logo}">{$addonInfo.name}</h2>
+</div>
+{/if}
+{if condition="isset($tips) && $tips neq ''"}
+<div class="rha-10">
+    <blockquote  class="layui-elem-quote layui-text">
+        {$tips}
+    </blockquote>
+</div>
+{/if}
+<form class="layui-form" action="" style="padding: 0px 10px 0px 10px;">
+    <div class="layui-tab">
+        <ul class="layui-tab-title ">
+            <li class="layui-this">参数设置</li>
+        </ul>
+        <div class="layui-tab-content">
+            <br>
+            <div class="layui-tab-item layui-show">
+                {volist name="$config" key="key1" id="v"}
+                {switch name="$v.type"}
+                {case value="text"}
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$v.title}</label>
+                    <div class="layui-input-block">
+                        <input name="{$v.name}" autocomplete="off" placeholder="{$v.placeholder}" value="{$v.value}" class="layui-input" type="text">
+                        <p class="tip_for_p">{$v.tip}</p>
+                    </div>
+                </div>
+                {/case}
+                {case value="password"}
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$v.title}</label>
+                    <div class="layui-input-block">
+                        <input name="{$v.name}" autocomplete="off" placeholder="{$v.placeholder}" value="{$v.value}" class="layui-input" type="password">
+                        <p class="tip_for_p">{$v.tip}</p>
+                    </div>
+                </div>
+                {/case}
+                {case value="date"}
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">{$v.title}</label>
+                        <div class="layui-input-inline">
+                            <input name="{$v.name}" class="layui-input" id="{$v.name}" placeholder="yyyy-MM-dd HH:mm:ss" value="{$v.value}" type="text">
+                            <p class="tip_for_p">{$v.tip}</p>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    layui.use(['laydate'], function(){
+                        laydate = layui.laydate;
+                        laydate.render({
+                            elem: '#{$v.name}'
+                            ,type: 'datetime'
+                        });
+                    });
+                </script>
+                {/case}
+                {case value="radio"}
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$v.title}</label>
+                    <div class="layui-input-block">
+                        {volist name="$v.value" key="k" id="rd"}
+                        <input type="radio" name="{$v.name}" value="{$rd.value}" {eq name="$rd.checked" value="1"}checked{/eq}  title="{$rd.title}">
+                        {/volist}
+                        <p class="tip_for_p">{$v.tip}</p>
+                    </div>
+                </div>
+                {/case}
+                {case value="checkbox"}
+                <div class="layui-form-item" pane="">
+                    <label class="layui-form-label">{$v.title}</label>
+                    <div class="layui-input-block">
+                        {volist name="$v.value" key="k" id="rd"}
+                        <input name="{$v.name}[{$rd.name}]" value="{$rd.value}" lay-skin="primary" title="{$rd.title}" {eq name="$rd.checked" value="1"}checked{/eq} type="checkbox">
+                        {/volist}
+                        <p class="tip_for_p">{$v.tip}</p>
+                    </div>
+                </div>
+                {/case}
+                {case value="textarea"}
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">{$v.title}</label>
+                    <div class="layui-input-block">
+                        <textarea name="{$v.name}" placeholder="{$v.placeholder}" class="layui-textarea">{$v.value}</textarea>
+                        <p class="tip_for_p">{$v.tip}</p>
+                    </div>
+
+                </div>
+                {/case}
+                {case value="file"}
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">{$v.title}</label>
+                    <div class="layui-input-block">
+                        {:hook('Upload',['type'=>'file','name'=>$v.name,'bt_title'=>'选择文件','value'=>$v.value])}
+                        <p class="tip_for_p">{$v.tip}</p>
+                    </div>
+
+                </div>
+                {/case}
+                {case value="image"}
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">{$v.title}</label>
+                    <div class="layui-input-block">
+                        {:hook('Upload',['type'=>'image','name'=>$v.name,'material'=>true,'value'=>$v.value])}
+                        <p class="tip_for_p">{$v.tip}</p>
+                    </div>
+
+                </div>
+                {/case}
+                {case value="images"}
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">{$v.title}</label>
+                    <div class="layui-input-block">
+                        {:hook('Upload',['type'=>'images','name'=>$v.name,'material'=>true,'value'=>$v.value])}
+                        <div class="rhaphp-upload-image">
+                            <p class="tip_for_p">{$v.tip}</p>
+                        </div>
+                    </div>
+
+                </div>
+                {/case}
+                {/switch}
+                {/volist}
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input hidden name="addonName" value="{$addonInfo.addon}">
+            <button class="layui-btn" lay-submit="" lay-filter="ADDC">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+        var editIndex = layedit.build('LAY_demo_editor');
+        laydate.render({
+            elem: '#rha-date'
+            ,type: 'datetime'
+        });
+        form.on('submit(ADDC)', function(data){
+            $.post('',data.field,function (res) {
+                if(res.status=='0'){
+                    layer.msg(res.msg);
+                }
+                if(res.status=='1'){
+                    layer.msg(res.msg,{time:1000},function () {
+                        // location.href="{:url('System/menuList')}";
+                    });
+
+                }
+            })
+            return false;
+        });
+    });
+    layui.use('element', function(){
+        var element = layui.element;
+    });
+</script>
+
+{/block}

@@ -1,0 +1,258 @@
+{extend name="common/base" /}
+{block name="body"}
+<div class="main layui-clear">
+  <div class="wrap">
+    <div class="content">
+      <div class="fly-tab fly-tab-index">
+        <span>
+          <a href="{:url('bbs/index')}">全部</a>
+          {volist name="category" id="v"}
+          <a href="{:url('bbs/index',['cate_id'=>$v.cate_id])}">{$v.name}</a>
+          {/volist}
+          <a href="{:url('bbs/index',['type'=>'1'])}">精帖</a>
+        </span>
+        <!--<form action="http://cn.bing.com/search" class="fly-search">-->
+          <!--<i class="iconfont icon-sousuo"></i>-->
+          <!--<input class="layui-input" autocomplete="off" placeholder="搜索内容，回车跳转" type="text" name="q">-->
+        <!--</form>-->
+        <a href="{:url('article/add')}" class="layui-btn jie-add">发布问题</a>
+      </div>
+
+      {if condition="isset($top) && !empty($top)"}
+      <ul class="fly-list fly-list-top">
+        {volist name="top" id="v"}
+        <li class="fly-list-li">
+          <a class="fly-list-avatar">
+            <img src="{$v.headimgurl}">
+          </a>
+          <h2 class="fly-tip">
+            <a href="{:url('article/detail',['id'=>$v.id])}">{$v.title}</a>
+            <span class="fly-tip-stick">置顶</span>
+            {eq name="$v.type" value="1"}<span class="fly-tip-jing">精帖</span>{/eq}
+          </h2>
+          <p>
+            <span><a href="user/home.html">{$v.nickname}</a></span>
+            <span>{:_formatTime(strtotime($v.create_time))}</span>
+            <span>{:_getCateName($v['cate_id'])}</span>
+            <span class="fly-list-hint">
+              <i class="iconfont" title="回答">&#xe60c;</i> {$v.comment_total}
+              <i class="iconfont" title="人气">&#xe60b;</i> {$v.view}
+            </span>
+          </p>
+        </li>
+        {/volist}
+      </ul>
+      {/if}
+      <ul class="fly-list">
+        {volist name="list" id="v"}
+        <li class="fly-list-li">
+          <a  class="fly-list-avatar">
+            <img src="{$v.headimgurl}" alt="{$v.nickname}">
+          </a>
+          <h2 class="fly-tip">
+            <a href="{:url('article/detail',['id'=>$v.id])}">{$v.title}</a>
+          </h2>
+          <p>
+            <span><a>{$v.nickname}</a></span>
+            <span>{:_formatTime(strtotime($v.create_time))}</span>
+            <span>{:_getCateName($v['cate_id'])}</span>
+            <span class="fly-list-hint">
+              <i class="iconfont" title="回答">&#xe60c;</i> {$v.comment_total}
+              <i class="iconfont" title="人气">&#xe60b;</i> {$v.view}
+            </span>
+          </p>
+        </li>
+        {/volist}
+      </ul>
+
+      <div style="text-align: center">
+        <div class="laypage-main">
+          <a href="jie/index.html" class="laypage-next">更多求解</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="edge">
+    <div class="fly-panel leifeng-rank">
+      <h3 class="fly-panel-title">近一月回答榜 - TOP 12</h3>
+      <dl>
+        <dd>
+          <a href="user/home.html">
+            <img src="../res/images/avatar/default.png">
+            <cite>纸飞机</cite>
+            <i>159次回答</i>
+          </a>
+        </dd>
+        <dd>
+          <a href="user/home.html">
+            <img src="../res/images/avatar/default.png">
+            <cite>纸飞机</cite>
+            <i>159次回答</i>
+          </a>
+        </dd>
+        <dd>
+          <a href="user/home.html">
+            <img src="../res/images/avatar/default.png">
+            <cite>纸飞机</cite>
+            <i>159次回答</i>
+          </a>
+        </dd>
+        <dd>
+          <a href="user/home.html">
+            <img src="../res/images/avatar/default.png">
+            <cite>纸飞机</cite>
+            <i>159次回答</i>
+          </a>
+        </dd>
+        <dd>
+          <a href="user/home.html">
+            <img src="../res/images/avatar/default.png">
+            <cite>纸飞机</cite>
+            <i>159次回答</i>
+          </a>
+        </dd>
+        <dd>
+          <a href="user/home.html">
+            <img src="../res/images/avatar/default.png">
+            <cite>纸飞机</cite>
+            <i>159次回答</i>
+          </a>
+        </dd>
+        <dd>
+          <a href="user/home.html">
+            <img src="../res/images/avatar/default.png">
+            <cite>纸飞机</cite>
+            <i>159次回答</i>
+          </a>
+        </dd>
+        <dd>
+          <a href="user/home.html">
+            <img src="../res/images/avatar/default.png">
+            <cite>纸飞机</cite>
+            <i>159次回答</i>
+          </a>
+        </dd>
+        <dd>
+          <a href="user/home.html">
+            <img src="../res/images/avatar/default.png">
+            <cite>纸飞机</cite>
+            <i>159次回答</i>
+          </a>
+        </dd>
+        <dd>
+          <a href="user/home.html">
+            <img src="../res/images/avatar/default.png">
+            <cite>纸飞机</cite>
+            <i>159次回答</i>
+          </a>
+        </dd>
+        <dd>
+          <a href="user/home.html">
+            <img src="../res/images/avatar/default.png">
+            <cite>纸飞机</cite>
+            <i>159次回答</i>
+          </a>
+        </dd>
+        <dd>
+          <a href="user/home.html">
+            <img src="../res/images/avatar/default.png">
+            <cite>纸飞机</cite>
+            <i>159次回答</i>
+          </a>
+        </dd>
+      </dl>
+    </div>
+
+    <dl class="fly-panel fly-list-one">
+      <dt class="fly-panel-title">最近热帖</dt>
+      <dd>
+        <a href="jie/detail.html">使用 layui 秒搭后台大布局（基本结构）</a>
+        <span><i class="iconfont">&#xe60b;</i> 6087</span>
+      </dd>
+      <dd>
+        <a href="jie/detail.html">Java实现LayIM后端的核心代码</a>
+        <span><i class="iconfont">&#xe60b;</i> 767</span>
+      </dd>
+      <dd>
+        <a href="jie/detail.html">使用 layui 秒搭后台大布局（基本结构）</a>
+        <span><i class="iconfont">&#xe60b;</i> 6087</span>
+      </dd>
+      <dd>
+        <a href="jie/detail.html">Java实现LayIM后端的核心代码</a>
+        <span><i class="iconfont">&#xe60b;</i> 767</span>
+      </dd>
+      <dd>
+        <a href="jie/detail.html">使用 layui 秒搭后台大布局（基本结构）</a>
+        <span><i class="iconfont">&#xe60b;</i> 6087</span>
+      </dd>
+      <dd>
+        <a href="jie/detail.html">Java实现LayIM后端的核心代码</a>
+        <span><i class="iconfont">&#xe60b;</i> 767</span>
+      </dd>
+      <dd>
+        <a href="jie/detail.html">使用 layui 秒搭后台大布局（基本结构）</a>
+        <span><i class="iconfont">&#xe60b;</i> 6087</span>
+      </dd>
+      <dd>
+        <a href="jie/detail.html">Java实现LayIM后端的核心代码</a>
+        <span><i class="iconfont">&#xe60b;</i> 767</span>
+      </dd>
+    </dl>
+
+    <dl class="fly-panel fly-list-one">
+      <dt class="fly-panel-title">近期热议</dt>
+      <dd>
+        <a href="jie/detail.html">使用 layui 秒搭后台大布局之基本结构</a>
+        <span><i class="iconfont">&#xe60c;</i> 96</span>
+      </dd>
+      <dd>
+        <a href="jie/detail.html">使用 layui 秒搭后台大布局之基本结构</a>
+        <span><i class="iconfont">&#xe60c;</i> 96</span>
+      </dd>
+      <dd>
+        <a href="jie/detail.html">使用 layui 秒搭后台大布局之基本结构</a>
+        <span><i class="iconfont">&#xe60c;</i> 96</span>
+      </dd>
+      <dd>
+        <a href="jie/detail.html">使用 layui 秒搭后台大布局之基本结构</a>
+        <span><i class="iconfont">&#xe60c;</i> 96</span>
+      </dd>
+      <dd>
+        <a href="jie/detail.html">使用 layui 秒搭后台大布局之基本结构</a>
+        <span><i class="iconfont">&#xe60c;</i> 96</span>
+      </dd>
+      <dd>
+        <a href="jie/detail.html">使用 layui 秒搭后台大布局之基本结构</a>
+        <span><i class="iconfont">&#xe60c;</i> 96</span>
+      </dd>
+      <dd>
+        <a href="jie/detail.html">使用 layui 秒搭后台大布局之基本结构</a>
+        <span><i class="iconfont">&#xe60c;</i> 96</span>
+      </dd>
+      <dd>
+        <a href="jie/detail.html">使用 layui 秒搭后台大布局之基本结构</a>
+        <span><i class="iconfont">&#xe60c;</i> 96</span>
+      </dd>
+    </dl>
+
+    <div class="fly-panel fly-link">
+      <h3 class="fly-panel-title">友情链接</h3>
+      <dl>
+        <dd>
+          <a href="http://www.layui.com/" target="_blank">layui</a>
+        </dd>
+        <dd>
+          <a href="http://layim.layui.com/" target="_blank">LayIM</a>
+        </dd>
+        <dd>
+          <a href="http://layer.layui.com/" target="_blank">layer</a>
+        </dd>
+      </dl>
+    </div>
+  </div>
+</div>
+{/block}
+
+

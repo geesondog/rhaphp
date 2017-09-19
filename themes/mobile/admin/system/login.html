@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>登录</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    {css href="__STATIC__/layui/css/layui.css" /}
+    {css href="__STATIC__/admin/css/style.css" /}
+    {js href="__STATIC__/jquery.js" /}
+    {js href='__STATIC__/layui/layui.js' /}
+    {CSS href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.min.css" /}
+</head>
+<body>
+<!-- 用户登录 -->
+<style>
+    .layui-form-item .layui-input-inline {
+        margin: 0 0 10px 0px
+    }
+</style>
+<div class="login-main" id="login" style="position: inherit;">
+    <header class="layui-elip">后台登录</header>
+    <form class="layui-form" id="loginform">
+        <div class="layui-form-item">
+            <div class="layui-input-inline">
+                <input name="user_name" lay-verify="required" placeholder="请输入登录用户名"  type="text" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-inline">
+                <input name="password" lay-verify="required" placeholder="请输入登录密码"  type="password" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-input-inline login-btn">
+            <button type="submit" lay-submit="" lay-filter="login" class="layui-btn">登录</button>
+        </div>
+    </form>
+    <footer data-am-widget="footer" class="am-footer am-footer-default" data-am-footer="{}" style="position: fixed;bottom: 0;left: 0;right: 0;">
+        <div class="am-footer-miscs ">
+            <p>由 <a href="http://www.rhaphp.com/" title="RhaPHP"
+                    target="_blank" class="">RhaPHP</a>提供技术支持</p>
+            <p>CopyRight©2017 All Rights Reserved.</p>
+        </div>
+    </footer>
+</div>
+
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+        form.on('submit(login)', function(data){
+            $.post(
+                "{:url('Login/index')}",
+                data.field,
+                function(obj) {
+                    if(obj.code == 200){
+                        layer.msg(obj.msg,{icon:1,time:2000},function () {
+                            location.href="{:url('mp/Mp/index')}";
+                        });
+                    }else {
+                        layer.alert(obj.msg);
+                    }
+                },
+                "json"
+            );
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

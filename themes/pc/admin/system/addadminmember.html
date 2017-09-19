@@ -1,0 +1,51 @@
+{extend name="common/base" /}
+{block name="body"}
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <div class="layui-form-item">
+                <label class="layui-form-label">登录账户：</label>
+                <div class="layui-input-inline">
+                    <input name="admin_name" required="" lay-verify="required" placeholder="请输入登录账户" autocomplete="off" class="layui-input" type="text">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">更改密码：</label>
+                <div class="layui-input-inline">
+                    <input name="password" required="" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input" type="password">
+                </div>
+                <div class="layui-form-mid layui-word-aux">建议使用复杂一些的密码</div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">重复密码：</label>
+                <div class="layui-input-inline">
+                    <input name="repassword" required="" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input" type="password">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="updatepwd">确认更改</button>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.on('submit(updatepwd)', function (data) {
+            $.post('',data.field,function (res) {
+                if(res.status=='0'){
+                    layer.msg(res.msg);
+                }
+                if(res.status=='1'){
+                    layer.msg(res.msg,{time:1000},function () {
+                        location.href="{:url('adminmember')}";
+                    });
+                }
+            })
+            return false;
+        });
+    });
+</script>
+{/block}

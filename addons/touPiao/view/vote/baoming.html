@@ -1,0 +1,62 @@
+{extend name="./common/base" /}
+{block name="body"}
+<form class="layui-form" action="" style="padding: 10px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">姓名</label>
+        <div class="layui-input-block">
+            <input type="text" name="username" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">电话</label>
+        <div class="layui-input-block">
+            <input type="text" name="phone" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">封面</label>
+        <div class="layui-input-block">
+            {:hook('Upload',['type'=>'image','name'=>'cover'])}
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">描述</label>
+        <div class="layui-input-block">
+            <textarea name="description" placeholder="" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" style="background-color:{$info.text_color};" lay-submit lay-filter="BM">立即报名</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    layui.use(['form','layer'], function(){
+        var form = layui.form;
+        var layer = layui.layer;
+        form.on('submit(BM)', function(data){
+            var index=layer.load(1)
+            $.post('',data.field,function (res) {
+                layer.close(index);
+                if(res.status==-2){
+                    layer.open({
+                        type: 1,
+                        title:'请先扫码',
+                        skin: 'layui-layer-rim', //加上边框
+                        area: ['170px', '200px'], //宽高
+                        content: "<img width='150' height='150' src='{$mpInfo.qrcode}' >"
+                    });
+                }else{
+                    layer.msg(res.msg);
+                }
+
+            })
+            return false;
+        });
+    });
+</script>
+
+{/block}

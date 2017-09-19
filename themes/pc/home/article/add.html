@@ -1,0 +1,79 @@
+{extend name="common/base" /}
+{block name="body"}
+<div class="main layui-clear">
+    <div class="fly-panel" pad20>
+        <h2 class="page-title">发表问题</h2>
+        <div class="layui-form layui-form-pane">
+            <form action="" method="post">
+                <div class="layui-form-item">
+                    <label for="L_title" class="layui-form-label">标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="L_title" name="title" required lay-verify="required" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <div class="layui-input-block">
+                        <textarea id="L_content" name="content"  placeholder="请输入内容" class="layui-textarea fly-editor" style="height: 260px;"></textarea>
+                    </div>
+                    <label for="L_content" class="layui-form-label" style="top: -2px;">描述</label>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">所在类别</label>
+                        <div class="layui-input-block">
+                            <select lay-verify="required" name="cate_id">
+                                <option></option>
+                                {volist name="$cate" id="vo"}
+                                <option value="{$vo.cate_id}" >{$vo.name}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </div>
+                    <!--<div class="layui-inline">-->
+                        <!--<label class="layui-form-label">悬赏飞吻</label>-->
+                        <!--<div class="layui-input-block">-->
+                            <!--<select name="experience">-->
+                                <!--<option value="5" selected>5</option>-->
+                                <!--<option value="20">20</option>-->
+                                <!--<option value="50">50</option>-->
+                                <!--<option value="100">100</option>-->
+                            <!--</select>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                </div>
+                <div class="layui-form-item">
+                    <span  class="layui-btn" lay-filter="addarticle" lay-submit>立即发布</span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use(['form', 'layedit'], function(){
+        var form = layui.form()
+            ,layer = layui.layer
+            ,layedit = layui.layedit;
+        layedit.set({
+            uploadImage: {
+                url: "{:url('article/uploadImg')}"
+            }
+        });
+        var index=layedit.build('L_content');
+        form.on('submit(addarticle)', function(data){
+            var content =layedit.getContent(index)
+            data.field['content']=content;
+            $.post("",data.field,function(res){
+                if(res.status=='1'){
+                    layer.msg(res.msg,{icon:1,time:1000},function () {
+                        location.href=res.url;
+                    });
+                }else{
+                    layer.alert(res.msg);
+                }
+            })
+            return false;
+        })
+    });
+</script>
+{/block}

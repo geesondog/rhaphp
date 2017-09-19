@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>会员登录</title>
+    {js href='__STATIC__/jquery/jquery-1.11.0.min.js' /}
+    {js href='__STATIC__/layui/layui.js' /}
+    <link rel="stylesheet" href="//cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/1.0.1/css/jquery-weui.min.css">
+</head>
+
+<body>
+<div class="page" style="margin-top: 30%;">
+    <form class="layui-form" action="">
+        <div class="page__bd">
+            <div class="weui-cells__title">会员登录</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd">
+                        <label class="weui-label">密码</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <input name="password" class="weui-input"  type="password" placeholder="请输入密码"/>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cells__tips"></div>
+            <div class="weui-btn-area" style="margin-top: 10%;">
+                <button class="weui-btn weui-btn_primary" lay-submit lay-filter="formDemo" href="javascript:" id="showTooltips">登录</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+<script src="//cdn.bootcss.com/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+<script src="//cdn.bootcss.com/jquery-weui/1.0.1/js/swiper.min.js"></script>
+<script src="//cdn.bootcss.com/jquery-weui/1.0.1/js/city-picker.min.js"></script>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+        form.on('submit(formDemo)', function(data){
+            $.post('',data.field,function (res) {
+                if(res.status=='0'){
+                    $.alert(res.msg);
+                }
+                if(res.status=='1'){
+                    $.toast("登录成功", function() {
+                        window.location.href=res.url;
+                    });
+                }
+            })
+            return false;
+        });
+    });
+</script>
+</html>

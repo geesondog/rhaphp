@@ -1,0 +1,184 @@
+{extend name="common/base" /}
+{block name="body"}
+<div class="main layui-clear">
+    <div class="wrap">
+        <div class="content detail">
+            <div class="fly-panel detail-box">
+                <h1>{$detail.title}</h1>
+                <div class="fly-tip fly-detail-hint" data-id="{{rows.id}}">
+                    {eq name="$detail.is_top" value="1"}<span class="fly-tip-stick">置顶帖</span>&nbsp;{/eq}
+                    {eq name="$detail.type" value="1"}<span class="fly-tip-jing">精帖</span>{/eq}
+
+                    <span>未结贴</span>
+                   <span class="fly-tip-jie">已采纳</span>
+
+                    <span class="jie-admin" type="del" style="margin-left: 20px;">删除</span>
+                    <span class="jie-admin" type="set" field="stick" rank="1">置顶</span>
+                    <span class="jie-admin" type="set" field="stick" rank="0" style="background-color:#ccc;">取消置顶</span>
+                    <span class="jie-admin" type="set" field="status" rank="1">加精</span>
+                    <span class="jie-admin" type="set" field="status" rank="0" style="background-color:#ccc;">取消加精</span>
+
+                    <div class="fly-list-hint">
+                        <i class="iconfont" title="回答">&#xe60c;</i> {$detail.comment_total}
+                        <i class="iconfont" title="人气">&#xe60b;</i> {$detail.view}
+                    </div>
+                </div>
+                <div class="detail-about">
+                    <a class="jie-user" href="">
+                        <img src="{$detail.headimgurl}">
+                        <cite>
+                            {$detail.nickname}
+                            <em>{:_formatTime(strtotime($detail.create_time))}</em>
+                        </cite>
+                    </a>
+                    <div class="detail-hits" data-id="{{rows.id}}">
+                        <span style="color:#FF7200">悬赏：20飞吻</span>
+                        <span class="layui-btn layui-btn-mini jie-admin" type="edit"><a href="">编辑此贴</a></span>
+                        <span class="layui-btn layui-btn-mini jie-admin " type="collect" data-type="add">收藏</span>
+                        <!--<span class="layui-btn layui-btn-mini jie-admin  layui-btn-danger" type="collect" data-type="add">取消收藏</span>-->
+                    </div>
+                </div>
+
+                <div class="detail-body photos" style="margin-bottom: 20px;">
+                    {:htmlspecialchars_decode($detail.content)}
+                </div>
+            </div>
+
+            <div class="fly-panel detail-box" style="padding-top: 0;">
+                <a name="comment"></a>
+                <ul class="jieda photos" id="jieda">
+                    <!--<li data-id="12" class="jieda-daan">-->
+                        <!--<a name="item-121212121212"></a>-->
+                        <!--<div class="detail-about detail-about-reply">-->
+                            <!--<a class="jie-user" href="">-->
+                                <!--<img src="../../res/images/avatar/default.png" alt="">-->
+                                <!--<cite>-->
+                                    <!--<i>纸飞机</i>-->
+                                    <!--&lt;!&ndash; <em>(楼主)</em>-->
+                                    <!--<em style="color:#5FB878">(管理员)</em>-->
+                                    <!--<em style="color:#FF9E3F">（活雷锋）</em>-->
+                                    <!--<em style="color:#999">（该号已被封）</em> &ndash;&gt;-->
+                                <!--</cite>-->
+                            <!--</a>-->
+                            <!--<div class="detail-hits">-->
+                                <!--<span>3分钟前</span>-->
+                            <!--</div>-->
+                            <!--<i class="iconfont icon-caina" title="最佳答案"></i>-->
+                        <!--</div>-->
+                        <!--<div class="detail-body jieda-body">-->
+                            <!--<p>么么哒</p>-->
+                        <!--</div>-->
+                        <!--<div class="jieda-reply">-->
+                            <!--<span class="jieda-zan zanok" type="zan"><i class="iconfont icon-zan"></i><em>12</em></span>-->
+                            <!--<span type="reply"><i class="iconfont icon-svgmoban53"></i>回复</span>-->
+                            <!--&lt;!&ndash; <div class="jieda-admin">-->
+                              <!--<span type="edit">编辑</span>-->
+                              <!--<span type="del">删除</span>-->
+                              <!--<span class="jieda-accept" type="accept">采纳</span>-->
+                            <!--</div> &ndash;&gt;-->
+                        <!--</div>-->
+                    <!--</li>-->
+                    {volist name="comment" id="v"}
+                    <li data-id="13">
+                        <a name="item-121212121212"></a>
+                        <div class="detail-about detail-about-reply">
+                            <a class="jie-user" href="">
+                                <img src="{$v.headimgurl}" alt="">
+                                <cite>
+                                    <i>{$v.nickname}</i>
+                                    <!--<em style="color:#FF9E3F">活雷锋</em>-->
+                                </cite>
+                            </a>
+                            <div class="detail-hits">
+                                <span>{:_formatTime($v.create_time)}</span>
+                            </div>
+                        </div>
+                        <div class="detail-body jieda-body">
+                            <p>{:htmlspecialchars_decode($v.comment_content)}</p>
+                        </div>
+                        <div class="jieda-reply">
+                            <!--<span class="jieda-zan" type="zan"><i class="iconfont icon-zan"></i><em>0</em></span>-->
+                            <!--<span type="reply"><i class="iconfont icon-svgmoban53"></i>回复</span>-->
+                            <div class="jieda-admin">
+                                <!--<span type="edit">编辑</span>-->
+                                <!--<span type="del">删除</span>-->
+                                <!--<span class="jieda-accept" type="accept">采纳</span>-->
+                            </div>
+                        </div>
+                    </li>
+                    {/volist}
+                    {if condition="isset($comment) && !is_array($comment)"}
+                     <li class="fly-none">没有任何回答</li>
+                    {/if}
+                </ul>
+
+                <div class="layui-form layui-form-pane">
+                    <form action="" method="post">
+                        <div class="layui-form-item layui-form-text">
+                            <div class="layui-input-block">
+                                <textarea id="L_content" name="content" placeholder="我要回答"  class="layui-textarea fly-editor" style="height: 150px;"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <button class="layui-btn" lay-filter="tocomment" lay-submit>提交回答</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="edge">
+        <dl class="fly-panel fly-list-one">
+            <dt class="fly-panel-title">最近热帖</dt>
+            <dd>
+                <a href="">使用 layui 秒搭后台大布局（基本结构）</a>
+                <span><i class="iconfont">&#xe60b;</i> 6087</span>
+            </dd>
+            <dd>
+                <a href="">Java实现LayIM后端的核心代码</a>
+                <span><i class="iconfont">&#xe60b;</i> 767</span>
+            </dd>
+
+        </dl>
+
+        <dl class="fly-panel fly-list-one">
+            <dt class="fly-panel-title">近期热议</dt>
+            <dd>
+                <a href="">使用 layui 秒搭后台大布局之基本结构</a>
+                <span><i class="iconfont">&#xe60c;</i> 96</span>
+            </dd>
+            <dd>
+                <a href="">使用 layui 秒搭后台大布局之基本结构</a>
+                <span><i class="iconfont">&#xe60c;</i> 96</span>
+            </dd>
+
+        </dl>
+    </div>
+</div>
+<script>
+    layui.use(['form', 'layedit'], function(){
+        var form = layui.form()
+            ,layer = layui.layer
+            ,layedit = layui.layedit;
+        layedit.set({
+            uploadImage: {
+                url: "{:url('article/uploadImg')}"
+            }
+        });
+        var index=layedit.build('L_content');
+        form.on('submit(tocomment)', function(data){
+            var content =layedit.getContent(index)
+            data.field['content']=content;
+            $.post("{:url('tocomment',['id'=>$detail.id])}",data.field,function(res){
+                if(res.status=='1'){
+                    layer.msg(res.msg);
+                }else{
+                    layer.alert(res.msg);
+                }
+            })
+            return false;
+        })
+    });
+</script>
+{/block}

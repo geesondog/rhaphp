@@ -1,0 +1,67 @@
+{extend name="public/base"/}
+{block name="body"}
+	<h1>环境检测</h1>
+	<table class="table table-hover">
+		<caption><h2>运行环境检查</h2></caption>
+		<thead>
+			<tr>
+				<th>项目</th>
+				<th>所需配置</th>
+				<th>当前配置</th>
+			</tr>
+		</thead>
+		<tbody>
+			{volist name="env" id="item"}
+				<tr>
+					<td>{$item[0]}</td>
+					<td>{$item[1]}</td>
+					<td><i class="icon icon-{$item[4]}">&nbsp;</i>{$item[3]}</td>       
+				</tr>
+			{/volist}
+		</tbody>
+	</table>
+	{present name="dirfile"}
+	<table class="table table-hover">
+		<caption><h2>目录、文件权限检查</h2></caption>
+		<thead>
+			<tr>
+				<th>目录/文件</th>
+				<th>所需状态</th>
+				<th>当前状态</th>
+			</tr>
+		</thead>
+		<tbody>
+			{volist name="dirfile" id="item"}
+				<tr>
+					<td>{$item[3]}</td>
+					<td><i class="icon icon-ok">&nbsp;</i>可写</td>
+					<td><i class="icon icon-{$item[2]}">&nbsp;</i>{$item[1]}</td>
+				</tr>
+			{/volist}
+		</tbody>
+	</table>
+	{/present}
+	<table class="table table-hover">
+		<caption><h2>函数依赖性检查</h2></caption>
+		<thead>
+			<tr>
+				<th>函数名称</th>
+				<th>检查结果</th>
+			</tr>
+		</thead>
+		<tbody>
+			{volist name="func" id="item"}
+				<tr>
+					<td>{$item[0]}()</td>
+					<td><i class="icon icon-{$item[2]}">&nbsp;</i>{$item[1]}</td>
+				</tr>
+			{/volist}
+		</tbody>
+	</table>
+{/block}
+{block name="footer"}
+<div class="text-center">
+    <a class="btn btn-primary" href="{:url('install/index/config')}">下一步</a>
+    <a class="btn btn-default" href="{:url('install/index/index')}">上一步</a>
+</div>
+{/block}

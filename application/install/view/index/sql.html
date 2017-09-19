@@ -1,0 +1,21 @@
+{extend name="public/base"/}
+{block name="body"}
+<h1 class="text-center">安装数据库</h1>
+<div id="show-list" class="install-database list-group" style="height:450px; overflow-y:auto; ">
+</div>
+<script type="text/javascript">
+	var list   = document.getElementById('show-list');
+	function showmsg(msg, classname){
+		var li = document.createElement('p'); 
+		li.innerHTML = msg;
+		classname && li.setAttribute('class', 'list-group-item text-' + classname);
+		list.appendChild(li);
+		document.scrollTop += 30;
+	}
+</script>
+{/block}
+{block name="footer"}
+<div class="text-center">
+	<button class="btn btn-warning disabled">正在安装，请稍候...</button>
+</div>
+{/block}

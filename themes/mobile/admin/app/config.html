@@ -1,0 +1,159 @@
+{extend name="common/base" /}
+{block name="leftMenu"}
+<dl>
+    <dt><i class="type-ico ico-trade rha-icon"></i>应用配置</dt>
+    {volist name="apps" id="v"}
+    <dd class="{eq name="name" value="$v['addon']"}selected{/eq}"><a href="{:url('config',['name'=>$v['addon']])}">{$v.name}</a></dd>
+    {/volist}
+</dl>
+
+{/block}
+{block name="body"}
+<h1 class="site-h1">配置：{$addonInfo.name}</h1>
+<form class="layui-form" action="">
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            {if condition="$addonInfo.entry_url neq ''"}<li class="layui-this">入口配置</li>{/if}
+            <li>功能设置</li>
+        </ul>
+        <div class="layui-tab-content">
+            {if condition="$addonInfo.entry_url neq ''"}
+            <div class="layui-tab-item layui-show">
+                    <br>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">回复关键词</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="keyword"    placeholder="请输入关键词" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">标题</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="title" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">封面图</label>
+                        <div class="layui-input-block">
+                            {:hook('Upload',['type'=>'image','name'=>'picurl'])}
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">图文描述</label>
+                        <div class="layui-input-block">
+                            <textarea name="news_content" placeholder="请输入图文描述" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">连接地址</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="link"  placeholder="请输入连接地址如：http://xxxx.com/……" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+            </div>
+            {/if}
+            <div class="layui-tab-item">
+
+                {volist name="$addonInfo.config" key="key1" id="v"}
+                {switch name="$v.type"}
+                {case value="text"}
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$v.title}</label>
+                    <div class="layui-input-block">
+                        <input name="{$v.name}" autocomplete="off" placeholder="{$v.placeholder}" value="{$v.value}" class="layui-input" type="text">
+                        <p style="font-size: 12px; padding: 7px; color: #737373;">{$v.tip}</p>
+                    </div>
+                </div>
+                {/case}
+                {case value="password"}
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$v.title}</label>
+                    <div class="layui-input-block">
+                        <input name="{$v.name}" autocomplete="off" placeholder="{$v.placeholder}" value="{$v.value}" class="layui-input" type="password">
+                        <p style="font-size: 12px; padding: 7px; color: #737373;">{$v.tip}</p>
+                    </div>
+                </div>
+                {/case}
+                {case value="date"}
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">{$v.title}</label>
+                        <div class="layui-input-inline">
+                            <input name="{$v.name}" id="date" placeholder="yyyy-mm-dd" autocomplete="off" class="layui-input" onclick="layui.laydate({elem: this})" type="text">
+                            <p style="font-size: 12px; padding: 7px; color: #737373;">{$v.tip}</p>
+                        </div>
+                    </div>
+                </div>
+                {/case}
+
+                {case value="radio"}
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$v.title}</label>
+                    <div class="layui-input-block">
+                        {volist name="$v.value" key="k" id="rd"}
+                        <input type="radio" name="{$v.name}" value="{$rd.value}" {eq name="$rd.checked" value="1"}checked{/eq}  title="{$rd.title}">
+                        {/volist}
+                        <p style="font-size: 12px; padding: 7px; color: #737373;">{$v.tip}</p>
+                    </div>
+                </div>
+                {/case}
+                {case value="textarea"}
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">{$v.title}</label>
+                    <div class="layui-input-block">
+                        <textarea name="{$v.name}" placeholder="{$v.placeholder}" class="layui-textarea">{$v.value}</textarea>
+                        <p style="font-size: 12px; padding: 7px; color: #737373;">{$v.tip}</p>
+                    </div>
+
+                </div>
+
+                {/case}
+                {/switch}
+                {/volist}
+
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input hidden name="addonName" value="{$addonInfo.addon}">
+            <button class="layui-btn" lay-submit="" lay-filter="ADAPP">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+        var editIndex = layedit.build('LAY_demo_editor');
+        form.on('submit(ADAPP)', function(data){
+            $.post('',data.field,function (res) {
+                if(res.status=='0'){
+                    layer.msg(res.msg);
+                }
+                if(res.status=='1'){
+                    layer.msg(res.msg,{time:1000},function () {
+                       // location.href="{:url('System/menuList')}";
+                    });
+
+                }
+            })
+            return false;
+        });
+
+
+    });
+    layui.use('element', function(){
+        var element = layui.element();
+    });
+</script>
+
+{/block}

@@ -1,0 +1,82 @@
+{extend name="../admin/common/base" /}
+{block name="body"}
+<form class="layui-form" action="" style="padding-right:10px; margin-top: 10px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">场景名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" required lay-verify="required" placeholder="请输入名称" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">关联关键词</label>
+        <div class="layui-input-block">
+            <input type="text" name="keyword" required lay-verify="required" placeholder="请输入关键词" autocomplete="off"
+                   class="layui-input">
+            <p class="tip_for_p">扫描此二维码的同时也会触发此关键词。</p>
+        </div>
+    </div>
+    <div id="qrcodes" class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div id="replyType" class="layui-input-block">
+            <input type="radio" checked name="qr_type" value="2" title="永久">
+            <input type="radio" name="qr_type" value="0" title="临时">
+        </div>
+    </div>
+    <div id="qrcode">
+        <div class="qr_2 layui-form-item layui-show layui-tab-item">
+            <label class="layui-form-label">场景值字符</label>
+            <div class="layui-input-block">
+                <input type="text" name="scene_str"  placeholder="请输入场景值字符串" autocomplete="off"
+                       class="layui-input">
+                <p class="tip_for_p">注：目前腾讯规定了永久二维码只能生成10万个，请悠着点使用永久类型二维码。</p>
+            </div>
+
+        </div>
+        <div class="qr_0 layui-form-item layui-tab-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">有效时间/秒</label>
+                <div class="layui-input-inline">
+                    <input name="time" required lay-verify="required" autocomplete="off" value="2592000" class="layui-input" type="tel">
+                </div>
+                <div class="layui-form-mid layui-word-aux">临时二维码过期时间, 最大为30天（2592000秒）</div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    $(function () {
+        $("#qrcodes").click(function () {
+            var class_a = 'qr_' + $("input[name='qr_type']:checked").val();
+            $('#qrcode div').removeClass('layui-show')
+            $('.' + class_a).addClass('layui-show')
+        });
+    })
+    layui.use('form', function () {
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+           // layer.msg(JSON.stringify(data.field));
+            $.post('',data.field,function (res) {
+                if(res.status=='0'){
+                    layer.msg(res.msg);
+                }
+                if(res.status=='1'){
+                    layer.msg(res.msg);
+                    window.location.href=res.url;
+                }
+            })
+            return false;
+        });
+    });
+</script>
+
+{/block}
