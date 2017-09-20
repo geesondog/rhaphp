@@ -17,3 +17,5 @@ define('ADDON_PATH', __DIR__ . '/addons/');
 define('ADDON_ROUTE','/app/');
 define('RUNTIME_PATH', __DIR__ . '/data/runtime/');
 require __DIR__ . '/thinkphp/start.php';
+
+
