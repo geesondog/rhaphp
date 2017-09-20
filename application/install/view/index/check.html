@@ -15,7 +15,7 @@
 				<tr>
 					<td>{$item[0]}</td>
 					<td>{$item[1]}</td>
-					<td><i class="icon icon-{$item[4]}">&nbsp;</i>{$item[3]}</td>       
+					<td style="color: {eq name="$item[4]" value="error"}red{/eq}"><i class="icon icon-{$item[4]}">&nbsp;</i>{$item[3]}</td>
 				</tr>
 			{/volist}
 		</tbody>
@@ -35,7 +35,7 @@
 				<tr>
 					<td>{$item[3]}</td>
 					<td><i class="icon icon-ok">&nbsp;</i>可写</td>
-					<td><i class="icon icon-{$item[2]}">&nbsp;</i>{$item[1]}</td>
+					<td style="color: {eq name="$item[2]" value="error"}red{/eq}"><i class="icon icon-{$item[2]}">&nbsp;</i>{$item[1]}</td>
 				</tr>
 			{/volist}
 		</tbody>
@@ -53,7 +53,7 @@
 			{volist name="func" id="item"}
 				<tr>
 					<td>{$item[0]}()</td>
-					<td><i class="icon icon-{$item[2]}">&nbsp;</i>{$item[1]}</td>
+					<td style="color: {eq name="$item[2]" value="error"}red{/eq}"><i class="icon icon-{$item[2]}">&nbsp;</i>{$item[1]}</td>
 				</tr>
 			{/volist}
 		</tbody>

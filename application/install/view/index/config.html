@@ -6,7 +6,7 @@
 <form method="post" target="_self">
 	<div class="create-database">
 		<h2>
-			数据库连接信息
+			数据库类型
 		</h2>
 		<table class="table-hover table">
 			<tr>
@@ -16,12 +16,18 @@
 							mysql
 						</option>
 						<option>
-							mysqli
+							Sqlsrv
+						</option>
+						<option>
+							Sqlite
+						</option>
+						<option>
+							Pgsql
 						</option>
 					</select>
 				</td>
 				<td>
-					数据库连接类型，服务器支持的情况下建议使用mysql
+					系统默认使用mysql数据库，如使用Sqlsrv、Sqlite、Pgsql请自行做相关配置
 				</td>
 			</tr>
 			<tr>
