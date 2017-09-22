@@ -149,7 +149,7 @@ class App extends Base
                     if ($ruleModel->allowField(true)->save($data, ['type' => 'addon', 'addon' => input('name'), 'mpid' => $this->mid])) {
                         ajaxMsg(1, '更新成功');
                     } else {
-                        ajaxMsg(0, '更新失败');
+                        ajaxMsg(0, '并没更新');
                     }
                 }
             }
@@ -160,9 +160,10 @@ class App extends Base
             if ($addon['entry_url'] != '') {
                 $url = getHostDomain() . addonUrl($addon['entry_url'], ['mid' => $this->mid]);
 
-            }else{
-                $type='addon';
             }
+//            else{
+//                $type='addon';
+//            }
             $ruleModel = new MpRule();
             $rePly = $ruleModel->alias('r')
                 ->where(['r.mpid' => $this->mid, 'r.type' => $type, 'r.addon' => input('name')])
