@@ -1544,6 +1544,8 @@ function sendRedpack($mid = '', $param = [], $addon = '')
             unlink($sslkey);
             return ['errCode' => -1, 'errMsg' => 'errMsg:' . $result['result_code'] . '：' . $result['return_msg']];
         }
+    }else{
+        return ['errCode' => -1, 'errMsg' => 'errMsg:该公众号还没有配置支付相关的参数'];
     }
 }
 

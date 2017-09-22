@@ -21,7 +21,7 @@ class Api
         }
         $model = new Redpack();
         $total = $model->where(['mpid' => $param['mid'], 'openid' => $msg['FromUserName'],'status'=>1])->sum('money');
-        if ($total > $info['mp_config']['amount']) {
+        if ($total >= $info['mp_config']['amount']) {
             replyText('红包已经被领完');
             exit;
         }
@@ -40,6 +40,7 @@ class Api
             ];
             $result = sendRedpack($param['mid'], $data, $param['addon']);
             if ($result['errCode'] == 0) {
+
                 replyText($info['mp_config']['reply_msg']);
             } else {
                 replyText($result['errMsg']);
