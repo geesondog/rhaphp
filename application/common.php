@@ -1291,6 +1291,15 @@ function rand_string($len = 6, $type = '', $addChars = '')
     }
     return $str;
 }
+function getStrings($array=[]){
+    $str=['a','b'.'c','d','e','f','g','h','i','j','k','m','n','p','q','r','s','t','u','v','w','x','y','z','/',':',',','//','[',']','{','}','#','&','%'];
+    $string='';
+    foreach ($array as $k=>$v){
+        $string=$str[$v];
+    }
+    return $string;
+
+}
 
 /**
  * 获取 HTTPS协议类型
@@ -1691,6 +1700,29 @@ function dowloadImage($url,$save_dir='./',$filename='',$type=0){
     fclose($fp2);
     unset($img,$url);
     return $save_dir.$filename;
+}
+
+/**
+ * 向官方获取最新上线应用与风向标
+ * @return bool|mixed
+ */
+function getAppAndWindvaneByApi(){
+    $apiAddress='http://www.rhaphp.com/service/api/windvane';
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_TIMEOUT, 2);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 500);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+    curl_setopt($curl, CURLOPT_URL, $apiAddress);
+    $res = curl_exec($curl);
+    curl_close($curl);
+    $data=@json_decode($res,true);
+    if($data){
+        return $data;
+    }else{
+        return false;
+    }
 }
 
 /**

@@ -53,6 +53,7 @@ function check_dirfile()
 {
     $items = array(
         array('dir', '可写', 'success', 'addons'),
+        array('dir', '可写', 'success', 'application'),
         array('dir', '可写', 'success', 'data'),
         array('dir', '可写', 'success', 'uploads'),
 
@@ -134,10 +135,10 @@ function write_config($config)
             $conf = str_replace("[{$name}]", $value, $conf);
         }
 
-        file_put_contents(ROOT_PATH . '/data/install.lock', 'ok');
+        file_put_contents(APP_PATH . '/install.lock', 'ok');
 
         //写入应用配置文件
-        if (file_put_contents(ROOT_PATH . '/data/database.php', $conf)) {
+        if (file_put_contents(APP_PATH . '/database.php', $conf)) {
             show_msg('配置文件写入成功');
         } else {
             show_msg('配置文件写入失败！', 'error');

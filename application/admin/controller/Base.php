@@ -23,7 +23,7 @@ class Base extends Controller
     public $admin_id;
     public function _initialize()
     {
-        if (!is_file(ROOT_PATH . '/data/database.php') || !is_file(ROOT_PATH . '/data/install.lock')) {
+        if (!is_file(APP_PATH . '/database.php') || !is_file(APP_PATH . '/install.lock')) {
             return $this->redirect('install/index/index');
         }
         $admin=getAdmin();

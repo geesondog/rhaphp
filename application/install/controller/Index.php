@@ -14,7 +14,7 @@ class Index extends \think\Controller {
 			'complete' => 'info',
 		);
 
-		if (request()->action() != 'complete' && is_file(ROOT_PATH . '/data/database.php') && is_file(ROOT_PATH . '/data/install.lock')) {
+		if (request()->action() != 'complete' && is_file(APP_PATH . '/database.php') && is_file(APP_PATH . '/install.lock')) {
 			return $this->redirect('admin/index/index');
 		}
 	}
@@ -128,6 +128,19 @@ class Index extends \think\Controller {
 		$this->status['config']   = 'success';
 		$this->status['sql']      = 'success';
 		$this->status['complete'] = 'primary';
+        $data=[];
+        $app=[];
+        $result=getAppAndWindvaneByApi();
+        if($result != false){
+            if(isset($result['status']) && isset($result['data'])){
+                if($result['status']==1){
+                    $data=isset($result['data'])?$result['data']:[];
+                    $app=isset($result['app'])?$result['app']:[];
+                }
+            }
+        }
+        $this->assign('app_by_api',$app);
+        $this->assign('data_by_api',$data);
 		$this->assign('status', $this->status);
 		$this->assign('status', $this->status);
 		return $this->fetch();

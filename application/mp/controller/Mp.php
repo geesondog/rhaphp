@@ -36,6 +36,7 @@ class Mp extends Base
 
     public function index()
     {
+        $this->getAppStore();
         $model = new MpFriends();
         $result = $model->getFriendReport($this->mid);
         $this->assign('report', $result);
@@ -954,6 +955,22 @@ class Mp extends Base
         } else {
             return view('qrcode_add');
         }
+    }
+
+    public function getAppStore(){
+        $data=[];
+        $app=[];
+        $result=getAppAndWindvaneByApi();
+        if($result != false){
+            if(isset($result['status']) && isset($result['data'])){
+                if($result['status']==1){
+                    $data=isset($result['data'])?$result['data']:[];
+                    $app=isset($result['app'])?$result['app']:[];
+                }
+            }
+        }
+        $this->assign('app_by_api',$app);
+        $this->assign('data_by_api',$data);
     }
 
 

@@ -296,6 +296,38 @@
     <p class="tip_for_p" style="margin-top: 7px;">
         注：以上数据以接入平台后产生的数据为准，若公众号已认证请先同步粉丝。
     </p>
+        <div class="layui-row" style="padding:10px 0px 10px 0px;">
+            <div class="layui-col-md6" style="padding-right: 5px;">
+                <div class="layui-collapse">
+                    <div class="layui-colla-item">
+                        <h2 class="layui-colla-title">风向标</h2>
+                        <div class="layui-colla-content layui-show">
+                            <ul>
+                                {volist name="data_by_api" id="vo" empty="暂时没有数据" }
+                                <li><a href="{$vo.link}" target="_blank">{$vo.title}</a> </li>
+                                {/volist}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6" style="padding-left: 5px;">
+                <div class="layui-collapse">
+                    <div class="layui-colla-item">
+                        <h2 class="layui-colla-title">热门应用</h2>
+                        <div class="layui-colla-content layui-show">
+                            <ul class="rha_app_list">
+                            {volist name="app_by_api" id="vo" empty="暂时没有数据" }
+                                <li><a href="{$vo.link}" target="_blank" title="{$vo.name}"><img src="{$vo.logo}" ><span>{$vo.name}</span></a> </li>
+                            {/volist}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 </div>
 
 {/block}

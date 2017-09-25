@@ -105,3 +105,7 @@ a:hover { text-decoration: underline; }
 .upload-imgs{border: 1px solid #e6e6e6; padding: 3px; display: inline-block; margin-right: 5px;}
 .upload-imgs img {width: 150px; height: 90px;}
 .upload-imgs-del{cursor: pointer;position: absolute;  font-size: 18px;}
+.rha_app_list li{width: 65px; display: inline-block;text-align: center;margin-right: 5px; overflow: hidden;  }
+.rha_app_list a {font-size: 12px; overflow: hidden; width: 65px;}
+.rha_app_list img{width: 65px;height: 65px; border-radius: 3px;}
+.rha_app_list span {display: block; text-overflow: ellipsis;  white-space: nowrap;}
