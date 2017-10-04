@@ -37,21 +37,6 @@ CREATE TABLE IF NOT EXISTS `rh_admin` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 TRUNCATE TABLE `rh_admin`;
-CREATE TABLE IF NOT EXISTS `rh_article` (
-  `id` int(11) NOT NULL COMMENT '自增 ID',
-  `user_id` int(11) NOT NULL COMMENT '用户 ID',
-  `title` varchar(255) CHARACTER SET utf8 DEFAULT NULL COMMENT '标题',
-  `content` text COMMENT '内容',
-  `cate_id` int(11) NOT NULL COMMENT 'cate ID',
-  `create_time` int(10) NOT NULL COMMENT '创建时间',
-  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1:正常0隐藏',
-  `type` tinyint(1) NOT NULL COMMENT '1:精贴……',
-  `is_top` tinyint(1) NOT NULL COMMENT '1:至顶',
-  `view` int(11) NOT NULL COMMENT '查看数量',
-  `comment_total` int(11) NOT NULL COMMENT '评论数量'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-TRUNCATE TABLE `rh_article`;
 CREATE TABLE IF NOT EXISTS `rh_comment` (
   `com_id` int(11) NOT NULL COMMENT '自增 ID',
   `article_id` int(11) NOT NULL COMMENT '内容 ID',
@@ -336,19 +321,6 @@ CREATE TABLE IF NOT EXISTS `rh_setting` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 TRUNCATE TABLE `rh_setting`;
-CREATE TABLE IF NOT EXISTS `rh_users` (
-  `user_id` int(11) NOT NULL COMMENT '用户 ID',
-  `nickname` varchar(32) DEFAULT NULL COMMENT '呢称',
-  `headimgurl` varchar(255) CHARACTER SET utf8 DEFAULT NULL COMMENT '头像',
-  `phone` varchar(11) CHARACTER SET utf8 DEFAULT NULL COMMENT '手机号码',
-  `password` varchar(64) CHARACTER SET utf8 DEFAULT NULL COMMENT '密码',
-  `pwd_str` varchar(32) CHARACTER SET utf8 DEFAULT NULL COMMENT '随机字符',
-  `last_ip` varchar(16) CHARACTER SET utf8 DEFAULT NULL COMMENT '登录 IP',
-  `create_time` int(10) NOT NULL DEFAULT '0' COMMENT '注册时间',
-  `update_time` int(11) NOT NULL COMMENT '最后登录时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-TRUNCATE TABLE `rh_users`;
 CREATE TABLE IF NOT EXISTS `rh_vote_baoming` (
   `bm_id` int(11) NOT NULL,
   `mpid` int(11) NOT NULL,
@@ -380,17 +352,6 @@ CREATE TABLE IF NOT EXISTS `rh_vote_view` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `rh_vote_view`;
-CREATE TABLE IF NOT EXISTS `rh_wepage` (
-  `id` int(11) NOT NULL COMMENT '自增ID',
-  `title` varchar(250) NOT NULL COMMENT '标题',
-  `description` text NOT NULL COMMENT '简介',
-  `content` longtext NOT NULL COMMENT '内容',
-  `mpid` int(11) NOT NULL COMMENT '公众号标识',
-  `create_time` int(10) NOT NULL COMMENT '创建时间',
-  `cover` varchar(500) NOT NULL COMMENT '封面图'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微单页应用内容表';
-
-TRUNCATE TABLE `rh_wepage`;
 
 ALTER TABLE `rh_addons`
   ADD PRIMARY KEY (`id`);
@@ -399,9 +360,6 @@ ALTER TABLE `rh_addon_info`
   ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `rh_admin`
-  ADD PRIMARY KEY (`id`);
-
-ALTER TABLE `rh_article`
   ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `rh_comment`
@@ -453,9 +411,6 @@ ALTER TABLE `rh_redpack`
 ALTER TABLE `rh_setting`
   ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `rh_users`
-  ADD PRIMARY KEY (`user_id`);
-
 ALTER TABLE `rh_vote_baoming`
   ADD PRIMARY KEY (`bm_id`);
 
@@ -465,17 +420,11 @@ ALTER TABLE `rh_vote_record`
 ALTER TABLE `rh_vote_view`
   ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `rh_wepage`
-  ADD PRIMARY KEY (`id`);
-
-
 ALTER TABLE `rh_addons`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '自增ID';
 ALTER TABLE `rh_addon_info`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '自增ID';
 ALTER TABLE `rh_admin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID';
-ALTER TABLE `rh_article`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID';
 ALTER TABLE `rh_comment`
   MODIFY `com_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID';
@@ -509,13 +458,9 @@ ALTER TABLE `rh_redpack`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID';
 ALTER TABLE `rh_setting`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID';
-ALTER TABLE `rh_users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户 ID';
 ALTER TABLE `rh_vote_baoming`
   MODIFY `bm_id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `rh_vote_record`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `rh_vote_view`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-ALTER TABLE `rh_wepage`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID';

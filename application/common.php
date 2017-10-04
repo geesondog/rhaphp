@@ -1201,6 +1201,19 @@ function executeSql($sqlPath)
     $model = new \app\common\model\Addons();
     foreach ($sql as $value) {
         $value = trim($value);
+        if (!empty($value)) {
+            if (substr($value, 0, 12) == 'CREATE TABLE') {
+                $name = preg_replace("/^CREATE TABLE `(\w+)` .*/s", "\\1", $value);
+                $res=$model->execute("SHOW TABLES LIKE '".$name."'");
+                if($res){
+                    ajaxMsg('0', $name.'表，已经存在');
+                }
+            }
+        }
+
+    }
+    foreach ($sql as $value) {
+        $value = trim($value);
         if (empty($value)) {
             continue;
         }

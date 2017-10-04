@@ -12,6 +12,7 @@
 
 namespace app\admin\controller;
 
+use think\Cache;
 use think\Db;
 use think\Request;
 use think\Session;
@@ -194,6 +195,32 @@ class System extends Base
 
             return view();
         }
+    }
+
+    public function cacheClear(){
+        Cache::clear();
+        if($this->clearDir()==false){
+            ajaxMsg(0, '清空缓存失败，请检查runtime目录是否有删除权限。');
+        }else{
+            ajaxMsg(1, '清空缓存成功');
+        }
+
+    }
+    private function clearDir($path=RUNTIME_PATH){
+        $handle = opendir($path);
+        while(($item = readdir($handle)) !== false){
+            if($item != '.' and $item != '..'){
+                if(is_dir($path.'/'.$item)){
+                    $this->clearDir($path.'/'.$item);
+                }else{
+                    if(!unlink($path.'/'.$item)){
+                        return false;
+                    }
+                }
+            }
+        }
+        closedir( $handle );
+        return rmdir($path);
     }
 
 }

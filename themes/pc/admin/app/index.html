@@ -35,6 +35,9 @@
         <td>{$vo.author}</td>
         <td>
             <a class="layui-btn layui-btn-mini layui-btn-normal" href="{:url('mp/App/index',['name'=>$vo.addon,'type'=>'news','mid'=>$mpInfo.id])}">进入</a>
+            {eq name="$vo.upgrade" value="1"}
+            <a class="layui-btn layui-btn-mini layui-btn-warm" href="javascript:;" onclick="upgrade('{$vo.addon}')">升级</a>
+            {/eq}
         </td>
     </tr>
     {/volist}
@@ -116,6 +119,21 @@
                 if(res.status=='1'){
                     layer.msg(res.msg,{time:1000},function () {
                         location.href="{:url('admin/app/index',['type'=>'notinstall'])}";
+                    });
+                }
+            })
+        });
+    }
+    function upgrade(name) {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            $.post("{:url('admin/app/upgrade')}",{'name':name},function (res) {
+                if(res.status=='0'){
+                    layer.alert(res.msg);
+                }
+                if(res.status=='1'){
+                    layer.msg(res.msg,{time:1000},function () {
+                        location.href="{:url('admin/app/index')}";
                     });
                 }
             })

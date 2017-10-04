@@ -37,7 +37,16 @@ class App extends Base
             $this->error('请先进入公众号，再操作',url('mp/index/mplist'));
         }
         if ($type == 'index') {
+            $model = new Addons();
             $result = Db::name('addons')->where('status', 1)->select();
+            foreach ($result as $key=>$value){
+                $upgrade_sql_file=ADDON_PATH.$value['addon'].'/upgrade.sql';
+                if(is_file($upgrade_sql_file)){
+                    $result[$key]['upgrade']=1;
+                }else{
+                    $result[$key]['upgrade']=0;
+                }
+            }
             $this->assign('addons', $result);
 
         }
@@ -214,23 +223,42 @@ class App extends Base
     public function upgrade($name = '')
     {
         if ($name == null) {
-            ajaxMsg('0', '没有要卸载的插件');
+            ajaxMsg('0', '没有此应用');
         }
-        $model = new Addons();
-        $cf = $model->getAddonByFile($name);
-        if (isset($cf['upgrade_sql']) && $cf['upgrade_sql'] != '') {
-            $instalFile = ADDON_PATH . $name . DS . $cf['upgrade_sql'];
-            if (!is_file($instalFile)) {
-                ajaxMsg('0', '没有找到安装数据的SQL文件：' . $cf['upgrade_sql']);
-            } else {
-                if (!strpos($instalFile, '.sql')) {
-                    ajaxMsg('0', 'SQL文件格式有误');
-                }
-                executeSql($instalFile);
-            }
-
+        $upgradeFile = ADDON_PATH . $name . DS . '/upgrade.sql';
+        if (!is_file($upgradeFile)) {
+            ajaxMsg('0', '没有找到升级数据的SQL文件：upgrade.sql');
         } else {
-            ajaxMsg('0', '此应用不支持升级');
+            if (!strpos($upgradeFile, '.sql')) {
+                ajaxMsg('0', 'SQL文件格式有误');
+            }
+            executeSql($upgradeFile);
+            $model = new Addons();
+            $cf = $model->getAddonByFile($name);
+            $cf['version'];
+            $model->save(['version'=>$cf['version']],['addon'=>$name]);
+            unlink($upgradeFile);
+            ajaxMsg('1', '升级成功');
         }
+
+
+
+//        $model = new Addons();
+//        $cf = $model->getAddonByFile($name);
+//        if (isset($cf['upgrade_sql']) && $cf['upgrade_sql'] != '') {
+//            $instalFile = ADDON_PATH . $name . DS . $cf['upgrade_sql'];
+//            if (!is_file($instalFile)) {
+//                ajaxMsg('0', '没有找到安装数据的SQL文件：' . $cf['upgrade_sql']);
+//            } else {
+//                if (!strpos($instalFile, '.sql')) {
+//                    ajaxMsg('0', 'SQL文件格式有误');
+//                }
+//                executeSql($instalFile);
+//                ajaxMsg('1', '升级成功');
+//            }
+//
+//        } else {
+//            ajaxMsg('0', '此应用没有可升级的版本');
+//        }
     }
 }

@@ -7,7 +7,7 @@
     <meta name="keywords" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
-    <title>RhaPHP - 二哈公众号管理系统</title>
+    <title>RhaPHP 二哈公众号管理系统</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     {CSS href="__STATIC__/admin/css/admin_base.css" /}
     {js href='__STATIC__/jquery/jquery-1.11.0.min.js' /}
@@ -31,13 +31,10 @@
                 </span>
                 <a class="quit" href="{:url('mp/index/mplist')}">切换公众号</a>
                 {/notempty}
-
+                <a href="{:url('mp/Message/messagelist')}"><i class="layui-icon">&#xe645;</i>用户消息<span class="num-feed rhaphp-msg-user show" style="display: none;">0</span></a>
+                <a href="javascript:;" onclick="cacheClear()"><i class="layui-icon">&#xe645;</i>清空缓存</a>
                 <a class="quit" href="{:url('admin/Login/out')}"><i class="rha-icon">&#xe696;</i>退出</a>
             </li>
-            <li>
-                <a href="{:url('mp/Message/messagelist')}"><i class="layui-icon">&#xe645;</i>用户消息<span class="num-feed rhaphp-msg-user show" style="display: none;">0</span></a>
-            </li>
-
         </ul>
     </div>
 </div>
@@ -127,5 +124,15 @@
             })
         }
     })
+    function cacheClear() {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            var index =layer.load(1)
+            $.post("{:url('admin/system/cacheClear')}",function (res) {
+                layer.close(index);
+                layer.alert(res.msg);
+            })
+        });
+    }
 </script>
 </html>
