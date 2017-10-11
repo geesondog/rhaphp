@@ -421,8 +421,8 @@ function getMpType($type = '')
 /**
  * 获取应用配置信息
  * @author geeson  myrhzq@qq.com
- * $param $addonName string //应用标识
- * @param string $addonName
+ * $param $addonName string // 当前应用插件名称
+ * @param string  mid 当前公众号标识ID
  * @return array|bool|mixed
  */
 function getAddonInfo($addonName = '', $mid = '')

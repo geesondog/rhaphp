@@ -113,7 +113,7 @@ class System extends Base
             if ($_data['password'] != $_data['repassword']) {
                 ajaxMsg(0, '两次密码不匹配');
             }
-            $S=Session::get('admin');
+            $S=getAdmin();
             if ($S['id'] != $this->admin_id) {
                 ajaxMsg('0', '你无权操作');
             }
@@ -174,7 +174,7 @@ class System extends Base
                 if ($result['admin_id'] != $this->admin_id) {
                     ajaxMsg('0', '你无权操作');//禁用成员不属于当前管理员
                 }
-                $S_admin=Session::get('admin');
+                $S_admin=getAdmin();
                 if($S_admin['id']!=$this->admin_id){//不是超级管理员
                     if($id!=$S_admin['id']){
                         ajaxMsg('0', '只能超级管理员更改其它成员密码');

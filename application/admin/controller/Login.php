@@ -42,7 +42,8 @@ class Login extends Controller
         return view('system/login');
     }
     public function out(){
-        Session::clear();
+        Session::clear('think_');
+        Cookie::clear('think_');
         $this->redirect('admin/Login/index');
     }
 }

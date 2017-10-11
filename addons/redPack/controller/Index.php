@@ -8,6 +8,7 @@ use think\Request;
 
 class Index extends Addon
 {
+    public $adminLogin =true;
     public function index(){
 
         $input =input();
