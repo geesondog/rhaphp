@@ -45,7 +45,7 @@ class System extends Base
     public function addMenu()
     {
         if (Request::instance()->isPost()) {
-            $_data = input();
+            $_data = input('post.');
             unset($_data['mid']);
             if (Db::name('menu')->insert($_data)) {
                 ajaxMsg(1, '增加成功');

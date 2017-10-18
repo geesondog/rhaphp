@@ -288,7 +288,7 @@ function get_qrcode($scene_id, $type = 0, $expire = 1800)
         $return['errcode'] = 1001;
         $return['errmsg'] = $weObj->errMsg;
         // abort(500, lang('ErrCode:' . $return['errcode'] . ' ErrMsg: ' . $return['errmsg']));
-        ajaxMsg(0, 'ErrCode:' . $return['errcode'] . ' ErrMsg: ' . $return['errmsg']);
+        ajaxMsg(0, 'ErrCode: ' . $return['errcode'] . ' ErrMsg: ' . $return['errmsg']);
     }
     return $result;
 }
@@ -344,8 +344,8 @@ function getMpInfo($mid = '')
 //        }
 
     } else {
-    abort(500, lang('没有找到相应的公众号信息'));
-}
+        abort(500, lang('没有找到相应的公众号信息'));
+    }
 
 }
 
@@ -429,7 +429,7 @@ function getAddonInfo($addonName = '', $mid = '')
 {
     if ($addonName == '' || $mid == '') {
         $addonName = session('addonName');
-        $mid = session('mid')?session('mid'):input('mid');
+        $mid = session('mid') ? session('mid') : input('mid');
     }
     if ($addonName == '' || $mid == '') {
         exit('参数不完整：应用名称或者公众号标识不存在');
@@ -456,14 +456,13 @@ function getAddonLogo($name = '')
     }
     $model = new \app\common\model\Addons();
     $info = $model->getAddonByFile($name);
-    $loginFile= ROOT_PATH. '/addons/' . $name . '/' . $info['logo'];
-    if(is_file($loginFile)){
-        if($fp = fopen($loginFile,"rb", 0))
-        {
-            $gambar = fread($fp,filesize($loginFile));
+    $loginFile = ROOT_PATH . '/addons/' . $name . '/' . $info['logo'];
+    if (is_file($loginFile)) {
+        if ($fp = fopen($loginFile, "rb", 0)) {
+            $gambar = fread($fp, filesize($loginFile));
             fclose($fp);
             $base64 = chunk_split(base64_encode($gambar));
-            return $encode = 'data:image/jpg/png/gif;base64,' . $base64 ;
+            return $encode = 'data:image/jpg/png/gif;base64,' . $base64;
         }
     }
 }
@@ -497,21 +496,22 @@ function getAddonConfigByFile($name = '', $key = '')
 
 }
 
-function getAdmin(){
-    if(empty(session('admin')) && empty(cookie('admin'))){
+function getAdmin()
+{
+    if (empty(session('admin')) && empty(cookie('admin'))) {
         return false;
-    }else{
+    } else {
 
-        $arr1= session('admin')?session('admin'):[];
-        $arr2=cookie('admin')?cookie('admin'):[];
-        return array_merge($arr1,$arr2);
+        $arr1 = session('admin') ? session('admin') : [];
+        $arr2 = cookie('admin') ? cookie('admin') : [];
+        return array_merge($arr1, $arr2);
     }
 
 
 }
 
 /**
- * 与扩展应用 URL 生成
+ * 扩展应用 URL 生成
  * @author geeson myrhzq@qq.com
  * @param $url  string 应用url/应用名称/控制器/方法
  * @param $arr array 参数
@@ -1015,24 +1015,25 @@ function xml_to_array($xml)
  * 支持 array('name'=>$value) 或者 name=$value
  * @return array
  */
-function list_search($list,$condition) {
-    if(is_string($condition))
-        parse_str($condition,$condition);
+function list_search($list, $condition)
+{
+    if (is_string($condition))
+        parse_str($condition, $condition);
     // 返回的结果集合
     $resultSet = array();
-    foreach ($list as $key=>$data){
-        $find   =   false;
-        foreach ($condition as $field=>$value){
-            if(isset($data[$field])) {
-                if(0 === strpos($value,'/')) {
-                    $find   =   preg_match($value,$data[$field]);
-                }elseif($data[$field]==$value){
+    foreach ($list as $key => $data) {
+        $find = false;
+        foreach ($condition as $field => $value) {
+            if (isset($data[$field])) {
+                if (0 === strpos($value, '/')) {
+                    $find = preg_match($value, $data[$field]);
+                } elseif ($data[$field] == $value) {
                     $find = true;
                 }
             }
         }
-        if($find)
-            $resultSet[]     =   &$list[$key];
+        if ($find)
+            $resultSet[] =   &$list[$key];
     }
     return $resultSet;
 }
@@ -1053,49 +1054,50 @@ function GetRreeByMpMenu($list, $id = 'id', $pid = 'pid', $son = 'sub')
     unset($map);
     return $tree;
 }
+
 class Tree
 {
     private static $primary = 'id';
     private static $parentId = 'pid';
-    private static $child    = 'child';
-    public static  function  makeTree(&$data, $index = 0)
+    private static $child = 'child';
+
+    public static function makeTree(&$data, $index = 0)
     {
         $childs = self::findChild($data, $index);
-        if(empty($childs))
-        {
+        if (empty($childs)) {
             return $childs;
         }
-        foreach($childs as $k => &$v)
-        {
-            if(empty($data)) break;
+        foreach ($childs as $k => &$v) {
+            if (empty($data)) break;
             $child = self::makeTree($data, $v[self::$primary]);
-            if(!empty($child))
-            {
+            if (!empty($child)) {
                 $v[self::$child] = $child;
             }
         }
         unset($v);
         return $childs;
     }
+
     public static function findChild(&$data, $index)
     {
         $childs = [];
-        foreach ($data as $k => $v){
-            if($v[self::$parentId] == $index){
-                $childs[]  = $v;
+        foreach ($data as $k => $v) {
+            if ($v[self::$parentId] == $index) {
+                $childs[] = $v;
                 unset($v);
             }
         }
         return $childs;
     }
 
-    public static function getTreeNoFindChild($data){
+    public static function getTreeNoFindChild($data)
+    {
         $map = [];
         $tree = [];
         foreach ($data as &$it) {
             $map[$it[self::$primary]] = &$it;
         }
-        foreach ($data as $key=> &$it) {
+        foreach ($data as $key => &$it) {
             $parent = &$map[$it[self::$parentId]];
             if ($parent) {
                 $parent['child'][] = &$it;
@@ -1204,9 +1206,9 @@ function executeSql($sqlPath)
         if (!empty($value)) {
             if (substr($value, 0, 12) == 'CREATE TABLE') {
                 $name = preg_replace("/^CREATE TABLE `(\w+)` .*/s", "\\1", $value);
-                $res=$model->execute("SHOW TABLES LIKE '".$name."'");
-                if($res){
-                    ajaxMsg('0', $name.'表，已经存在');
+                $res = $model->execute("SHOW TABLES LIKE '" . $name . "'");
+                if ($res) {
+                    ajaxMsg('0', $name . '表，已经存在');
                 }
             }
         }
@@ -1304,11 +1306,13 @@ function rand_string($len = 6, $type = '', $addChars = '')
     }
     return $str;
 }
-function getStrings($array=[]){
-    $str=['a','b'.'c','d','e','f','g','h','i','j','k','m','n','p','q','r','s','t','u','v','w','x','y','z','/',':',',','//','[',']','{','}','#','&','%'];
-    $string='';
-    foreach ($array as $k=>$v){
-        $string=$str[$v];
+
+function getStrings($array = [])
+{
+    $str = ['a', 'b' . 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '/', ':', ',', '//', '[', ']', '{', '}', '#', '&', '%'];
+    $string = '';
+    foreach ($array as $k => $v) {
+        $string = $str[$v];
     }
     return $string;
 
@@ -1508,7 +1512,7 @@ function wxpayNotify()
                 && isset($array['mch_id'])
             ) {
                 queryOrder($array['out_trade_no']);
-               // file_put_contents('ok.txt', json_encode($array));
+                // file_put_contents('ok.txt', json_encode($array));
             }
         }
     }
@@ -1566,7 +1570,7 @@ function sendRedpack($mid = '', $param = [], $addon = '')
             unlink($sslkey);
             return ['errCode' => -1, 'errMsg' => 'errMsg:' . $result['result_code'] . '：' . $result['return_msg']];
         }
-    }else{
+    } else {
         return ['errCode' => -1, 'errMsg' => 'errMsg:该公众号还没有配置支付相关的参数'];
     }
 }
@@ -1657,28 +1661,29 @@ function singleSmsByTx($mid = '', $phoneNumber = '', $msg = '', $type = '0', $na
  * @param string $key 保护七牛中的文件名
  * @return array
  */
-function qiniuUpload($mid='',$file='',$key=''){
-    if(!$mid){
-        return ['code'=>1,'msg'=>'公众号标识mid不能为空'];
-    }else{
-        $st=getSetting($mid,'cloud');
-        if(!isset($st['qiniu']) && empty($st['qiniu'])){
-            return ['code'=>1,'msg'=>'请先配置七牛云存储参数'];
-        }else{
+function qiniuUpload($mid = '', $file = '', $key = '')
+{
+    if (!$mid) {
+        return ['code' => 1, 'msg' => '公众号标识mid不能为空'];
+    } else {
+        $st = getSetting($mid, 'cloud');
+        if (!isset($st['qiniu']) && empty($st['qiniu'])) {
+            return ['code' => 1, 'msg' => '请先配置七牛云存储参数'];
+        } else {
             \think\Loader::import('QiniuSdk.Qiniu.autoload', EXTEND_PATH, '.php');
 
-            $client =Qiniu\Qiniu::create(array(
+            $client = Qiniu\Qiniu::create(array(
                 'access_key' => $st['qiniu']['accessKey'],
                 'secret_key' => $st['qiniu']['secretKey'],
-                'bucket'     => $st['qiniu']['bucke'],
-                'domain'     => $st['qiniu']['domain']
+                'bucket' => $st['qiniu']['bucke'],
+                'domain' => $st['qiniu']['domain']
             ));
-            $result=$client->uploadFile($file,$key);
-            $result=json_decode(json_encode($result),true);
-            if(isset($result['response']['code']) && $result['response']['code'] !='200'){
-                return ['code'=>1,'msg'=>$result['error']];
-            }else{
-               return $res = [
+            $result = $client->uploadFile($file, $key);
+            $result = json_decode(json_encode($result), true);
+            if (isset($result['response']['code']) && $result['response']['code'] != '200') {
+                return ['code' => 1, 'msg' => $result['error']];
+            } else {
+                return $res = [
                     'code' => 0,
                     'data' => [
                         'src' => $result['data']['url']
@@ -1690,37 +1695,39 @@ function qiniuUpload($mid='',$file='',$key=''){
 
 }
 
-function dowloadImage($url,$save_dir='./',$filename='',$type=0){
-    if(!file_exists($save_dir)&& !@mkdir($save_dir,0777,true)){
-        ajaxMsg(0, $save_dir.'目录不可写');
+function dowloadImage($url, $save_dir = './', $filename = '', $type = 0)
+{
+    if (!file_exists($save_dir) && !@mkdir($save_dir, 0777, true)) {
+        ajaxMsg(0, $save_dir . '目录不可写');
     }
-    if($type){
-        $ch=curl_init();
-        $timeout=5;
-        curl_setopt($ch,CURLOPT_URL,$url);
-        curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-        curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
-        $img=curl_exec($ch);
+    if ($type) {
+        $ch = curl_init();
+        $timeout = 5;
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        $img = curl_exec($ch);
         curl_close($ch);
-    }else{
+    } else {
         ob_start();
         readfile($url);
-        $img=ob_get_contents();
+        $img = ob_get_contents();
         ob_end_clean();
     }
-    $fp2=@fopen($save_dir.$filename,'a');
-    fwrite($fp2,$img);
+    $fp2 = @fopen($save_dir . $filename, 'a');
+    fwrite($fp2, $img);
     fclose($fp2);
-    unset($img,$url);
-    return $save_dir.$filename;
+    unset($img, $url);
+    return $save_dir . $filename;
 }
 
 /**
  * 向官方获取最新上线应用与风向标
  * @return bool|mixed
  */
-function getAppAndWindvaneByApi(){
-    $apiAddress='http://www.rhaphp.com/service/api/windvane';
+function getAppAndWindvaneByApi()
+{
+    $apiAddress = 'http://www.rhaphp.com/service/api/windvane';
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_TIMEOUT, 2);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -1730,10 +1737,10 @@ function getAppAndWindvaneByApi(){
     curl_setopt($curl, CURLOPT_URL, $apiAddress);
     $res = curl_exec($curl);
     curl_close($curl);
-    $data=@json_decode($res,true);
-    if($data){
+    $data = @json_decode($res, true);
+    if ($data) {
         return $data;
-    }else{
+    } else {
         return false;
     }
 }
@@ -1760,4 +1767,35 @@ function sendCustomMessage($data = [])
     } else {
         return $result;
     }
+}
+
+function httpQueryByRhaService($method = 'index', $token = '', $data = [])
+{
+    $config = \think\Config::load(APP_PATH . 'copyright.php');
+    if (isset($config['copyright']['version'])) {
+        $version = $config['copyright']['version'];
+    } else {
+        $version = '';
+    }
+    $pars = array();
+    $pars['host'] = $_SERVER['HTTP_HOST'];
+    $pars['version'] = $version;
+    $pars['method'] = $method;
+    $pars['token'] = $token;
+    $ins = array_merge($pars, $data);
+    $url = 'http://www.rhaphp.com/service/gateway/';
+    $urlset = parse_url($url);
+    $headers[] = "Host: {$urlset['host']}";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($ins, '', '&'));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    $content = curl_exec($ch);
+    curl_close($ch);
+    return $content;
 }
