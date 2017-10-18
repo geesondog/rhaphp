@@ -137,8 +137,8 @@ INSERT INTO `rh_menu` (`id`, `pid`, `name`, `url`, `sort`, `icon`, `child`, `sho
 (53, 52, '管理成员', 'admin/system/AdminMember', 0, '', NULL, NULL),
 (54, 53, '更改密码', 'admin/system/updatepwd', 0, '', NULL, NULL),
 (55, 53, '增加成员', 'admin/system/addadminmember', 0, '', NULL, NULL),
-(56, 45, '应用管理', 'admin/app/index', 0, '', NULL, NULL);
-
+(56, 45, '应用管理', 'admin/app/index', 0, '', NULL, NULL),
+(57, 52, '系统升级', 'admin/upgrade/index', 0, '', NULL, NULL);
 CREATE TABLE IF NOT EXISTS `rh_mp` (
   `id` int(10) unsigned NOT NULL COMMENT '自增ID',
   `user_id` int(10) NOT NULL COMMENT '用户ID',
