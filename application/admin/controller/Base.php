@@ -83,7 +83,7 @@ class Base extends Controller
         $this->assign('menu', $menu2);
         $this->assign('controller_name', CONTROLLER_NAME);
         $this->assign('action_name', ACTION_NAME);
-        $this->assign('admin',session('admin'));
+        $this->assign('admin',$admin);
         $this->assign('mpInfo',session('mpInfo'));
         $this->assign('copy',$config['copyright']);
 

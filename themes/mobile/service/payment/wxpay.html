@@ -1,6 +1,14 @@
-{extend name="../member/common/base" /}
-{block name="body"}
-<br>
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{$title}</title>
+    <link rel="stylesheet" href="//cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
+    {js href='__STATIC__/jquery/jquery-1.11.0.min.js' /}
+</head>
+<body>
+
 <div class="weui-form-preview">
     <div class="weui-form-preview__hd">
         <div class="weui-form-preview__item">
@@ -31,7 +39,7 @@
     function callpay() {
         $(function () {
             var money=$('.money').val();
-            $.post("",{'payment_id':"{$payment.order_number}"},function (res) {
+            $.post("",{'payment_id':"{$payment.payment_id}"},function (res) {
                 if(res.status==1){
                     WeixinJSBridge.invoke(
                         'getBrandWCPayRequest',
@@ -58,4 +66,5 @@
     }
 
 </script>
-{/block}
+</body>
+</html>

@@ -458,12 +458,13 @@ function getAddonLogo($name = '')
     $info = $model->getAddonByFile($name);
     $loginFile = ROOT_PATH . '/addons/' . $name . '/' . $info['logo'];
     if (is_file($loginFile)) {
-        if ($fp = fopen($loginFile, "rb", 0)) {
-            $gambar = fread($fp, filesize($loginFile));
-            fclose($fp);
-            $base64 = chunk_split(base64_encode($gambar));
-            return $encode = 'data:image/jpg/png/gif;base64,' . $base64;
-        }
+//        if ($fp = fopen($loginFile, "rb", 0)) {
+//            $gambar = fread($fp, filesize($loginFile));
+//            fclose($fp);
+//            $base64 = chunk_split(base64_encode($gambar));
+//            return $encode = 'data:image/jpg/png/gif;base64,' . $base64;
+//        }
+        return getHostDomain() . '/addons/' . $name . '/' . $info['logo'];
     }
 }
 
@@ -1534,7 +1535,7 @@ function sendRedpack($mid = '', $param = [], $addon = '')
 
     if (setWxpayConfig($mid)) {
         $url = "https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack";
-        echo $order_number = time() . rand_string(18, 1);
+        $order_number = time() . rand_string(18, 1);
         $redpackObj = new Redpack();
         $redpackObj->setParments("re_openid", isset($param['openid']) ? $param['openid'] : '');//openid
         $redpackObj->setParments("mch_billno", $order_number);//订单号
@@ -1798,4 +1799,20 @@ function httpQueryByRhaService($method = 'index', $token = '', $data = [])
     $content = curl_exec($ch);
     curl_close($ch);
     return $content;
+}
+
+/**
+ * 获取微信支付页面跳转（授权目录）
+ * @param array $mid 公众号 ID 不能为空
+ * @param array $param url 携带参数
+ * @return string
+ */
+function getWxPayUrl($mid = '', $param = [])
+{
+    if (!$mid) {
+        return ['code' => -1, 'msg' => '公众号标识ID不能为空'];
+    }
+    $str = http_build_query($param);
+    return getHostDomain() . \think\Url::build('service/payment/wxpay', '', false) . '/?mid=' . $mid . '&' . $str;
+
 }

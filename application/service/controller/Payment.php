@@ -31,8 +31,9 @@ class Payment extends Controller
      * @param string $payment_id 定单 ID
      * @return \think\response\View
      */
-    public function wxPay($payment_id = '')
+    public function wxPay()
     {
+        $payment_id = input('payment_id');
         if (!$payment = $this->paymentModel->getPaymentByFind(['payment_id' => $payment_id])) {
             ajaxMsg(0, '订单信息不存在');
         }
@@ -49,11 +50,21 @@ class Payment extends Controller
             }
         } else {
             $this->assign('payment', $payment);
-            $this->assign('title', '微信安全支付');
-            return view();
+            $this->assign('title', '微信支付');
+            if(!empty($view=input('view'))){
+                return view($view);
+            }else{
+                return view();
+            }
+
         }
     }
 
+    /**
+     * 退款示例
+     * @param $mid
+     * @param $order_number
+     */
     public function refund($mid, $order_number)
     {
         if ($member = getMember()) {
@@ -82,7 +93,7 @@ class Payment extends Controller
     }
 
     /**
-     * 订单查询
+     * 订单查询示例
      * @param string $ordernumber
      *
      */
