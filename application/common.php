@@ -1728,7 +1728,7 @@ function dowloadImage($url, $save_dir = './', $filename = '', $type = 0)
  */
 function getAppAndWindvaneByApi()
 {
-    $apiAddress = 'http://www.rhaphp.com/service/api/windvane';
+    $apiAddress = 'https://www.rhaphp.com/service/api/windvane';
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_TIMEOUT, 2);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -1784,7 +1784,7 @@ function httpQueryByRhaService($method = 'index', $token = '', $data = [])
     $pars['method'] = $method;
     $pars['token'] = $token;
     $ins = array_merge($pars, $data);
-    $url = 'http://www.rhaphp.com/service/gateway/';
+    $url = 'https://www.rhaphp.com/service/gateway/';
     $urlset = parse_url($url);
     $headers[] = "Host: {$urlset['host']}";
     $ch = curl_init();
