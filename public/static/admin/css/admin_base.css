@@ -109,3 +109,15 @@ a:hover { text-decoration: underline; }
 .rha_app_list a {font-size: 12px; overflow: hidden; width: 65px;}
 .rha_app_list img{width: 65px;height: 65px; border-radius: 3px;}
 .rha_app_list span {display: block; text-overflow: ellipsis;  white-space: nowrap;}
+.login_body { background: rgb(233, 240, 244) url('../images/login_bg.jpg') no-repeat scroll 0% 0%; }
+#login_wrapper { position: relative; margin-bottom: 20px; padding-top: 200px; }
+.rha_login { width: 714px; margin: 0px auto; background-color: rgb(255, 255, 255); border: 1px solid rgb(179, 179, 179); border-radius: 3px; }
+.rha_login .logo a { display: block; width: 151px; height: 94px; }
+.rha_login .mod-body { padding: 50px 60px; }
+.rha_login .mod-body .content { width: 300px; margin-right: 60px; }
+.rha_login .mod-body .content h2 { margin: 13px 0px 10px; color: rgb(102, 102, 102);font-size: 21px;font-weight:lighter; }
+.rha_login .mod-body .content ul li { margin-top: 20px; line-height: 30px; }
+.rha_login .mod-body .content ul li:first-child { margin-top: 0px; }
+.rha_login .mod-body .content ul li.last a { color: rgb(102, 102, 102); }
+.rha_login .mod-footer span { color: rgb(102, 102, 102); }
+.rha_login .mod-footer a { color: rgb(102, 183, 255); }
