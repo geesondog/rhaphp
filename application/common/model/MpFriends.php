@@ -87,7 +87,7 @@ class MpFriends extends Model
                 'year'=> $year,
                 'lastyear'=> $lastyear,
             ];
-        $today=$this->where(['mpid'=>$mid])->whereTime('unsubscribe_time','today')->count('id');//今天
+        $today=$this->where(['mpid'=>$mid,'subscribe'=>0])->whereTime('unsubscribe_time','today')->count('id');//今天
         $yesterday=$this->where(['mpid'=>$mid])->whereTime('unsubscribe_time','yesterday')->count('id');//昨天
         $week=$this->where(['mpid'=>$mid])->whereTime('unsubscribe_time','week')->count('id');//本周
         $lastweek=$this->where(['mpid'=>$mid])->whereTime('unsubscribe_time','last week')->count('id');//上周
