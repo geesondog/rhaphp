@@ -33,7 +33,6 @@
 			<tr>
 				<td>
 					<input class="form-control" name="db[]" type="text" value="127.0.0.1">
-					</input>
 				</td>
 				<td>
 					<span>
@@ -44,7 +43,6 @@
 			<tr>
 				<td>
 					<input class="form-control" name="db[]" type="text" value="">
-					</input>
 				</td>
 				<td>
 					<span>
@@ -55,7 +53,6 @@
 			<tr>
 				<td>
 					<input class="form-control" name="db[]" type="text" value="">
-					</input>
 				</td>
 				<td>
 					<span>
@@ -66,7 +63,6 @@
 			<tr>
 				<td>
 					<input class="form-control" name="db[]" type="password" value="">
-					</input>
 				</td>
 				<td>
 					<span>
@@ -88,7 +84,6 @@
 			<tr>
 				<td>
 					<input class="form-control" name="db[]" type="text" value="rh_" class="form-control">
-					</input>
 				</td>
 				<td>
 					<span>
@@ -106,7 +101,6 @@
 			<tr>
 				<td>
 					<input class="form-control" name="admin[]" type="text" value="admin">
-					</input>
 				</td>
 				<td>
 					<span>
@@ -121,7 +115,6 @@
 			<tr>
 				<td>
 					<input class="form-control" name="admin[]" type="password" value="">
-					</input>
 				</td>
 				<td>
 					<span>
@@ -132,7 +125,6 @@
 			<tr>
 				<td>
 					<input class="form-control" name="admin[]" type="password" value="">
-					</input>
 				</td>
 				<td>
 					<span>
@@ -143,7 +135,6 @@
 			<tr>
 				<td>
 					<input class="form-control" name="admin[]" type="text" value="admin@admin.com">
-					</input>
 				</td>
 				<td>
 					<span>
@@ -155,15 +146,13 @@
 		<div>
 		</div>
 	</div>
+	<div class="text-center">
+		<button class="btn btn-primary" id="submit" type="submit">
+			下一步
+		</button>
+		<a class="btn btn-default" href="{:url('install/index/check')}">
+			上一步
+		</a>
+	</div>
 </form>
-{/block}
-{block name="footer"}
-<div class="text-center">
-	<button class="btn btn-primary" id="submit" onclick="$('form').submit();return false;" type="button">
-		下一步
-	</button>
-	<a class="btn btn-default" href="{:url('install/index/check')}">
-		上一步
-	</a>
-</div>
 {/block}
