@@ -679,6 +679,10 @@ class Mp extends Base
 
             $post = input('post.');
             $data = $post['data'];
+            if(empty($data)){
+                deleteMpMenu();//空菜单认为删除全部菜单
+                ajaxMsg(1, '保存成功');
+            }
             Db::name('mp_menu')
                 ->where(['mp_id' => $this->mid,])
                 ->delete();
@@ -697,6 +701,7 @@ class Mp extends Base
                 $result = Db::name('mp_menu')
                     ->field('id,index,pindex,name,type,content')
                     ->where('status', '1')
+                    ->where('mp_id',$this->mid)
                     ->order('sort ASC,id ASC')
                     ->select();
                 $menu_type = [
