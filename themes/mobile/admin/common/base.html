@@ -119,7 +119,7 @@
             shadeClose: true,
             shade: 0.8,
             area: ['350px', '280px'],
-            content: '{:getHostDomain()}/index.php/mp/Material/getMeterial/type/'+type+'/param/'+paramName //iframe的url
+            content: '{:getHostDomain()}/{:url("mp/Material/getMeterial","","")}/type/'+type+'/param/'+paramName //iframe的url
         });
     }
     function controllerByVal(value,paramName,type) {

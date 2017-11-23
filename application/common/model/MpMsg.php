@@ -59,8 +59,8 @@ class MpMsg extends Model
                             $voice=base64_encode($msg_voice);
                             $playID='play_'.rand();
                             $stopID='stop_'.rand();
-                            $html="<input class=\"layui-btn layui-btn-normal layui-btn-small\" type=\"button\" value=\"播放\" id=\"{$playID}\"/>
-                        <input class=\"layui-btn layui-btn-warm layui-btn-small\" type=\"button\" value=\"停止\" id=\"{$stopID}\"/>
+                            $html="<input class=\"layui-btn layui-btn-normal layui-btn-sm\" type=\"button\" value=\"播放\" id=\"{$playID}\"/>
+                        <input class=\"layui-btn layui-btn-warm layui-btn-sm\" type=\"button\" value=\"停止\" id=\"{$stopID}\"/>
                         <script type=\"text/javascript\">
                         RongIMLib.RongIMVoice.init();
                         document.getElementById(\"{$playID}\").onclick = function(){

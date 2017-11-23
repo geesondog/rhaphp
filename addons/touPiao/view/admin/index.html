@@ -43,12 +43,12 @@
         <td class="vote_time">{:date('d H:i',strtotime($vo.create_time))}</td>
         <td>
             {if condition="$vo.status eq '0'"}
-            <button onclick="voteHidden('{$vo.bm_id}','1')" class="layui-btn layui-btn-mini layui-btn-danger" href="">显示</button>
+            <button onclick="voteHidden('{$vo.bm_id}','1')" class="layui-btn layui-btn-xs layui-btn-danger" href="">显示</button>
             {else/}
-            <button onclick="voteHidden('{$vo.bm_id}','0')" class="layui-btn layui-btn-mini layui-btn-danger" href="">隐藏</button>
+            <button onclick="voteHidden('{$vo.bm_id}','0')" class="layui-btn layui-btn-xs layui-btn-danger" href="">隐藏</button>
             {/if}
 
-            <button onclick="voteSetinc('{$vo.bm_id}')" class="layui-btn layui-btn-mini layui-btn-normal" href="">增票</button>
+            <button onclick="voteSetinc('{$vo.bm_id}')" class="layui-btn layui-btn-xs layui-btn-normal" href="">增票</button>
         </td>
     </tr>
     {/volist}

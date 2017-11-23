@@ -2,10 +2,10 @@
 {block name="body"}
 <div style="padding: 0px 10px 0px 10px">
     <div class="layui-btn-group" style=" margin-bottom: 5px;">
-        <button onclick="sycMaterial('image')" class="layui-btn layui-btn-small"><i class="layui-icon">&#x1002;</i>同步图片</button>
-        <button onclick="sycMaterial('news')" class="layui-btn layui-btn-normal layui-btn-small "><i class="layui-icon">&#x1002;</i>同步图文</button>
-        <button onclick="sycMaterial('voice')" class="layui-btn layui-btn-normal layui-btn-small "><i class="layui-icon">&#x1002;</i>同步语音</button>
-        <button onclick="sycMaterial('video')" class="layui-btn layui-btn-warm layui-btn-small"><i class="layui-icon">&#x1002;</i>同步视频</button>
+        <button onclick="sycMaterial('image')" class="layui-btn layui-btn-sm"><i class="layui-icon">&#x1002;</i>同步图片</button>
+        <button onclick="sycMaterial('news')" class="layui-btn layui-btn-normal layui-btn-sm "><i class="layui-icon">&#x1002;</i>同步图文</button>
+        <button onclick="sycMaterial('voice')" class="layui-btn layui-btn-normal layui-btn-sm "><i class="layui-icon">&#x1002;</i>同步语音</button>
+        <button onclick="sycMaterial('video')" class="layui-btn layui-btn-warm layui-btn-sm"><i class="layui-icon">&#x1002;</i>同步视频</button>
     </div>
     <div class="layui-tab">
         <ul class="layui-tab-title">
@@ -49,10 +49,10 @@
                             </div>
                             <div>
                                 <div class="layui-btn-group">
-                                  <button onclick="sendMaterial('{$v.media_id}','image')" style="width: 50%" class="layui-btn layui-btn-primary layui-btn-small">
+                                  <button onclick="sendMaterial('{$v.media_id}','image')" style="width: 50%" class="layui-btn layui-btn-primary layui-btn-sm">
                                     <i class="layui-icon">&#xe609;</i>群发
                                   </button>
-                                  <button onclick="delMaterial('{$v.media_id}','image')" style="width: 50%;" class="layui-btn layui-btn-primary layui-btn-small">
+                                  <button onclick="delMaterial('{$v.media_id}','image')" style="width: 50%;" class="layui-btn layui-btn-primary layui-btn-sm">
                                     <i class="layui-icon">&#xe640;</i>删除
                                   </button>
                                 </div>
@@ -80,7 +80,7 @@
                             <td>{$vo.create_time}</td>
                             <td>
                                 <div class="">
-                                    <button onclick="delMaterial('{$vo.media_id}','voice')" class="layui-btn layui-btn-mini layui-btn-danger">
+                                    <button onclick="delMaterial('{$vo.media_id}','voice')" class="layui-btn layui-btn-xs layui-btn-danger">
                                         <i class="layui-icon">&#xe640;删除</i>
                                     </button>
                                 </div>
@@ -99,10 +99,10 @@
                             <span><img src="{$v.url}" width="169" height="169"></span>
                             <span>
                                 <div class="layui-btn-group">
-                                  <button onclick="sendMaterial('{$v.media_id}','image')" style="width: 50%" class="layui-btn layui-btn-primary layui-btn-small">
+                                  <button onclick="sendMaterial('{$v.media_id}','image')" style="width: 50%" class="layui-btn layui-btn-primary layui-btn-sm">
                                     <i class="layui-icon">&#xe609;</i>群发
                                   </button>
-                                  <button onclick="delMaterial('{$v.media_id}','image')" style="width: 50%;" class="layui-btn layui-btn-primary layui-btn-small">
+                                  <button onclick="delMaterial('{$v.media_id}','image')" style="width: 50%;" class="layui-btn layui-btn-primary layui-btn-sm">
                                     <i class="layui-icon">&#xe640;</i>删除
                                   </button>
                                 </div>
@@ -131,7 +131,7 @@
                             <td>{$vo.create_time}</td>
                             <td>
                                 <div class="">
-                                    <button onclick="delMaterial('{$vo.media_id}','video')" class="layui-btn layui-btn-mini layui-btn-danger">
+                                    <button onclick="delMaterial('{$vo.media_id}','video')" class="layui-btn layui-btn-xs layui-btn-danger">
                                         <i class="layui-icon">&#xe640;删除</i>
                                     </button>
                                 </div>
@@ -199,7 +199,7 @@
                 shadeClose: true,
                 shade: 0.5,
                 area: ['680px', '200px'],
-                content: '{:getHostDomain()}/index.php/mp/Material/sycMaterial/type/'+type+'/offset/0',
+                content: '{:getHostDomain()}/{:url("mp/Material/sycMaterial","","")}/type/'+type+'/offset/0',
                 cancel: function(index, layero){
                     window.location.reload();
                 }

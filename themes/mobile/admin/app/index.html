@@ -34,7 +34,7 @@
         <!--<td>{:getAddonConfigByFile($vo['addon'],'version')}</td>-->
         <td>{$vo.author}</td>
         <td>
-            <a class="layui-btn layui-btn-mini layui-btn-normal" href="{:url('mp/App/index',['name'=>$vo.addon,'type'=>'news','mid'=>$mpInfo.id])}">进入</a> </td>
+            <a class="layui-btn layui-btn-xs layui-btn-normal" href="{:url('mp/App/index',['name'=>$vo.addon,'type'=>'news','mid'=>$mpInfo.id])}">进入</a> </td>
     </tr>
     {/volist}
     </tbody>
@@ -64,7 +64,7 @@
             <!--<td>{$vo.version}</td>-->
             <!--<td>{:getAddonConfigByFile($vo['addon'],'version')}</td>-->
             <td>{$vo.author}</td>
-            <td><button class="layui-btn layui-btn-mini layui-btn-danger" onclick="closeApp('{$vo.addon}')">卸载</button></td>
+            <td><button class="layui-btn layui-btn-xs layui-btn-danger" onclick="closeApp('{$vo.addon}')">卸载</button></td>
         </tr>
         {/volist}
         </tbody>
@@ -95,7 +95,7 @@
         <td>{$vo.version}</td>
         <!--<td>{:getAddonConfigByFile($vo['addon'])}</td>-->
         <td>{$vo.author}</td>
-        <td><button class="layui-btn layui-btn-mini " onclick="installApp('{$vo.addon}')">安装</button> </td>
+        <td><button class="layui-btn layui-btn-xs" onclick="installApp('{$vo.addon}')">安装</button> </td>
     </tr>
     {/volist}
     </tbody>

@@ -229,7 +229,7 @@ layui.define(['laypage', 'fly', 'element'], function(exports){
       {{# for(var i = 0; i < len; i++){ }}\
         <li data-id="{{d.rows[i].id}}">\
           <blockquote class="layui-elem-quote">{{ d.rows[i].content}}</blockquote>\
-          <p><span>{{d.rows[i].time}}</span><a href="javascript:;" class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</a></p>\
+          <p><span>{{d.rows[i].time}}</span><a href="javascript:;" class="layui-btn layui-btn-sm layui-btn-danger fly-delete">删除</a></p>\
         </li>\
       {{# } }}\
       </ul>\

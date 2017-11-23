@@ -34,9 +34,9 @@
         <td>{:getAddonConfigByFile($vo['addon'],'version')}</td>
         <td>{$vo.author}</td>
         <td>
-            <a class="layui-btn layui-btn-mini layui-btn-normal" href="{:url('mp/App/index',['name'=>$vo.addon,'type'=>'news','mid'=>$mpInfo.id])}">进入</a>
+            <a class="layui-btn layui-btn-xs layui-btn-normal" href="{:url('mp/App/index',['name'=>$vo.addon,'type'=>'news','mid'=>$mpInfo.id])}">进入</a>
             {eq name="$vo.upgrade" value="1"}
-            <a class="layui-btn layui-btn-mini layui-btn-warm" href="javascript:;" onclick="upgrade('{$vo.addon}')">升级</a>
+            <a class="layui-btn layui-btn-xs layui-btn-warm" href="javascript:;" onclick="upgrade('{$vo.addon}')">升级</a>
             {/eq}
         </td>
     </tr>
@@ -69,7 +69,7 @@
             <td>{:getAddonConfigByFile($vo['addon'],'version')}</td>
             <td>{$vo.author}</td>
             <td>
-                <button class="layui-btn layui-btn-mini layui-btn-danger" onclick="closeApp('{$vo.addon}')">卸载</button>
+                <button class="layui-btn layui-btn-xs layui-btn-danger" onclick="closeApp('{$vo.addon}')">卸载</button>
             </td>
         </tr>
         {/volist}
@@ -100,7 +100,7 @@
         <td>{$vo.version}</td>
         <td>{:getAddonConfigByFile($vo['addon'])}</td>
         <td>{$vo.author}</td>
-        <td><button class="layui-btn layui-btn-mini " onclick="installApp('{$vo.addon}')">安装应用</button> </td>
+        <td><button class="layui-btn layui-btn-xs " onclick="installApp('{$vo.addon}')">安装应用</button> </td>
     </tr>
     {/volist}
     </tbody>
