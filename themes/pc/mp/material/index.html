@@ -40,8 +40,14 @@
                         </div>
                         {else /}
                         <div class="material_li_b">
-                            <img width="30" height="30" src="{$news.thumb_url}">
-                            <p>{$news.title}</p>
+                            <div class="layui-row">
+                                <div class="layui-col-xs9">
+                                    <p>{$news.title}</p>
+                                </div>
+                                <div class="layui-col-xs3">
+                                    <img width="30" height="30" src="{$news.thumb_url}">
+                                </div>
+                            </div>
                         </div>
                         {/if}
                         {/volist}

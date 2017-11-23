@@ -135,5 +135,9 @@ class Message extends Base
        ajaxReturn(['msgTotal'=>$result],1);
     }
 
+    public function playVideo($video_id=''){
+        echo getMedia($video_id);
+    }
+
 
 }

@@ -1769,7 +1769,17 @@ function sendCustomMessage($data = [])
         return $result;
     }
 }
+/**
+ * 获取临时素材(认证后的订阅号可用)
+ * @param string $media_id 媒体文件id
+ * @param boolean $is_video 是否为视频文件，默认为否
+ * @return raw data
+ */
+function getMedia($media_id,$is_video=false){
+    $wxObj = getWechatActiveObj();
+    return $result=$wxObj->getMedia($media_id,$is_video=false);
 
+}
 function httpQueryByRhaService($method = 'index', $token = '', $data = [])
 {
     $config = \think\Config::load(APP_PATH . 'copyright.php');

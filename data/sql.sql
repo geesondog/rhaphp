@@ -464,3 +464,4 @@ ALTER TABLE `rh_vote_record`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `rh_vote_view`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `rh_material` CHANGE `content` `content` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文本素材内容';

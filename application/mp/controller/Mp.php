@@ -556,6 +556,9 @@ class Mp extends Base
                     case 'unsubscribe':
                         $this->doSpecial('unsubscribe', $td);
                         break;
+                    case 'unidentified':
+                        $this->doSpecial('unidentified', $td);
+                        break;
                 }
             }
             ajaxMsg('1', '保存成功');
@@ -573,6 +576,7 @@ class Mp extends Base
                 '7' => 'view',
                 '8' => 'subscribe',
                 '9' => 'unsubscribe',
+                '10'=>'unidentified',
             ];
             foreach ($where as $key => $v) {
                 $result = Db::name('mp_rule')

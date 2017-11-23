@@ -121,7 +121,7 @@ class Upgrade extends Base
         $urlset = parse_url($url);
         $headers[] = "Host: {$urlset['host']}";
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 500);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_URL, $url);

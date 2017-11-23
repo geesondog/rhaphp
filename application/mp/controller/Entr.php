@@ -196,8 +196,20 @@ class Entr
             if ($rule['addon']) {
                 loadAdApi($rule['addon'], $msgData,['mid'=>$this->mid,'addon'=>$rule['addon']]);
             }
-        } else {//不存在响应、保存为消息
-            $this->mpMsg($msgData);
+        } else {//不存在响应处理
+            $rule = Db::name('mp_rule')
+                ->where(['mpid' => $this->mid, 'event' => 'unidentified', 'status' => '1'])->find();
+            if (!empty($rule)) {
+                if ($rule['keyword']) {
+                    $this->keyword($rule['keyword'], $msgData);
+                }
+                if ($rule['addon']) {
+                    loadAdApi($rule['addon'], $msgData,['mid'=>$this->mid,'addon'=>$rule['addon']]);
+                }
+            }else{
+                $this->mpMsg($msgData);
+            }
+
         }
     }
 
@@ -321,11 +333,23 @@ class Entr
                     break;
             }
         } else {
-            $this->mpMsg($msg);
-            $options=session('mp_options');
-            $weObj = new \Wechat($options);
-            $weObj->getRev();
-            $weObj->transfer_customer_service()->reply();
+            $rule = Db::name('mp_rule')
+                ->where(['mpid' => $this->mid, 'event' => 'unidentified', 'status' => '1'])->find();
+            if (!empty($rule)) {
+                if ($rule['keyword']) {
+                    $this->keyword($rule['keyword'], $msg);
+                }
+                if ($rule['addon']) {
+                    loadAdApi($rule['addon'], $msg,['mid'=>$this->mid,'addon'=>$rule['addon']]);
+                }
+            }else{
+                $this->mpMsg($msg);
+                $options=session('mp_options');
+                $weObj = new \Wechat($options);
+                $weObj->getRev();
+                $weObj->transfer_customer_service()->reply();
+            }
+
         }
 
     }

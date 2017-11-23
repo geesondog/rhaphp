@@ -394,6 +394,44 @@
         </div>
     </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label">未被识别</label>
+        <div id="replyType_unidentified" class="layui-input-block">
+            <input type="radio"  {eq name="$unidentified['event']" value="nocol"} checked {/eq} name="unidentified" value="nocol" title="转客服">
+            <input type="radio" {notempty name="$unidentified['keyword']"} checked {/notempty} name="unidentified" value="keyword" title="触发关键词" >
+            <input type="radio" {notempty name="$unidentified['addon']"} checked {/notempty} name="unidentified" value="addon" title="触发应用">
+        </div>
+    </div>
+    <div id="tapNodeunidentified">
+        <div class="layui-tab-content link">
+            <div class=" image_text layui-tab-item {eq name="$unidentified['event']" value="nocol"} layui-show {/eq}">
+            <div class="layui-form-item layui-form-text">
+            </div>
+        </div>
+        <div class="unidentified_keyword layui-tab-item {notempty name="$unidentified['keyword']"} layui-show {/notempty}">
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <input type="text" name="unidentified_keyword" value="{$unidentified['keyword']}" placeholder="请输入关键词" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="unidentified_addon layui-tab-item {notempty name="$unidentified['addon']"} layui-show {/notempty}">
+    <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <div class="layui-input-block">
+            <select name="unidentified_addons">
+                <option value="">请选择应用</option>
+                {volist name="addons" id="v"}
+                <option {eq name="$unidentified['addon']" value="$v.addon"} selected {/eq} value="{$v.addon}">{$v.name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
 
     <div class="layui-form-item">
         <div class="layui-input-block">
@@ -453,6 +491,11 @@
         $("#replyType_view").click(function(){
             var class_a='view_'+ $("input[name='view']:checked").val();
             $('.view div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_unidentified").click(function(){
+            var class_a='unidentified_'+ $("input[name='unidentified']:checked").val();
+            $('.link div').removeClass('layui-show')
             $('.'+class_a).addClass('layui-show')
         });
     })
