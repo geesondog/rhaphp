@@ -465,3 +465,4 @@ ALTER TABLE `rh_vote_record`
 ALTER TABLE `rh_vote_view`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `rh_material` CHANGE `content` `content` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文本素材内容';
+ALTER TABLE `rh_mp` CHANGE `valid_status` `valid_status` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '1已接入；0未接入';
