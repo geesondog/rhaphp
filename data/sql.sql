@@ -138,7 +138,10 @@ INSERT INTO `rh_menu` (`id`, `pid`, `name`, `url`, `sort`, `icon`, `child`, `sho
 (54, 53, '更改密码', 'admin/system/updatepwd', 0, '', NULL, NULL),
 (55, 53, '增加成员', 'admin/system/addadminmember', 0, '', NULL, NULL),
 (56, 45, '应用管理', 'admin/app/index', 0, '', NULL, NULL),
-(57, 52, '系统升级', 'admin/upgrade/index', 0, '', NULL, NULL);
+(57, 52, '系统升级', 'admin/upgrade/index', 0, '', NULL, NULL),
+(58, 13, '图文群发', 'mp/mp/newslist', 6, '', NULL, NULL),
+(59, 58, '增加图文', 'mp/mp/addnews', 0, '', NULL, NULL),
+(60, 58, '修改图文', 'mp/mp/editnews', 0, '', NULL, NULL);
 CREATE TABLE IF NOT EXISTS `rh_mp` (
   `id` int(10) unsigned NOT NULL COMMENT '自增ID',
   `user_id` int(10) NOT NULL COMMENT '用户ID',
@@ -466,3 +469,60 @@ ALTER TABLE `rh_vote_view`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `rh_material` CHANGE `content` `content` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文本素材内容';
 ALTER TABLE `rh_mp` CHANGE `valid_status` `valid_status` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '1已接入；0未接入';
+
+CREATE TABLE IF NOT EXISTS `rh_media_news` (
+  `news_id` int(11) NOT NULL COMMENT '自增 ID',
+  `mid` int(11) NOT NULL COMMENT '公众号标识',
+  `media_id` varchar(500) DEFAULT NULL COMMENT '媒体 ID',
+  `title` text COMMENT '标题',
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1:文本2:单图文3:多图文',
+  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
+  `create_time` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(10) NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `status_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1已上传，0未上传,3已经群发'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `rh_media_news_list` (
+  `id` int(11) NOT NULL COMMENT '自增 ID',
+  `news_id` int(11) NOT NULL COMMENT '主题 ID',
+  `cover` varchar(500) CHARACTER SET utf8 NOT NULL COMMENT '封面',
+  `thumb_media_id` varchar(500) CHARACTER SET utf8 DEFAULT NULL COMMENT '媒体 ID',
+  `author` varchar(80) CHARACTER SET utf8 DEFAULT NULL COMMENT '作者',
+  `title` varchar(180) DEFAULT NULL COMMENT '标题',
+  `content_source_url` text CHARACTER SET utf8 COMMENT '链接',
+  `content` mediumtext COMMENT '内容',
+  `digest` text COMMENT '描述',
+  `show_cover_pic` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1为显示，0为不显示',
+  `status_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1已上传，2未上传',
+  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+ALTER TABLE `rh_media_news`
+  ADD PRIMARY KEY (`news_id`);
+
+ALTER TABLE `rh_media_news_list`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `rh_media_news`
+  MODIFY `news_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID';
+ALTER TABLE `rh_media_news_list`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID';
+
+CREATE TABLE IF NOT EXISTS `rh_media_news_material` (
+  `id` int(11) NOT NULL COMMENT '自增 ID',
+  `mid` int(11) NOT NULL COMMENT '公众号标识',
+  `url` text COMMENT '地址',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1图片：2视频',
+  `path` varchar(500) DEFAULT NULL COMMENT '本地路径'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE `rh_media_news_material`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `rh_media_news_material`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID';

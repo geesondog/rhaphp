@@ -91,6 +91,7 @@ class Index extends \think\Controller {
 	}
 
 	public function sql() {
+        set_time_limit(0);
 		session('error', false);
 		$this->status['index']  = 'success';
 		$this->status['check']  = 'success';

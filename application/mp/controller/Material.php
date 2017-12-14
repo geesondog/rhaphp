@@ -43,7 +43,7 @@ class   Material extends Base
                         $data['create_time'] = $val['update_time'];
                         $data['media_id'] = $val['media_id'];
                         $data['title'] = $val['name'];
-                        $data['url'] = getHostDomain() . url('mp/Show/image', ['url' => urlencode($val['url'])]);
+                        $data['url'] = getHostDomain() . url('mp/Show/image','','').'?url='.urlencode($val['url']);
                         $model = new \app\common\model\Material();
                         $model->addMaterialByMp($type, $data);
                     }
@@ -207,7 +207,7 @@ class   Material extends Base
                 foreach ($newsItem['news_item'] as $key1 => $val2) {
                     $news[$key]['news_item'][$key1]['title'] = $val2['title'];
                     $news[$key]['news_item'][$key1]['url'] = $val2['url'];
-                    $news[$key]['news_item'][$key1]['thumb_url'] = getHostDomain() . url('mp/Show/image', ['url' => urlencode($val2['thumb_url'])]);
+                    $news[$key]['news_item'][$key1]['thumb_url'] = getHostDomain() . url('mp/Show/image','','').'?url='.urlencode($val2['thumb_url']);
                 }
             }
             $this->assign('page', $data->render());

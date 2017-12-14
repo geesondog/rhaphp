@@ -52,6 +52,7 @@ class Entr
         session('mid',$mid);
         session('mp_options', $options);
         $weObj = new \Wechat($options);
+        $weObj->valid();
         $weObj->getRev();//获取微信服务器发来信息(不返回结果)，被动接口必须调用
         $msgData = $weObj->getRevData();//返回微信服务器发来的信息（数组）
         if($mpInfo['status']==0){
@@ -177,6 +178,7 @@ class Entr
                 break;
 
         }
+        exit;
     }
 
     /**

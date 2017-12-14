@@ -65,6 +65,7 @@ function getWechatObj($options = [], $mid = '')
     \think\Loader::import('wechatSdk.wechat', EXTEND_PATH, '.class.php');
     empty($options) ? $options = session('mp_options') : $options = $options;
     $weObj = new \Wechat($options);
+    $weObj->valid();
     $weObj->getRev();
     return $weObj;
 }
@@ -525,18 +526,18 @@ function addonUrl($url = '', $vars = '', $suffix = true, $domain = false)
         $addonAction = isset($addonRule['act']) ? $addonRule['act'] : '';
         $node = '';
         if ($url == '') {
-            $node = $addonName . DS . $addonController . DS . $addonAction;
+            $node = $addonName . '/' . $addonController . '/' . $addonAction;
         } else {
             $nodeArr = array_values(array_filter(explode('/', $url)));
             switch (count($nodeArr)) {
                 case 1:
-                    $node = $addonName . DS . $addonController . DS . $nodeArr[0];
+                    $node = $addonName . '/' . $addonController . '/' . $nodeArr[0];
                     break;
                 case 2:
-                    $node = $addonName . DS . $nodeArr[0] . DS . $nodeArr[1];
+                    $node = $addonName . '/' . $nodeArr[0] . '/' . $nodeArr[1];
                     break;
                 case 3:
-                    $node = $node = $nodeArr[0] . DS . $nodeArr[1] . DS . $nodeArr[2];
+                    $node = $node = $nodeArr[0] . '/' . $nodeArr[1] . '/' . $nodeArr[2];
                     break;
             }
         }

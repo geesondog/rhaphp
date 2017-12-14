@@ -73,13 +73,13 @@ class Addon extends Common
             $nodeArr = array_values(array_filter(explode('/', $url)));
             switch (count($nodeArr)) {
                 case 1:
-                    $node = $this->addonName . DS . $this->addonController . DS . $nodeArr[0];
+                    $node = $this->addonName . '/' . $this->addonController . '/' . $nodeArr[0];
                     break;
                 case 2:
-                    $node = $this->addonName . DS . $nodeArr[0] . DS . $nodeArr[1];
+                    $node = $this->addonName . '/' . $nodeArr[0] . '/' . $nodeArr[1];
                     break;
                 case 3:
-                    $node = $node = $nodeArr[0] . DS . $nodeArr[1] . DS . $nodeArr[2];
+                    $node = $node = $nodeArr[0] . '/' . $nodeArr[1] . '/' . $nodeArr[2];
                     break;
             }
         }

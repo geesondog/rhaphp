@@ -58,6 +58,10 @@ a:hover { text-decoration: underline; }
 .content-hd .title-tab li a { display: block; padding: 0px 22px; color: rgb(34, 34, 34); }
 .content-hd .title-tab li a:hover { text-decoration: none; }
 .content-bd { padding: 30px; }
+.set-style dl dd {font-size: 14px;line-height: 32px;vertical-align: top;letter-spacing: normal;word-spacing: normal;display: inline-block;width: 62%;padding: 10px 0 10px 0;}
+.set-style dl {width: 100%;font-size: 0;line-height: 20px;clear: both;padding: 0;margin: 0;overflow: hidden;}
+.set-style dl dt {font-size: 16px;line-height: 32px;vertical-align: top;letter-spacing: normal;word-spacing: normal;text-align: right;display: inline-block;width: 36%;padding: 10px 1% 10px 0;margin: 0;font-weight: normal;}
+.set-style dl dd textarea {font: 12px/20px Arial;color: #777;background-color: #FFF;vertical-align: top;display: inline-block;height: 60px;padding: 4px;border: solid 1px #CCC;outline: 0 none;width: 400px;margin: 0;}
 .datepicker.large .datepicker-switch { width: 140px; }
 .menu { padding: 13px 0px; height: auto; min-height: 550px; }
 .menu dl { padding: 6px 0px; line-height: 34px; border-bottom: 1px solid rgb(231, 231, 235); }
@@ -87,6 +91,7 @@ a:hover { text-decoration: underline; }
 .logo-left img{width: 60px;height: 60px; border-radius: 5px;}
 .logo-right{float: left;margin-left: 8px; height: 60px; line-height: 30px;}
 .rha-mp-msg{width: 100%;}
+.rhaphp-media-news{margin-bottom: 10px;}
 .mp-msg-headimg{float: left;height:60px;}
 .mp-msg-headimg img{width: 60px; height: 60px; border-radius: 5px;}
 .mp-msg-info{float: left;margin-left: 20px; }
@@ -106,6 +111,7 @@ a:hover { text-decoration: underline; }
 .upload-imgs img {width: 150px; height: 90px;}
 .upload-imgs-del{cursor: pointer;position: absolute;  font-size: 18px;}
 .rha_app_list li{width: 65px; display: inline-block;text-align: center;margin-right: 5px; overflow: hidden;  }
+.rha_news_content{height: 40px;line-height: 40px;}
 .rha_app_list a {font-size: 12px; overflow: hidden; width: 65px;}
 .rha_app_list img{width: 65px;height: 65px; border-radius: 3px;}
 .rha_app_list span {display: block; text-overflow: ellipsis;  white-space: nowrap;}
@@ -121,3 +127,15 @@ a:hover { text-decoration: underline; }
 .rha_login .mod-body .content ul li.last a { color: rgb(102, 102, 102); }
 .rha_login .mod-footer span { color: rgb(102, 102, 102); }
 .rha_login .mod-footer a { color: rgb(102, 183, 255); }
+.media-news-body{border: 1px solid rgb(231, 231, 235);padding: 10px;margin: 0px 10px 0px 0px;}
+.media-news-img{width: 100%; height: 180px;}
+.media-news-time{border-bottom: 1px solid rgb(231, 231, 235);padding-bottom: 5px; margin-bottom: 8px;color: #8c8c8c;}
+.media-news-desc{bottom: 10px;position: absolute; background: rgba(0, 0, 0, 0.5) none repeat scroll 0 0;color: #ffffff;width: 100%; bottom:0; height: 42px;}
+.media-news-desc-sp{padding: 0px 3px;}
+.media-news-content{ height:  180px; position: relative}
+.media-news-item-type2{text-align: center;}
+.media-news-btn{margin-top: 10px; text-align: center;}
+.media-news-title-box{float: left;}
+.mdedia-news-lists-box{border-bottom: 1px solid rgb(231, 231, 235);display: inline-block;padding:5px 0 5px 0px; height: 48px;width: 100%;}
+.media-news-img-box{float:right;}
+.media-news-lists-img{width:100%;height: 48px;}

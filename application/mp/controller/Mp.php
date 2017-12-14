@@ -12,12 +12,14 @@ namespace app\mp\controller;
 
 
 use app\common\model\Addons;
+use app\common\model\MediaNewsList;
 use app\common\model\MpFriends;
 use app\common\model\MpMsg;
 use app\common\model\MpReply;
 use app\common\model\MpRule;
 use app\common\model\Qrcode;
 use think\Db;
+use think\Exception;
 use think\Request;
 use think\Session;
 use think\Url;
@@ -308,19 +310,19 @@ class Mp extends Base
                     if ($result === false) {
                         ajaxMsg(0, $validate->getError());
                     }
-                    $sting=getSetting($this->mid,'cloud');
-                    if(isset($sting['qiniu']['status']) && $sting['qiniu']['status']==1){
-                            $ext=strrchr($input['reply_image'],'.');
-                            $fileName_h=md5(rand_string(12)).$ext;
-                        $filePath[1]=dowloadImage($input['reply_image'],'./uploads/',$fileName_h);
-                        if(!$filePath[1]){
+                    $sting = getSetting($this->mid, 'cloud');
+                    if (isset($sting['qiniu']['status']) && $sting['qiniu']['status'] == 1) {
+                        $ext = strrchr($input['reply_image'], '.');
+                        $fileName_h = md5(rand_string(12)) . $ext;
+                        $filePath[1] = dowloadImage($input['reply_image'], './uploads/', $fileName_h);
+                        if (!$filePath[1]) {
                             ajaxMsg(0, '获取图片失败');
                         }
-                    }else{
-                        $ext=strrchr($input['reply_image'],'.');
-                        $fileName_h=md5(rand_string(12)).$ext;
-                        $filePath[1]=dowloadImage($input['reply_image'],'./uploads/',$fileName_h);
-                       // $filePath = explode(getHostDomain(),$input['reply_image']);//strpos
+                    } else {
+                        $ext = strrchr($input['reply_image'], '.');
+                        $fileName_h = md5(rand_string(12)) . $ext;
+                        $filePath[1] = dowloadImage($input['reply_image'], './uploads/', $fileName_h);
+                        // $filePath = explode(getHostDomain(),$input['reply_image']);//strpos
                     }
                     if (!strpos($input['reply_image'], 'show/image') || !strpos($input['reply_image'], 'qpic.cn')) {
                         //认为本地资源或者新上传
@@ -576,7 +578,7 @@ class Mp extends Base
                 '7' => 'view',
                 '8' => 'subscribe',
                 '9' => 'unsubscribe',
-                '10'=>'unidentified',
+                '10' => 'unidentified',
             ];
             foreach ($where as $key => $v) {
                 $result = Db::name('mp_rule')
@@ -683,7 +685,7 @@ class Mp extends Base
 
             $post = input('post.');
             $data = $post['data'];
-            if(empty($data)){
+            if (empty($data)) {
                 deleteMpMenu();//空菜单认为删除全部菜单
                 ajaxMsg(1, '保存成功');
             }
@@ -705,7 +707,7 @@ class Mp extends Base
                 $result = Db::name('mp_menu')
                     ->field('id,index,pindex,name,type,content')
                     ->where('status', '1')
-                    ->where('mp_id',$this->mid)
+                    ->where('mp_id', $this->mid)
                     ->order('sort ASC,id ASC')
                     ->select();
                 $menu_type = [
@@ -801,10 +803,10 @@ class Mp extends Base
 //                    } else {
 //                        $config = diffArrayValue($arr1, json_decode($result['value'], true));
 //                    }
-                    $array=json_decode($result['value'], true);
-                    $arr2=$array?$array:[];
-                    $config=array_merge($arr1,$arr2);
-                    $this->assign('payUrl',getHostDomain().Url::build('service/Payment/wxPay','',false));
+                    $array = json_decode($result['value'], true);
+                    $arr2 = $array ? $array : [];
+                    $config = array_merge($arr1, $arr2);
+                    $this->assign('payUrl', getHostDomain() . Url::build('service/Payment/wxPay', '', false));
                     $this->assign('config', $config);
                     break;
                 case 'uploadjsfile':
@@ -824,9 +826,9 @@ class Mp extends Base
                         ]
                     ];
                     $config = json_decode($result['value'], true);
-                    foreach ($arr1 as $key=>$val){
-                        if(isset($config[$key])){
-                            $config[$key]=array_merge($arr1[$key],$config[$key]);
+                    foreach ($arr1 as $key => $val) {
+                        if (isset($config[$key])) {
+                            $config[$key] = array_merge($arr1[$key], $config[$key]);
                         }
                     }
                     $this->assign('config', $config);
@@ -838,16 +840,16 @@ class Mp extends Base
                         'qiniu' => [
                             'accessKey' => '',
                             'secretKey' => '',
-                            'bucke'=>'',
-                            'domain'=>'',
-                            'status'=>'',
+                            'bucke' => '',
+                            'domain' => '',
+                            'status' => '',
                         ],
 
                     ];
                     $config = json_decode($result['value'], true);
-                    foreach ($arr1 as $key=>$val){
-                        if(isset($config[$key])){
-                            $config[$key]=array_merge($arr1[$key],$config[$key]);
+                    foreach ($arr1 as $key => $val) {
+                        if (isset($config[$key])) {
+                            $config[$key] = array_merge($arr1[$key], $config[$key]);
                         }
                     }
                     $this->assign('config', $config);
@@ -880,8 +882,8 @@ class Mp extends Base
                 $this->assign('data', $data);
             }
             if ($type == 'friend') {
-                $data=Db::name('qrcode_data')->alias('a')->where(['a.scene_id'=>input('scene_id'),'a.mpid'=>$this->mid,'a.type'=>'1'])
-                    ->join('__MP_FRIENDS__ b','a.openid=b.openid')
+                $data = Db::name('qrcode_data')->alias('a')->where(['a.scene_id' => input('scene_id'), 'a.mpid' => $this->mid, 'a.type' => '1'])
+                    ->join('__MP_FRIENDS__ b', 'a.openid=b.openid')
                     ->order('a.create_time DESC')
                     ->field('a.*,b.nickname,b.headimgurl')
                     ->paginate(15);
@@ -902,7 +904,7 @@ class Mp extends Base
         if (Request::instance()->isPost()) {
             $qrModel = new Qrcode();
             $IN = input();
-            if ($qrModel->where(['scene_name'=>$IN['name'],'mpid'=>$this->mid])->find()) {
+            if ($qrModel->where(['scene_name' => $IN['name'], 'mpid' => $this->mid])->find()) {
                 ajaxMsg('0', '场景名称已经存在');
             }
             $data['mpid'] = $this->mid;
@@ -964,22 +966,521 @@ class Mp extends Base
         }
     }
 
-    public function getAppStore(){
-        $data=[];
-        $app=[];
-        $result=getAppAndWindvaneByApi();
-        if($result != false){
-            if(isset($result['status']) && isset($result['data'])){
-                if($result['status']==1){
-                    $data=isset($result['data'])?$result['data']:[];
-                    $app=isset($result['app'])?$result['app']:[];
+    public function getAppStore()
+    {
+        $data = [];
+        $app = [];
+        $result = getAppAndWindvaneByApi();
+        if ($result != false) {
+            if (isset($result['status']) && isset($result['data'])) {
+                if ($result['status'] == 1) {
+                    $data = isset($result['data']) ? $result['data'] : [];
+                    $app = isset($result['app']) ? $result['app'] : [];
                 }
             }
         }
-        $this->assign('app_by_api',$app);
-        $this->assign('data_by_api',$data);
+        $this->assign('app_by_api', $app);
+        $this->assign('data_by_api', $data);
     }
 
+    /**
+     * @author Geeson RHAPHP.COM
+     * @param int $type
+     * @return \think\response\View
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function newsList($type = 3)
+    {
+//       $lists=Db::name('media_news')
+//           ->alias('a')
+//           ->where(['a.mid'=>$this->mid,'a.type'=>$type])
+//           ->join('__MEDIA_NEWS_LIST__ b','a.news_id=b.news_id','RIGHT')
+//           ->select();
+        $url = getHostDomain() . $_SERVER['REQUEST_URI'];
+        \session('news_list_url', $url);
+        $lists = Db::name('media_news')->where(['mid' => $this->mid, 'type' => $type])
+            ->order('news_id DESC')
+            ->paginate(6);
+        $page = $lists->render();
+        $news_ids = '';
+        foreach ($lists as $val) {
+            $news_ids .= $val['news_id'] . ',';
+        }
+        $model = new MediaNewsList();
+        $newsInfos = $model->where('news_id', 'in', $news_ids)
+            ->where('title', 'neq', '')
+            ->select();
+        $newsInfos = json_decode(json_encode($newsInfos), true);
+        $infoLists = [];
+        foreach ($lists as $key => $val) {
+            $infoLists[$key] = $val;
+            foreach ($newsInfos as $key2 => $val2) {
+
+                if ($val['news_id'] == $val2['news_id']) {
+                    $infoLists[$key]['list'][$key2] = $val2;
+                }
+            }
+        }
+        $this->assign('intype', $type);
+        $this->assign('data', $infoLists);
+        $this->assign('page', $page);
+        return view();
+    }
+
+    /**
+     * @author Geeson RhaPhp.COM
+     * @return \think\response\View
+     * @throws Exception
+     * @throws \think\exception\PDOException
+     */
+    public function addNews()
+    {
+        if (Request::instance()->isAjax()) {
+            $In = Request::instance()->post();
+            if (empty($In['title'])) {
+                ajaxMsg(3, '标题不能为空');
+            }
+            if (isset($In['content']) && $In['content'] == '`$`') {
+                ajaxMsg(3, '请检查必填项');
+            }
+            $model = new MediaNewsList();
+            $info['mid'] = $this->mid;
+            $info['title'] = $In['title'];
+            $info['type'] = $In['type'];
+            $info['create_time'] = time();
+            $info['update_time'] = time();
+            if (!$news_id = Db::name('media_news')->insertGetId($info)) {
+                ajaxMsg(0, '增加失败了');
+            }
+            switch ($In['type']) {
+                case 1:
+                    if (!$model->save(['news_id' => $news_id, 'content' => $In['title']])) {
+                        Db::name('media_news')->where(['mid' => $this->mid, 'news_id' => $news_id])->delete();
+                        ajaxMsg(0, '操作失败了');
+                    }
+                    break;
+                case 2:
+                    $array = explode('`|`', $In['content']);
+                    $news_lists['title'] = $array[0];
+                    $news_lists['author'] = $array[1];
+                    $news_lists['cover'] = $array[2];
+                    $news_lists['show_cover_pic'] = $array[3];
+                    $news_lists['digest'] = $array[4];
+                    $news_lists['content'] = $array[5];
+                    $news_lists['content_source_url'] = $array[6];
+                    $news_lists['news_id'] = $news_id;
+                    if (!$model->save($news_lists)) {
+                        Db::name('media_news')->where(['mid' => $this->mid, 'news_id' => $news_id])->delete();
+                        ajaxMsg(0, '操作失败了');
+                    }
+                    break;
+                case 3:
+                    $list = explode('`$`', $In['content']);
+                    $news_lists = [];
+                    foreach ($list as $k => $v) {
+                        $array = explode('`|`', $v);
+                        $news_lists['title'] = $array[0];
+                        $news_lists['author'] = $array[1];
+                        $news_lists['cover'] = $array[2];
+                        $news_lists['show_cover_pic'] = $array[3];
+                        $news_lists['digest'] = $array[4];
+                        $news_lists['content'] = $array[5];
+                        $news_lists['content_source_url'] = $array[6];
+                        $news_lists['news_id'] = $news_id;
+                        $model = new MediaNewsList();
+                        if (!$model->save($news_lists)) {
+                            Db::name('media_news')->where(['mid' => $this->mid, 'news_id' => $news_id])->delete();
+                            ajaxMsg(0, '增加图文第' . ($k + 1) . '失败了');
+                        }
+                    }
+                    break;
+            }
+            ajaxMsg(1, '操作成功');
+        } else {
+            $this->assign('uploadImg', getHostDomain() . \url('uploadMediaNewsImage'));
+            return view();
+        }
+    }
+
+    /**
+     * @author geeson Rhaphp.Com
+     * @throws Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
+    public function uploadMediaNews()
+    {
+        if (Request::instance()->isAjax()) {
+            $mp = getMpInfo($this->mid);
+            if ($mp['type'] == 1 || $mp['type'] == 3) {
+                ajaxMsg(0, '此功能认证公众号才能使用');
+            }
+            $news_id = Request::instance()->post('news_id');
+            $model = new MediaNewsList();
+            $lists = $model->where('news_id', 'in', $news_id)->select();
+            if (empty($lists))
+                ajaxMsg('0', '没有内容可上传');
+            $array = [];
+            $news = Db::name('media_news')->where(['mid' => $this->mid, 'news_id' => $news_id])->find();
+            if ($news['type'] != 1) {
+                foreach ($lists as $key => $val) {
+                    $F = explode(getHostDomain(), $val['cover']);
+                    if (isset($F['1'])) {
+                        $filePath = substr($F['1'], 1);
+                        //为了不占用5000张素材空间，这里上传为临时素材，有效果为3天
+                        if ($result = uploadMedia($filePath, 'image')) {
+                            $lists[$key]['thumb_media_id'] = $result['media_id'];
+                            $model->save(['thumb_media_id' => $result['media_id']], ['id' => $val['id']]);
+                        }
+
+                    }
+                    $array[$key]['thumb_media_id'] = $lists[$key]['thumb_media_id'];
+                    $array[$key]['author'] = $val['author'];
+                    $array[$key]['title'] = $val['title'];
+                    $array[$key]['content_source_url'] = $val['content_source_url'];
+                    $array[$key]['content'] = $val['content'];
+                    $array[$key]['digest'] = $val['digest'];
+                    $array[$key]['show_cover_pic'] = $val['show_cover_pic'];
+
+                }
+                $articleList['articles'] = $array;
+            } else {
+                ajaxMsg(0, '文本类型不需要上传，直接可预览或者群发');
+            }
+            $wxObj = getWechatActiveObj($this->mid);
+            if ($result = $wxObj->uploadArticles($articleList)) {
+                if (Db::name('media_news')->where('news_id', $news_id)->update(['media_id' => $result['media_id'], 'status_type' => 1])) {
+                    ajaxMsg(1, '上传至微信成功');
+                } else {
+                    ajaxMsg(0, '保存数据失败');
+                }
+            } else {
+                if (isset($wxObj->errCode) && !empty($wxObj->errCode)) {
+                    ajaxMsg(0, '上传失败：错误码：' . $wxObj->errCode . ' 错误内容为：' . $wxObj->errMsg);
+                } else {
+                    ajaxMsg('0', '未知错误');
+                }
+            }
+
+        }
+    }
+
+    /**
+     * @author Geeson RHAPHP.com
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function newsPreview()
+    {
+        if (Request::instance()->isAjax()) {
+            $mp = getMpInfo($this->mid);
+            if ($mp['type'] == 1 || $mp['type'] == 3) {
+                ajaxMsg(0, '此功能认证公众号才能使用');
+            }
+            $news_id = Request::instance()->post('news_id');
+            $wxid = Request::instance()->post('wxid');
+            $news = Db::name('media_news')->where(['mid' => $this->mid, 'news_id' => $news_id])->find();
+            if (empty($news)) {
+                ajaxMsg(0, '内容不存在');
+            }
+            if ($news['type'] != 1) {
+                if (empty($news['media_id'])) {
+                    ajaxMsg(0, '此内容还没有上传到微信服务器');
+                }
+            }
+            if ($news['type'] == 1) {
+                $data = [
+                    'towxname' => $wxid,
+                    'text' => [
+                        'content' => $news['title'],
+                    ],
+                    'msgtype' => 'text',
+
+                ];
+            } else {
+                $data = [
+                    'towxname' => $wxid,
+                    'msgtype' => 'mpnews',
+                    'mpnews' => [
+                        'media_id' => $news['media_id']
+                    ],
+                ];
+            }
+
+            $wxObj = getWechatActiveObj($this->mid);
+            $result = $wxObj->previewMassMessage($data);
+            if ($result && isset($result['errcode']) && $result['errcode'] == 0) {
+                ajaxMsg(1, '发送成功，请打开发送者微信进行预览');
+            } else {
+                ajaxMsg(0, '发送失败，错误码：' . $wxObj->errCode . ' 错误内容：' . $wxObj->errMsg);
+            }
+
+        }
+    }
+
+    /**
+     * @author Geeson rhaphp.com
+     * @param string $news_id
+     * @param string $type
+     * @return \think\response\View
+     * @throws Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
+    public function editNews($news_id = '', $type = '')
+    {
+
+        if (empty($news_id) || empty($type)) {
+            $this->error('没有相应的内容');
+        }
+        $result = Db::name('media_news')->where(['news_id' => $news_id])->find();
+        if ($result['mid'] != $this->mid) {
+            $this->error('修改内容不存在或者与公众号不匹配');
+        }
+        if (Request::instance()->isAjax()) {
+            $In = Request::instance()->post();
+            if (empty($In['title'])) {
+                ajaxMsg(3, '标题不能为空');
+            }
+            if (isset($In['content']) && $In['content'] == '`$`') {
+                ajaxMsg(3, '请检查必填项');
+            }
+            $model = new MediaNewsList();
+            switch ($type) {
+                case 1:
+                    $res = Db::name('media_news')
+                        ->where(['mid' => $this->mid, 'news_id' => $news_id])
+                        ->update(['title' => $In['title'], 'update_time' => time()]);
+                    if ($res) {
+                        $model->save(['content' => $In['title']], ['news_id' => $news_id]);
+                        ajaxMsg(1, '修改成功');
+                    } else {
+                        ajaxMsg(0, '操作成功，但内容没有发生改变');
+                    }
+                    break;
+                case 2:
+                    $array = explode('`|`', $In['content']);
+                    $data['title'] = $array[0];
+                    $data['author'] = $array[1];
+                    $data['cover'] = $array[2];
+                    $data['show_cover_pic'] = $array[3];
+                    $data['digest'] = $array[4];
+                    $data['content'] = $array[5];
+                    $data['content_source_url'] = $array[6];
+                    if ($model->save($data, ['news_id' => $news_id])) {
+                        Db::name('media_news')
+                            ->where(['mid' => $this->mid, 'news_id' => $news_id])
+                            ->update(['title' => $In['title'], 'update_time' => time(), 'status_type' => 0]);
+                    }
+                    ajaxMsg(1, '修改成功');
+                    break;
+                case 3:
+                    $res = Db::name('media_news')
+                        ->where(['mid' => $this->mid, 'news_id' => $news_id])
+                        ->update(['title' => $In['title'], 'update_time' => time(), 'status_type' => 0]);
+                    if (!$res) {
+                        ajaxMsg(0, '更新状态失败');
+                    }
+                    $list = explode('`$`', $In['content']);
+                    $data = [];
+                    foreach ($list as $k => $v) {
+                        $array = explode('`|`', $v);
+                        $data[$k]['title'] = $array[0];
+                        $data[$k]['author'] = $array[1];
+                        $data[$k]['cover'] = $array[2];
+                        $data[$k]['show_cover_pic'] = $array[3];
+                        $data[$k]['digest'] = $array[4];
+                        $data[$k]['content'] = $array[5];
+                        $data[$k]['content_source_url'] = $array[6];
+                        $data[$k]['news_id'] = $news_id;
+                    }
+                    $model = new  MediaNewsList();
+                    $model->where('news_id', $news_id)->delete();
+                    if ($model->insertAll($data)) {
+                        ajaxMsg(1, '修改成功');
+                    } else {
+                        ajaxMsg(0, '保存失败，建议不要关闭页面，检查好填写项再次提交');
+                    }
+                    break;
+            }
+        } else {
+            $newsInfo = Db::name('media_news')->where(['mid' => $this->mid, 'type' => $type, 'news_id' => $news_id])->find();
+
+            $model = new MediaNewsList();
+            $newsInfos = $model->where('news_id', '=', $news_id)
+                ->select();
+            $newsInfos = json_decode(json_encode($newsInfos), true);
+            $newsInfo['list'] = $newsInfos;
+
+            switch ($type) {
+                case 1:
+                    if (isset($newsInfo['list']['0']['content'])) {
+                        $content = $newsInfo['list']['0']['content'];
+                    } else {
+                        //此有两个个可能，在增加图文时插入内容时失败，另一个内容为空，是没有办法做修改功能的，所以建议删除重新增加
+                        $content = '没有此图文内容，建议你将此图文删除，重新增加';
+                    }
+                    $this->assign('content', $content);
+                    break;
+                case 2:
+                    if (isset($newsInfo['list']['0'])) {
+                        $newsInfo = $newsInfo['list']['0'];
+                    } else {
+                        $newsInfo = [];
+                    }
+                    $this->assign('info', $newsInfo);
+                    break;
+                case 3:
+                    if (isset($newsInfo['list']) && !empty($newsInfo['list'])) {
+                        $newsInfo = $newsInfo['list'];
+                    } else {
+                        $newsInfo = [];
+                    }
+                    $this->assign('info', $newsInfo);
+                    break;
+            }
+            $this->assign('news_id', $news_id);
+            $this->assign('back_url', \session('news_list_url'));
+            $this->assign('uploadImg', getHostDomain() . \url('uploadMediaNewsImage'));
+            $this->assign('type', $type);
+            return view();
+        }
+    }
+
+    /**
+     * @author geeson rhaphp.com
+     * @throws Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
+    public function delMediaNews()
+    {
+        if (Request::instance()->isAjax()) {
+            if ($news_id = Request::instance()->post('id')) {
+                $result = Db::name('media_news')->where(['news_id' => $news_id])->find();
+                if ($result['mid'] != $this->mid) {
+                    ajaxMsg(0, '删除失败，内容与公众号不吻合');
+                }
+                Db::name('media_news')->where(['mid' => $this->mid, 'news_id' => $news_id])->delete();
+                Db::name('media_news_list')->where(['news_id' => $news_id])->delete();
+                ajaxMsg(1, '删除成功');
+            }
+        }
+    }
+
+
+    public function sendall()
+    {
+        if (Request::instance()->isAjax()) {
+            $mp = getMpInfo($this->mid);
+            if ($mp['type'] == 1 || $mp['type'] == 3) {
+                ajaxMsg(0, '此功能认证公众号才能使用');
+            }
+            $news_id = Request::instance()->post('news_id');
+            $news = Db::name('media_news')->where(['mid' => $this->mid, 'news_id' => $news_id])->find();
+            if (empty($news)) {
+                ajaxMsg(0, '内容不存在');
+            }
+            if ($news['type'] != 1) {
+                if (empty($news['media_id'])) {
+                    ajaxMsg(0, '此内容还没有上传到微信服务器');
+                }
+            }
+            if ($news['type'] == 1) {
+                $data = [
+                    'filter' => [
+                        'is_to_all' => true,
+                        'tag_id' => ''
+                    ],
+                    'text' => [
+                        'content' => $news['title'],
+                    ],
+                    'msgtype' => 'text',
+
+                ];
+            } else {
+                $data = [
+                    'filter' => [
+                        'is_to_all' => true
+                    ],
+                    'msgtype' => 'mpnews',
+                    'mpnews' => [
+                        'media_id' => $news['media_id']
+                    ],
+                    'send_ignore_reprint' => 0
+                ];
+            }
+            $wxObj = getWechatActiveObj($this->mid);
+            $result = $wxObj->sendGroupMassMessage($data);
+            if ($result && isset($result['errcode']) && $result['errcode'] == 0) {
+                ajaxMsg(1, '群发成功');
+            } else {
+                ajaxMsg(0, '群发失败，错误码：' . $wxObj->errCode . ' 错误内容：' . $wxObj->errMsg);
+            }
+        }
+    }
+
+    public function uploadMediaNewsImage()
+    {
+        if (Request::instance()->isPost()) {
+            $file = \request()->file('upfile');
+            $info = $file->rule('md5')->validate(['ext' => 'jpg,png'])->move(ROOT_PATH . DS . ENTR_PATH . DS . 'uploads');
+            if ($info) {
+                $imgFile = '@' . ROOT_PATH . DS . ENTR_PATH . DS . 'uploads' . DS . $info->getSaveName();
+                $wxObj = getWechatActiveObj($this->mid);
+                $result = $wxObj->uploadImg(['media' => $imgFile]);
+                if ($result && isset($result['url']) && !empty($result['url'])) {
+                    $data = [
+                        'mid' => $this->mid,
+                        'url' => $result['url'],
+                        'create_time' => time(),
+                        'type' => 1,
+                        'path' => DS . 'uploads' . DS . $info->getSaveName(),
+                    ];
+                    Db::name('media_news_material')->insert($data);
+                    $ueInfo= [
+                        "state" => "SUCCESS",          //上传状态，上传成功时必须返回"SUCCESS"
+                        "url" => $result['url'],            //返回的地址
+                        "title" => "",          //新文件名
+                        "original" => "",       //原始文件名
+                        "type" => "",            //文件类型
+                        "size" => "",           //文件大小
+                    ];
+                    return json_encode($ueInfo);
+                }else{
+                    $ueInfo= [
+                        "state" => '群发失败，错误码：' . $wxObj->errCode . ' 错误内容：' . $wxObj->errMsg,          //上传状态，上传成功时必须返回"SUCCESS"
+                        "url" => '',            //返回的地址
+                        "title" => "",          //新文件名
+                        "original" => "",       //原始文件名
+                        "type" => "",            //文件类型
+                        "size" => "",           //文件大小
+                    ];
+                    return json_encode($ueInfo);
+                }
+
+            } else {
+                $ueInfo= [
+                    "state" => $info->getError(),          //上传状态，上传成功时必须返回"SUCCESS"
+                    "url" => '',            //返回的地址
+                    "title" => "",          //新文件名
+                    "original" => "",       //原始文件名
+                    "type" => "",            //文件类型
+                    "size" => "",           //文件大小
+                ];
+                return json_encode($ueInfo);
+            }
+        }
+    }
 
 
 }
