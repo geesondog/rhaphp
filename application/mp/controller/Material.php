@@ -44,10 +44,11 @@ class   Material extends Base
                         $data['media_id'] = $val['media_id'];
                         $data['title'] = $val['name'];
                         $data['url'] = getHostDomain() . url('mp/Show/image','','').'?url='.urlencode($val['url']);
-                        $model = new \app\common\model\Material();
-                        $model->addMaterialByMp($type, $data);
+                        if(!empty($val['url'])){
+                            $model = new \app\common\model\Material();
+                            $model->addMaterialByMp($type, $data);
+                        }
                     }
-
                     $url = getHostDomain() . url('mp/Material/sycMaterial', ['type' => $type, 'offset' => $offset + $i]);
                     $jdtCss = ceil(($offset / $image_count) * 100) . '%';
                     $text = $jdtCss;
