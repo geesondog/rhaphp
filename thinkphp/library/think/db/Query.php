@@ -607,7 +607,7 @@ class Query
                 return true;
             }
         }
-        return $this->setField($field, ['exp', $field . '+' . $step]);
+        return $this->setField($field, ['inc', $field, $step]);
     }
 
     /**
@@ -636,7 +636,7 @@ class Query
                 return true;
             }
         }
-        return $this->setField($field, ['exp', $field . '-' . $step]);
+        return $this->setField($field, ['dec', $field, $step]);
     }
 
     /**
@@ -704,7 +704,8 @@ class Query
     {
         // 传入的表名为数组
         if (is_array($join)) {
-            list($table, $alias) = each($join);
+            $table = key($join);
+            $alias = current($join);
         } else {
             $join = trim($join);
             if (false !== strpos($join, '(')) {
@@ -726,7 +727,7 @@ class Query
                 }
             }
         }
-        if (isset($alias)) {
+        if (isset($alias) && $table != $alias) {
             if (isset($this->options['alias'][$table])) {
                 $table = $table . '@think' . uniqid();
             }
@@ -828,7 +829,7 @@ class Query
     {
         $fields = is_string($field) ? explode(',', $field) : $field;
         foreach ($fields as $field) {
-            $this->data($field, ['exp', $field . '+' . $step]);
+            $this->data($field, ['inc', $field, $step]);
         }
         return $this;
     }
@@ -844,7 +845,7 @@ class Query
     {
         $fields = is_string($field) ? explode(',', $field) : $field;
         foreach ($fields as $field) {
-            $this->data($field, ['exp', $field . '-' . $step]);
+            $this->data($field, ['dec', $field, $step]);
         }
         return $this;
     }
@@ -1239,6 +1240,7 @@ class Query
         $logic = strtoupper($logic);
         if (isset($this->options['where'][$logic][$field])) {
             unset($this->options['where'][$logic][$field]);
+            unset($this->options['multi'][$logic][$field]);
         }
         return $this;
     }
@@ -1743,7 +1745,7 @@ class Query
                 $schema = $guid;
             }
             // 读取缓存
-            if (is_file(RUNTIME_PATH . 'schema/' . $schema . '.php')) {
+            if (!App::$debug && is_file(RUNTIME_PATH . 'schema/' . $schema . '.php')) {
                 $info = include RUNTIME_PATH . 'schema/' . $schema . '.php';
             } else {
                 $info = $this->connection->getFields($guid);
