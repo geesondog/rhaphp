@@ -13,6 +13,7 @@ namespace app\mp\controller;
 
 use app\common\model\Addons;
 use app\common\model\MediaNewsList;
+use app\common\model\MediaNewsMaterial;
 use app\common\model\MpFriends;
 use app\common\model\MpMsg;
 use app\common\model\MpReply;
@@ -904,6 +905,8 @@ class Mp extends Base
         if (Request::instance()->isPost()) {
             $qrModel = new Qrcode();
             $IN = input();
+            pr($IN);
+            exit;
             if ($qrModel->where(['scene_name' => $IN['name'], 'mpid' => $this->mid])->find()) {
                 ajaxMsg('0', '场景名称已经存在');
             }
@@ -1470,7 +1473,7 @@ class Mp extends Base
 
             } else {
                 $ueInfo= [
-                    "state" => $info->getError(),          //上传状态，上传成功时必须返回"SUCCESS"
+                    "state" => '上传失败，图片类型只支持jpg,png',          //上传状态，上传成功时必须返回"SUCCESS"
                     "url" => '',            //返回的地址
                     "title" => "",          //新文件名
                     "original" => "",       //原始文件名
@@ -1479,6 +1482,31 @@ class Mp extends Base
                 ];
                 return json_encode($ueInfo);
             }
+        }
+    }
+
+    public function getNewsMediaMeterial(){
+        $in=input();
+        $model = new MediaNewsMaterial();
+        $mediaLists=$model->where('mid',$this->mid)
+            ->where('type',1)
+            ->order('id DESC')
+            ->limit($in['start'],$in['size'])->select();
+        if(!empty($mediaLists));{
+            $count=count($mediaLists);
+            $list=[];
+            foreach ($mediaLists as $key=>$val){
+                $list [$key]['url']=$val['path'];
+            }
+
+            $result = json_encode(array(
+                "state" => "SUCCESS",
+                "list" => $list,
+                "start" => $in['start'],
+                "total" => '1000'
+            ));
+
+            return $result;
         }
     }
 

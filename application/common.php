@@ -4,8 +4,6 @@
 // +----------------------------------------------------------------------
 // | [RhaPHP] 并不是自由软件,你可免费使用,未经许可不能去掉RhaPHP相关版权
 // +----------------------------------------------------------------------
-// | 官方网站：RhaPHP.com 任何企业和个人不允许对程序代码以任何形式任何目的再发布
-// +----------------------------------------------------------------------
 // | Author: Geeson <qimengkeji@vip.qq.com>
 // +----------------------------------------------------------------------
 
@@ -1207,7 +1205,19 @@ function executeSql($sqlPath)
         $value = trim($value);
         if (!empty($value)) {
             if (substr($value, 0, 12) == 'CREATE TABLE') {
-                $name = preg_replace("/^CREATE TABLE `(\w+)` .*/s", "\\1", $value);
+               // $name = preg_replace("/^CREATE TABLE `(\w+)` .*/s", "\\1", $value);
+                $name='';
+                preg_match('|EXISTS `(.*?)`|',$value,$outValue1);
+                preg_match('|TABLE `(.*?)`|',$value,$outValue2);
+                if(isset($outValue1[1]) && !empty($outValue1[1])){
+                    $name=$outValue1[1];
+                }
+                if(isset($outValue2[1]) && !empty($outValue2[1])){
+                    $name=$outValue2[1];
+                }
+                if(!$name){
+                    ajaxMsg('0', $name . ' SQL语句有误，获取不到表名');
+                }
                 $res = $model->execute("SHOW TABLES LIKE '" . $name . "'");
                 if ($res) {
                     ajaxMsg('0', $name . '表，已经存在');
@@ -1221,7 +1231,7 @@ function executeSql($sqlPath)
         if (empty($value)) {
             continue;
         }
-        $res = $model->execute($value);
+        $res = $model->query($value);
     }
 }
 
@@ -1825,5 +1835,84 @@ function getWxPayUrl($mid = '', $param = [])
     }
     $str = http_build_query($param);
     return getHostDomain() . \think\Url::build('service/payment/wxpay', '', false) . '/?mid=' . $mid . '&' . $str;
+
+}
+
+/**【增加或者修复图文关键词内容】
+ * @author geeson rhaphp.com
+ * @param string $keyword 关键词
+ * @param string $title 标题
+ * @param string $picurl 封面URL
+ * @param string $desc 描述内容
+ * @param string $link 连接地址 （不需要域名），接受addonUrl()与 Url()函数地址
+ * @return bool
+ */
+function setMpKeywordByNews($keyword='',$title='',$picurl='',$desc='',$link=''){
+    $mp=getMpInfo();
+    if(!$keyword || !$title || !$picurl || !$desc || !$link || !isset($mp['id'])){
+        return false;//['status'=>0,'msg'=>'参数缺失'];
+    }
+    $data['mpid']=$mp['id'];
+    $data['keyword']=$keyword;
+    $data['title'] = $title;
+    $data['url'] = $picurl;
+    $data['content'] = $desc;
+    $data['link'] = getHostDomain().$link;
+    $data['type'] = 'news';
+    $ruleModel=new \app\common\model\MpRule();
+    $replyMode=new \app\common\model\MpReply();
+    if($result=$replyMode->alias('a')->where('a.link',$data['link'])
+        ->join('__MP_RULE__ b','b.reply_id=a.reply_id')
+        ->find()){
+        if($data['mpid'] !=$result['mpid']){
+            ajaxMsg(0,'回复关键词内容公众号标识与当前公众号标识不匹配');
+        }
+        $replyMode->allowField(true)->save($data,['reply_id'=>$result['reply_id']]);
+        $ruleModel->allowField(true)->save(['keyword'=>$data['keyword']],['reply_id'=>$result['reply_id']]);
+        return true;
+    }else{
+        if ($res_1 = $replyMode->allowField(true)->save($data)) {
+            $data['reply_id'] = $replyMode->reply_id;
+            if (!$res_2 = $ruleModel->allowField(true)->save($data)) {
+                $replyMode::destroy(['reply_id' => $data['reply_id']]);
+            }
+        }
+        if ($res_1 && $res_2) {
+            return $replyMode->reply_id;
+        } else {
+            return false;
+        }
+    }
+
+
+}
+
+/**
+ * 【删除关键词回复内容】
+ * @author rhaphp.com
+ * @param string $reply_id
+ * @return bool
+ * @throws \think\db\exception\DataNotFoundException
+ * @throws \think\db\exception\ModelNotFoundException
+ * @throws \think\exception\DbException
+ */
+function delKeywordReply($reply_id=''){
+    $mp=getMpInfo();
+    if(!isset($mp['id']) || empty($mp['id']) || !$reply_id){
+        return false;//参数缺失
+    }
+    $ruleModel=new \app\common\model\MpRule();
+    $replyMode=new \app\common\model\MpReply();
+    $result=$ruleModel->where(['reply_id'=>$reply_id])->find();
+
+    if(!empty($result)){
+        if($mp['id'] != $result['mpid']){
+            ajaxMsg(0,'回复关键词内容公众号标识与当前公众号标识不匹配');
+        }
+        $replyMode->where(['reply_id'=>$reply_id])->delete();
+        $ruleModel->where(['reply_id'=>$reply_id])->delete();
+        return true;
+    }
+    return false;
 
 }

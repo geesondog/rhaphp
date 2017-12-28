@@ -173,7 +173,16 @@ function create_tables($db, $prefix = '')
         $value = trim($value);
         if (empty($value)) continue;
         if (substr($value, 0, 12) == 'CREATE TABLE') {
-            $name = preg_replace("/^CREATE TABLE `(\w+)` .*/s", "\\1", $value);
+           // $name = preg_replace("/^CREATE TABLE `(\w+)` .*/s", "\\1", $value);
+            $name='';
+            preg_match('|EXISTS `(.*?)`|',$value,$outValue1);
+            preg_match('|TABLE `(.*?)`|',$value,$outValue2);
+            if(isset($outValue1[1]) && !empty($outValue1[1])){
+                $name=$outValue1[1];
+            }
+            if(isset($outValue2[1]) && !empty($outValue2[1])){
+                $name=$outValue2[1];
+            }
             $msg = "创建数据表{$name}";
             if (false !== $db->execute($value)) {
                 show_msg($msg . '...成功');

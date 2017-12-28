@@ -530,7 +530,9 @@
             return '{$uploadImg}';
         } else if (action == 'uploadvideo') {
             return 'video';
-        } else {
+        }else if (action == 'listimage') {
+            return "{:url('getNewsMediaMeterial')}";
+        }else {
             return this._bkGetActionUrl.call(this, action);
         }
     }

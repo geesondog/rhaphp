@@ -1,6 +1,3 @@
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
 CREATE TABLE IF NOT EXISTS `rh_addons` (
   `id` int(10) NOT NULL COMMENT '自增ID',
   `name` varchar(255) NOT NULL COMMENT '插件名称',
@@ -14,9 +11,13 @@ CREATE TABLE IF NOT EXISTS `rh_addons` (
   `entry_url` varchar(160) NOT NULL COMMENT '前端入口',
   `admin_url` varchar(160) NOT NULL COMMENT '后台入口',
   `menu_show` tinyint(1) NOT NULL COMMENT '是否在菜单显示1：显示0：隐藏'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='应用表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='应用表';
 
-TRUNCATE TABLE `rh_addons`;
+INSERT INTO `rh_addons` (`id`, `name`, `addon`, `desc`, `version`, `author`, `logo`, `status`, `config`, `entry_url`, `admin_url`, `menu_show`) VALUES
+(1, '万能表单', 'nbforms', '万能的表单设计器，报名、预约、信息提交等等。', '1.0', 'Geeson', 'http://rhaphp.cc/addons/nbforms/logo.png', 1, '', '', '', 1),
+(2, '投票', 'touPiao', '一款多功能微信在线投票应用，活动推广、营销利器。', '1.0', 'Geeson', 'http://rhaphp.cc/addons/touPiao/logo.jpg', 1, '[{"name":"login_type","title":"\\u767b\\u5f55\\u65b9\\u5f0f","type":"radio","value":[{"title":"\\u6388\\u6743\\u767b\\u5f55","value":"1","checked":"1"},{"title":"\\u56de\\u590d|\\u83dc\\u5355","value":"2","checked":"0"}],"placeholder":"","tip":"\\u8ba4\\u8bc1\\u516c\\u4f17\\u53f7\\u8bf7\\u9009\\u62e9\\u6388\\u6743\\u767b\\u5f55\\uff0c\\u6ca1\\u6709\\u8ba4\\u8bc1\\u7684\\u8bf7\\u9009\\u62e9\\u56de\\u590d\\u5173\\u952e\\u8bcd\\u3002"},{"name":"vote_title","title":"\\u6807\\u9898","type":"text","value":"","placeholder":"","tip":"\\u6295\\u7968\\u6d3b\\u52a8\\u6807\\u9898"},{"name":"vote_logo","title":"\\u56fe\\u6807","type":"image","value":"","placeholder":"","tip":"\\u5206\\u4eab\\u5230\\u5fae\\u4fe1\\u6216\\u8005\\u670b\\u53cb\\u65f6\\uff0c\\u6807\\u9898\\u524d\\u9762\\u7684\\u5c0f\\u56fe\\u6807\\uff0c\\u62e5\\u6709\\u5206\\u4eab\\u6743\\u9650\\u7684\\u516c\\u4f17\\u53f7\\u6709\\u6548\\u3002"},{"name":"vote_desc","title":"\\u63cf\\u8ff0","type":"textarea","value":"","placeholder":"","tip":"\\u5206\\u4eab\\u53d1\\u9001\\u670b\\u53cb\\u65f6\\uff0c\\u53ef\\u4ee5\\u770b\\u5230\\u7684\\u63cf\\u8ff0\\u5185\\u5bb9\\u3002"},{"name":"banner","title":"banner\\u56fe","type":"images","value":"","placeholder":"","tip":"\\u4e3b\\u9875\\u9762\\u4e0a\\u7684\\u6eda\\u52a8\\u56fe\\uff0c\\u5efa\\u4f7f\\u75281-3\\u5f20\\uff0c\\u592a\\u591a\\u4f1a\\u5f71\\u54cd\\u9875\\u9762\\u6253\\u5f00\\u901f\\u5ea6\\u3002"},{"name":"start_time","title":"\\u5f00\\u59cb\\u65f6\\u95f4","type":"date","value":"","placeholder":"","tip":""},{"name":"end_time","title":"\\u7ed3\\u675f\\u65f6\\u95f4","type":"date","value":"","placeholder":"","tip":""},{"name":"number_of_times","title":"\\u6295\\u7968\\u9650\\u5236","type":"text","value":"1","placeholder":"","tip":"\\u6bcf\\u4eba\\u6bcf\\u5929\\u53ef\\u6295\\u7968\\u6b21\\u6570\\u3002"},{"name":"text_color","title":"\\u98ce\\u683c\\u989c\\u8272","type":"text","value":"#ffb800","placeholder":"","tip":"\\u9875\\u9762\\u98ce\\u683c\\u989c\\u8272\\uff0c\\u4f60\\u65b9\\u53ef\\u4f7f\\u7528\\u4f60\\u559c\\u6b22\\u7684\\u989c\\u8272\\u3002"},{"name":"rule","title":"\\u6d3b\\u52a8\\u89c4\\u5219","type":"textarea","value":"","placeholder":"","tip":"\\u6d3b\\u52a8\\u7684\\u89c4\\u5219\\uff0c\\u8bf4\\u660e\\u652f\\u6301HTML\\u4ee3\\u7801\\u3002"}]', 'touPiao/vote/index', '', 1),
+(3, '红包营销', 'redPack', '有钱就任性，活动营销-红包爱怎么发就怎么发', '1.0', 'Geeson', 'http://rhaphp.cc/addons/redPack/logo.jpg', 1, '[{"name":"amount","title":"\\u7ea2\\u5305\\u603b\\u989d","type":"text","value":"0","placeholder":"","tip":"\\u5355\\u4f4d\\/\\u5143"},{"name":"money","title":"\\u7ea2\\u5305\\u91d1\\u989d","type":"text","value":"1","placeholder":"","tip":"\\u9886\\u53d6\\u7ea2\\u5305\\u4efd\\u989d\\uff0c\\u6ce8\\u610f\\u7ea2\\u5305\\u91d1\\u989d\\u5fae\\u4fe1\\u4e0d\\u80fd\\u4f4e\\u4e8e1\\u868a\\u9e21\\uff081\\u5143\\u94b1\\uff09\\u3002"},{"name":"nick_name","title":"\\u63d0\\u4f9b\\u65b9\\u540d","type":"text","value":"","placeholder":"","tip":"\\u5217\\u5982\\uff1a\\u7eee\\u68a6\\u79d1\\u6280\\u3001 RhaPHP\\u3001\\u51b0\\u51b0\\u5de5\\u4f5c\\u5ba4\\u7b49\\u7b49\\u3002"},{"name":"send_name","title":"\\u7ea2\\u5305\\u53d1\\u9001\\u8005\\u540d","type":"text","value":"","placeholder":"","tip":"\\u4f8b\\u5982\\uff1a\\u51b0\\u51b0\\u3001\\u52aa\\u529b\\u5c31\\u6709\\u5e0c\\u671b\\u3001\\u6709\\u94b1\\u7684\\u4e8c\\u72d7\\u5b50\\u7b49\\u7b49\\uff0c\\u5b57\\u6570\\u5c3d\\u91cf\\u4e0d\\u8981\\u592a\\u591a\\u3002"},{"name":"wishing","title":"\\u7ea2\\u5305\\u795d\\u798f\\u8bed","type":"text","value":"","placeholder":"","tip":"\\u4f8b\\u5982\\uff1a\\u606d\\u559c\\u53d1\\u8d22\\u3001\\u65e9\\u751f\\u8d35\\u5b50\\u3001\\u65e9\\u65e5\\u5206\\u624b\\u3001\\u4f60\\u60f3\\u5bf9\\u9886\\u53d6\\u7ea2\\u5305\\u7684\\u4eba\\u8bf4\\u7684\\u8bdd\\u3002"},{"name":"reply_msg","title":"\\u6210\\u529f\\u56de\\u590d","type":"text","value":"\\u7ea2\\u5305\\u53d1\\u653e\\u6210\\u529f\\uff0c\\u8bf7\\u4f60\\u7ee7\\u7eed\\u5173\\u6ce8\\u6d3b\\u52a8\\uff0c\\u540e\\u9762\\u798f\\u5229\\u591a\\u591a\\uff01","placeholder":"","tip":"\\u7ea2\\u5305\\u53d1\\u9001\\u6210\\u529f\\uff0c\\u56de\\u590d\\u7684\\u6d88\\u606f\\u5185\\u5bb9\\u3002"},{"name":"act_name","title":"\\u6d3b\\u52a8\\u540d\\u79f0","type":"text","value":"","placeholder":"","tip":"\\u4f8b\\u5982\\uff1a\\u4e94\\u4e00\\u5047\\u65e5\\u6d3b\\u52a8\\u3001\\u4e09\\u5468\\u5e74\\u5e86\\u3001\\u7b49\\u7b49\\u3002"},{"name":"start_time","title":"\\u5f00\\u59cb\\u65f6\\u95f4","type":"date","value":"","placeholder":"","tip":""},{"name":"end_time","title":"\\u7ed3\\u675f\\u65f6\\u95f4","type":"date","value":"","placeholder":"","tip":""},{"name":"number_of_times","title":"\\u9886\\u53d6\\u6b21\\u6570","type":"text","value":"1","placeholder":"","tip":"\\u6bcf\\u4eba\\u9886\\u53d6\\u7ea2\\u5305\\u6b21\\u6570\\uff0c\\u9ed8\\u8ba41\\u6b21"}]', '', '', 1);
+
 CREATE TABLE IF NOT EXISTS `rh_addon_info` (
   `id` int(10) NOT NULL COMMENT '自增ID',
   `mpid` int(10) NOT NULL COMMENT '公众号标识',
@@ -24,7 +25,6 @@ CREATE TABLE IF NOT EXISTS `rh_addon_info` (
   `infos` text NOT NULL COMMENT '配置信息'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='插件配置参数表';
 
-TRUNCATE TABLE `rh_addon_info`;
 CREATE TABLE IF NOT EXISTS `rh_admin` (
   `id` int(11) NOT NULL COMMENT '自增 ID',
   `admin_name` varchar(60) NOT NULL COMMENT '管理员登录',
@@ -36,7 +36,6 @@ CREATE TABLE IF NOT EXISTS `rh_admin` (
   `admin_id` int(11) NOT NULL DEFAULT '0' COMMENT '超级管理 ID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-TRUNCATE TABLE `rh_admin`;
 CREATE TABLE IF NOT EXISTS `rh_comment` (
   `com_id` int(11) NOT NULL COMMENT '自增 ID',
   `article_id` int(11) NOT NULL COMMENT '内容 ID',
@@ -48,7 +47,31 @@ CREATE TABLE IF NOT EXISTS `rh_comment` (
   `create_time` int(10) NOT NULL DEFAULT '0' COMMENT '时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-TRUNCATE TABLE `rh_comment`;
+CREATE TABLE IF NOT EXISTS `rh_forms` (
+  `id` int(11) NOT NULL COMMENT '自增 ID',
+  `mid` int(11) NOT NULL COMMENT '公众号标识',
+  `title` varchar(250) NOT NULL COMMENT '标题',
+  `picurl` text CHARACTER SET utf8 NOT NULL COMMENT '封面URL',
+  `content` text NOT NULL COMMENT '描述',
+  `success_msg` varchar(250) CHARACTER SET utf8 NOT NULL COMMENT '保存成功提示',
+  `attr_value` text CHARACTER SET utf8 NOT NULL COMMENT '表单属性',
+  `create_time` int(11) NOT NULL COMMENT '创建时间',
+  `keyword` varchar(60) CHARACTER SET utf8 NOT NULL COMMENT '关键词',
+  `template` varchar(60) CHARACTER SET utf8 NOT NULL DEFAULT 'default' COMMENT '模板',
+  `jump_url` text NOT NULL COMMENT '提交成功后跳转地址',
+  `reply_id` int(11) NOT NULL DEFAULT '0' COMMENT '回复规则 ID',
+  `title2` varchar(250) DEFAULT NULL COMMENT '副标题',
+  `content2` text COMMENT '规则说明'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `rh_forms_values` (
+  `id` int(11) NOT NULL COMMENT '自增 ID',
+  `forms_id` int(11) NOT NULL COMMENT '表单 ID',
+  `mid` int(11) NOT NULL COMMENT '公众号标识',
+  `val` text CHARACTER SET utf8mb4 NOT NULL COMMENT '值',
+  `create_time` int(11) NOT NULL COMMENT '创建时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `rh_material` (
   `id` int(10) NOT NULL COMMENT '自增ID',
   `mpid` int(10) NOT NULL COMMENT '公众号标识',
@@ -56,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `rh_material` (
   `title` varchar(255) DEFAULT NULL COMMENT '素材名称|标题',
   `url` varchar(500) DEFAULT NULL COMMENT '素材资源地址|图文封面',
   `description` text COMMENT '图文素材描述',
-  `content` text COMMENT '文本素材内容',
+  `content` mediumtext COMMENT '文本素材内容',
   `detail` text COMMENT '图文素材详情',
   `link` varchar(255) DEFAULT NULL COMMENT '图文链接',
   `create_time` int(10) DEFAULT NULL COMMENT '创建时间',
@@ -66,7 +89,42 @@ CREATE TABLE IF NOT EXISTS `rh_material` (
   `path` varchar(500) DEFAULT NULL COMMENT '资源路径'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='公众号素材表';
 
-TRUNCATE TABLE `rh_material`;
+CREATE TABLE IF NOT EXISTS `rh_media_news` (
+  `news_id` int(11) NOT NULL COMMENT '自增 ID',
+  `mid` int(11) NOT NULL COMMENT '公众号标识',
+  `media_id` varchar(500) DEFAULT NULL COMMENT '媒体 ID',
+  `title` text COMMENT '标题',
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1:文本2:单图文3:多图文',
+  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
+  `create_time` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(10) NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `status_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1已上传，0未上传,3已经群发'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `rh_media_news_list` (
+  `id` int(11) NOT NULL COMMENT '自增 ID',
+  `news_id` int(11) NOT NULL COMMENT '主题 ID',
+  `cover` varchar(500) CHARACTER SET utf8 NOT NULL COMMENT '封面',
+  `thumb_media_id` varchar(500) CHARACTER SET utf8 DEFAULT NULL COMMENT '媒体 ID',
+  `author` varchar(80) CHARACTER SET utf8 DEFAULT NULL COMMENT '作者',
+  `title` varchar(180) DEFAULT NULL COMMENT '标题',
+  `content_source_url` text CHARACTER SET utf8 COMMENT '链接',
+  `content` mediumtext COMMENT '内容',
+  `digest` text COMMENT '描述',
+  `show_cover_pic` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1为显示，0为不显示',
+  `status_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1已上传，2未上传',
+  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `rh_media_news_material` (
+  `id` int(11) NOT NULL COMMENT '自增 ID',
+  `mid` int(11) NOT NULL COMMENT '公众号标识',
+  `url` text COMMENT '地址',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1图片：2视频',
+  `path` varchar(500) DEFAULT NULL COMMENT '本地路径'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `rh_member_group` (
   `gid` int(11) NOT NULL COMMENT '组 ID',
   `mpid` int(11) NOT NULL COMMENT '公众号标识',
@@ -78,7 +136,6 @@ CREATE TABLE IF NOT EXISTS `rh_member_group` (
   `description` varchar(250) NOT NULL COMMENT '描述'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-TRUNCATE TABLE `rh_member_group`;
 CREATE TABLE IF NOT EXISTS `rh_member_wealth_record` (
   `id` int(11) NOT NULL COMMENT '自增 ID',
   `member_id` int(11) NOT NULL DEFAULT '0' COMMENT '会员 ID',
@@ -90,7 +147,6 @@ CREATE TABLE IF NOT EXISTS `rh_member_wealth_record` (
   `remark` varchar(255) DEFAULT NULL COMMENT '备注'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-TRUNCATE TABLE `rh_member_wealth_record`;
 CREATE TABLE IF NOT EXISTS `rh_menu` (
   `id` int(11) NOT NULL COMMENT '自增ID',
   `pid` int(5) NOT NULL COMMENT '上级ID',
@@ -100,9 +156,8 @@ CREATE TABLE IF NOT EXISTS `rh_menu` (
   `icon` varchar(180) DEFAULT NULL COMMENT '图标',
   `child` varchar(5) DEFAULT NULL,
   `shows` varchar(5) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8;
 
-TRUNCATE TABLE `rh_menu`;
 INSERT INTO `rh_menu` (`id`, `pid`, `name`, `url`, `sort`, `icon`, `child`, `shows`) VALUES
 (1, 0, '公众号', 'mp/mp/index', 0, '&#xe63a;', '', ''),
 (2, 0, '系统管理', 'admin/system/index', 0, '&#xe620;', '', ''),
@@ -134,7 +189,7 @@ INSERT INTO `rh_menu` (`id`, `pid`, `name`, `url`, `sort`, `icon`, `child`, `sho
 (50, 26, '修改菜单', 'admin/system/updatemenu', 0, '', NULL, NULL),
 (51, 22, '修改公众号', 'mp/index/updatemp', 0, '', NULL, NULL),
 (52, 2, '后台管理', 'NULL', 0, '&#xe663;', NULL, NULL),
-(53, 52, '管理成员', 'admin/system/AdminMember', 0, '', NULL, NULL),
+(53, 52, '管理成员', 'admin/system/adminmember', 0, '', NULL, NULL),
 (54, 53, '更改密码', 'admin/system/updatepwd', 0, '', NULL, NULL),
 (55, 53, '增加成员', 'admin/system/addadminmember', 0, '', NULL, NULL),
 (56, 45, '应用管理', 'admin/app/index', 0, '', NULL, NULL),
@@ -142,6 +197,7 @@ INSERT INTO `rh_menu` (`id`, `pid`, `name`, `url`, `sort`, `icon`, `child`, `sho
 (58, 13, '图文群发', 'mp/mp/newslist', 6, '', NULL, NULL),
 (59, 58, '增加图文', 'mp/mp/addnews', 0, '', NULL, NULL),
 (60, 58, '修改图文', 'mp/mp/editnews', 0, '', NULL, NULL);
+
 CREATE TABLE IF NOT EXISTS `rh_mp` (
   `id` int(10) unsigned NOT NULL COMMENT '自增ID',
   `user_id` int(10) NOT NULL COMMENT '用户ID',
@@ -152,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `rh_mp` (
   `type` int(1) NOT NULL DEFAULT '0' COMMENT '公众号类型（1：普通订阅号；2：认证订阅号；3：普通服务号；4：认证服务号',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态（0：禁用，1：正常，2：审核中）',
   `valid_token` varchar(40) DEFAULT NULL COMMENT '接口验证Token',
-  `valid_status` tinyint(1) NOT NULL COMMENT '1已接入；0未接入',
+  `valid_status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1已接入；0未接入',
   `token` varchar(50) DEFAULT NULL COMMENT '公众号标识',
   `encodingaeskey` varchar(50) DEFAULT NULL COMMENT '消息加解密秘钥',
   `mp_number` varchar(50) DEFAULT NULL COMMENT '微信号',
@@ -164,7 +220,6 @@ CREATE TABLE IF NOT EXISTS `rh_mp` (
   `is_use` tinyint(1) NOT NULL DEFAULT '0' COMMENT '当前使用'
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='公众号表';
 
-TRUNCATE TABLE `rh_mp`;
 INSERT INTO `rh_mp` (`id`, `user_id`, `name`, `appid`, `appsecret`, `origin_id`, `type`, `status`, `valid_token`, `valid_status`, `token`, `encodingaeskey`, `mp_number`, `desc`, `logo`, `qrcode`, `create_time`, `login_name`, `is_use`) VALUES
 (1, 1, '测试公众号', 'wxb8862c9e7cb27654', 'c280978c74a8749d74b0e504224bdf35', 'gh_d059d8896214f', 1, 1, 'MIL4umO8pWIkfNhvNx01uBDupfUqS7J4', 1, 'gVzaHNIx9RiO40KiXbJScNN2t7SLF2gl', 'ofVvs4t2lbhQBrzZ2JhFWu7P2q07SHTGmeCfIwHu8pL', 'demomp', '系统维护中，请稍后。', '', '', 1505629364, NULL, 1);
 
@@ -201,7 +256,6 @@ CREATE TABLE IF NOT EXISTS `rh_mp_friends` (
   `last_time` int(10) DEFAULT '586969200' COMMENT '最后交互时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='公众号粉丝表';
 
-TRUNCATE TABLE `rh_mp_friends`;
 CREATE TABLE IF NOT EXISTS `rh_mp_menu` (
   `id` bigint(16) unsigned NOT NULL,
   `mp_id` int(11) DEFAULT '0' COMMENT '公众号标识',
@@ -214,7 +268,6 @@ CREATE TABLE IF NOT EXISTS `rh_mp_menu` (
   `status` tinyint(1) unsigned DEFAULT '1' COMMENT '状态(0禁用1启用)'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微信自定义菜单表';
 
-TRUNCATE TABLE `rh_mp_menu`;
 CREATE TABLE IF NOT EXISTS `rh_mp_msg` (
   `msg_id` int(11) NOT NULL COMMENT '自增 ID',
   `pid` int(11) NOT NULL DEFAULT '0' COMMENT '上一条消息 ID',
@@ -227,7 +280,6 @@ CREATE TABLE IF NOT EXISTS `rh_mp_msg` (
   `create_time` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-TRUNCATE TABLE `rh_mp_msg`;
 CREATE TABLE IF NOT EXISTS `rh_mp_reply` (
   `reply_id` int(11) NOT NULL COMMENT '自增ID',
   `type` varchar(60) NOT NULL COMMENT '回复类型：text,images,news,voice,music,video',
@@ -239,7 +291,6 @@ CREATE TABLE IF NOT EXISTS `rh_mp_reply` (
   `media_id` varchar(500) DEFAULT NULL COMMENT '媒体ID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-TRUNCATE TABLE `rh_mp_reply`;
 CREATE TABLE IF NOT EXISTS `rh_mp_rule` (
   `id` int(10) NOT NULL COMMENT '自增ID',
   `mpid` int(10) NOT NULL COMMENT '公众号ID',
@@ -252,7 +303,6 @@ CREATE TABLE IF NOT EXISTS `rh_mp_rule` (
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态(1开户:0关闭)'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='公众号响应规则';
 
-TRUNCATE TABLE `rh_mp_rule`;
 CREATE TABLE IF NOT EXISTS `rh_payment` (
   `payment_id` int(11) NOT NULL COMMENT '自增 ID',
   `member_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户 ID',
@@ -269,7 +319,6 @@ CREATE TABLE IF NOT EXISTS `rh_payment` (
   `refund` tinyint(1) DEFAULT NULL COMMENT '1：申请退款中2：退款完成'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-TRUNCATE TABLE `rh_payment`;
 CREATE TABLE IF NOT EXISTS `rh_qrcode` (
   `id` int(10) unsigned NOT NULL COMMENT '主键',
   `mpid` int(10) DEFAULT NULL COMMENT '公众号标识',
@@ -288,7 +337,6 @@ CREATE TABLE IF NOT EXISTS `rh_qrcode` (
   `gz_count` int(11) NOT NULL COMMENT '关注数量'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-TRUNCATE TABLE `rh_qrcode`;
 CREATE TABLE IF NOT EXISTS `rh_qrcode_data` (
   `id` int(11) NOT NULL COMMENT '自增ID',
   `scene_id` int(11) NOT NULL COMMENT '场景 ID',
@@ -300,7 +348,6 @@ CREATE TABLE IF NOT EXISTS `rh_qrcode_data` (
   `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:默认1:扫码关注'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-TRUNCATE TABLE `rh_qrcode_data`;
 CREATE TABLE IF NOT EXISTS `rh_redpack` (
   `id` int(11) NOT NULL COMMENT '自增 ID',
   `openid` varchar(255) CHARACTER SET utf8 DEFAULT NULL COMMENT 'openid',
@@ -314,7 +361,6 @@ CREATE TABLE IF NOT EXISTS `rh_redpack` (
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态1：正常0：过期'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-TRUNCATE TABLE `rh_redpack`;
 CREATE TABLE IF NOT EXISTS `rh_setting` (
   `id` int(11) NOT NULL COMMENT '自增ID',
   `mpid` int(11) NOT NULL COMMENT '公众号标识',
@@ -323,7 +369,6 @@ CREATE TABLE IF NOT EXISTS `rh_setting` (
   `cate` varchar(30) DEFAULT NULL COMMENT '分类'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-TRUNCATE TABLE `rh_setting`;
 CREATE TABLE IF NOT EXISTS `rh_vote_baoming` (
   `bm_id` int(11) NOT NULL,
   `mpid` int(11) NOT NULL,
@@ -338,7 +383,6 @@ CREATE TABLE IF NOT EXISTS `rh_vote_baoming` (
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1:正常0：隐藏'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-TRUNCATE TABLE `rh_vote_baoming`;
 CREATE TABLE IF NOT EXISTS `rh_vote_record` (
   `id` int(11) NOT NULL,
   `mpid` int(11) NOT NULL,
@@ -347,14 +391,12 @@ CREATE TABLE IF NOT EXISTS `rh_vote_record` (
   `time` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-TRUNCATE TABLE `rh_vote_record`;
 CREATE TABLE IF NOT EXISTS `rh_vote_view` (
   `id` int(11) NOT NULL,
   `mpid` int(11) NOT NULL,
   `view` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-TRUNCATE TABLE `rh_vote_view`;
 
 ALTER TABLE `rh_addons`
   ADD PRIMARY KEY (`id`);
@@ -368,7 +410,22 @@ ALTER TABLE `rh_admin`
 ALTER TABLE `rh_comment`
   ADD PRIMARY KEY (`com_id`);
 
+ALTER TABLE `rh_forms`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `rh_forms_values`
+  ADD PRIMARY KEY (`id`);
+
 ALTER TABLE `rh_material`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `rh_media_news`
+  ADD PRIMARY KEY (`news_id`);
+
+ALTER TABLE `rh_media_news_list`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `rh_media_news_material`
   ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `rh_member_group`
@@ -423,22 +480,33 @@ ALTER TABLE `rh_vote_record`
 ALTER TABLE `rh_vote_view`
   ADD PRIMARY KEY (`id`);
 
+
 ALTER TABLE `rh_addons`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '自增ID';
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '自增ID',AUTO_INCREMENT=4;
 ALTER TABLE `rh_addon_info`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '自增ID';
 ALTER TABLE `rh_admin`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID';
 ALTER TABLE `rh_comment`
   MODIFY `com_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID';
+ALTER TABLE `rh_forms`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID';
+ALTER TABLE `rh_forms_values`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID';
 ALTER TABLE `rh_material`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '自增ID';
+ALTER TABLE `rh_media_news`
+  MODIFY `news_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID';
+ALTER TABLE `rh_media_news_list`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID';
+ALTER TABLE `rh_media_news_material`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID';
 ALTER TABLE `rh_member_group`
   MODIFY `gid` int(11) NOT NULL AUTO_INCREMENT COMMENT '组 ID';
 ALTER TABLE `rh_member_wealth_record`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID';
 ALTER TABLE `rh_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',AUTO_INCREMENT=57;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',AUTO_INCREMENT=61;
 ALTER TABLE `rh_mp`
   MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',AUTO_INCREMENT=2;
 ALTER TABLE `rh_mp_friends`
@@ -467,62 +535,3 @@ ALTER TABLE `rh_vote_record`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `rh_vote_view`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-ALTER TABLE `rh_material` CHANGE `content` `content` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文本素材内容';
-ALTER TABLE `rh_mp` CHANGE `valid_status` `valid_status` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '1已接入；0未接入';
-
-CREATE TABLE IF NOT EXISTS `rh_media_news` (
-  `news_id` int(11) NOT NULL COMMENT '自增 ID',
-  `mid` int(11) NOT NULL COMMENT '公众号标识',
-  `media_id` varchar(500) DEFAULT NULL COMMENT '媒体 ID',
-  `title` text COMMENT '标题',
-  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1:文本2:单图文3:多图文',
-  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
-  `create_time` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `update_time` int(10) NOT NULL DEFAULT '0' COMMENT '更新时间',
-  `status_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1已上传，0未上传,3已经群发'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `rh_media_news_list` (
-  `id` int(11) NOT NULL COMMENT '自增 ID',
-  `news_id` int(11) NOT NULL COMMENT '主题 ID',
-  `cover` varchar(500) CHARACTER SET utf8 NOT NULL COMMENT '封面',
-  `thumb_media_id` varchar(500) CHARACTER SET utf8 DEFAULT NULL COMMENT '媒体 ID',
-  `author` varchar(80) CHARACTER SET utf8 DEFAULT NULL COMMENT '作者',
-  `title` varchar(180) DEFAULT NULL COMMENT '标题',
-  `content_source_url` text CHARACTER SET utf8 COMMENT '链接',
-  `content` mediumtext COMMENT '内容',
-  `digest` text COMMENT '描述',
-  `show_cover_pic` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1为显示，0为不显示',
-  `status_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1已上传，2未上传',
-  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-ALTER TABLE `rh_media_news`
-  ADD PRIMARY KEY (`news_id`);
-
-ALTER TABLE `rh_media_news_list`
-  ADD PRIMARY KEY (`id`);
-
-
-ALTER TABLE `rh_media_news`
-  MODIFY `news_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID';
-ALTER TABLE `rh_media_news_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID';
-
-CREATE TABLE IF NOT EXISTS `rh_media_news_material` (
-  `id` int(11) NOT NULL COMMENT '自增 ID',
-  `mid` int(11) NOT NULL COMMENT '公众号标识',
-  `url` text COMMENT '地址',
-  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1图片：2视频',
-  `path` varchar(500) DEFAULT NULL COMMENT '本地路径'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-ALTER TABLE `rh_media_news_material`
-  ADD PRIMARY KEY (`id`);
-
-
-ALTER TABLE `rh_media_news_material`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID';

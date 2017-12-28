@@ -257,7 +257,7 @@ UE.I18N['zh-cn'] = {
         'static':{
             'lang_tab_remote':"插入图片", //节点
             'lang_tab_upload':"本地上传",
-            'lang_tab_online':"在线管理",
+            'lang_tab_online':"图文素材",
             'lang_tab_search':"图片搜索",
             'lang_input_url':"地 址：",
             'lang_input_size':"大 小：",

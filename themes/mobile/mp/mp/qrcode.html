@@ -6,7 +6,6 @@
 <a href="{:url('qrcodeAdd')}" id="addkw" class="layui-btn layui-btn-normal layui-btn-sm rha-nav-title">增加二维码</a>
 {/block}
 {block name="body"}
-{CSS href="/public/static/mp/css/custom_menu.css" /}
 <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
     <ul class="layui-tab-title">
         <li {eq name="type" value="list"}class="layui-this"{/eq} ><a href="{:url('mp/Mp/qrcode',['type'=>'list'])}">二维码列表</a></li>
@@ -36,10 +35,10 @@
                 </div></td>
                 <td>{$vo.scene_name}</td>
                 <td>{$vo.keyword}</td>
-                <td>{if condition="$vo.qr_type neq '0'"}临时
+                <td>{if condition="$vo.qr_type eq '0'"}临时
                     {else /} 永久
                     {/if}</td>
-                <td>{if condition="$vo.qr_type neq '0'"}{$vo.create_time}
+                <td>{if condition="$vo.qr_type eq '0'"}{$vo.create_time}
                     {else /} 长期有效
                     {/if}</td>
                 <!--<td>-->
