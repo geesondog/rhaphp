@@ -14,7 +14,7 @@ return
             'nickname1' => 'RhaPHP',
             'nickname2' => '二哈系统',
             'company_website' => 'http://www.rhaphp.com/',
-            'version' => '1.2.5'//请不要随意更改版本号
+            'version' => '1.2.6'//请不要随意更改版本号
         ]
     ];
 

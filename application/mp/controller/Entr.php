@@ -98,6 +98,18 @@ class Entr
                                         ->where(['scene_id' => $result['scene_id']])
                                         ->setInc('gz_count');
                                 }
+                                $friendInfo = getFriendInfoForApi(getOrSetOpenid());
+                                $friendInfo['tagid_list'] = json_encode($friendInfo['tagid_list']);
+                                $friendModel = new MpFriends();
+                                if (!empty($friendInfo)) {
+                                    $friendInfo['mpid'] = $this->mid;
+                                    $Res = $friendModel->where(['mpid' => $this->mid, 'openid' => getOrSetOpenid()])->find();
+                                    if (empty($Res)) {
+                                        $friendModel->save($friendInfo);
+                                    } else {
+                                        $friendModel->save($friendInfo, ['mpid' => $this->mid, 'openid' => getOrSetOpenid()]);
+                                    }
+                                }
                                 $this->qrcode($result, $msgData);
                             }
                         }
@@ -364,6 +376,7 @@ class Entr
     public function subscribe($msg = [], $type = 'subscribe')
     {
         $friendInfo = getFriendInfoForApi(getOrSetOpenid());
+        $friendInfo['tagid_list']=json_encode($friendInfo['tagid_list']);
         $friendModel = new MpFriends();
         if (!empty($friendInfo)) {
             $friendInfo['mpid'] = $this->mid;

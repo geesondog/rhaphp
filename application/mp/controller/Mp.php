@@ -905,8 +905,6 @@ class Mp extends Base
         if (Request::instance()->isPost()) {
             $qrModel = new Qrcode();
             $IN = input();
-            pr($IN);
-            exit;
             if ($qrModel->where(['scene_name' => $IN['name'], 'mpid' => $this->mid])->find()) {
                 ajaxMsg('0', '场景名称已经存在');
             }
