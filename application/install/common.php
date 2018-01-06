@@ -191,7 +191,7 @@ function create_tables($db, $prefix = '')
                 session('error', true);
             }
         } else {
-            $db->query($value);
+            $db->execute($value);
         }
 
     }
