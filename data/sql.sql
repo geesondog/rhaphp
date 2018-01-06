@@ -535,3 +535,5 @@ ALTER TABLE `rh_vote_record`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `rh_vote_view`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `rh_qrcode` CHANGE `scan_count` `scan_count` INT(11) NOT NULL DEFAULT '0' COMMENT '扫码次数';
+ALTER TABLE `rh_qrcode` CHANGE `gz_count` `gz_count` INT(11) NOT NULL DEFAULT '0' COMMENT '关注数量';
