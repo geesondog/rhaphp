@@ -1,10 +1,6 @@
-<p align=center>
-  <a href="https://www.rhaphp.com/">
-    <img src="https://rhaphp.com/static/home/images/rhaphp_pc.png" alt="rhaphp" width="520">
-  </a>
-</p>
 
----
+![](https://rhaphp.com/static/home/images/rhaphp_pc.png)
+
 #官方网站：https://www.rhaphp.com/
 
 #交流社区：https://ask.rhaphp.com/
