@@ -1,0 +1,40 @@
+{extend name="../admin/common/base" /}
+{block name="leftMenu"}
+<style>
+
+</style>
+<li class="  am-open">
+    <a href="##" class="" >应用管理</a>
+    <ul id="rhaphp-addon-menu" class="am-menu-sub am-collapse  am-avg-sm-2" style="display: block">
+        <li class="">
+            <a href="{:url('mp/App/index',['name'=>$addonInfo.addon,'type'=>'news'])}" class="" >入口配置</a>
+        </li>
+        {if condition="isset($addonInfo.config) && !empty($addonInfo.config)"}
+        <li class="">
+            <a href="{:url('mp/App/config',['name'=>$addonInfo.addon])}" class="" >参数设置</a>
+        </li>
+        {/if}
+        {volist name="$addonMenu" id="v"}
+        <li class="">
+            <a href="{:url('mp/App/toview',['name'=>$addonInfo.addon,'key'=>$key])}" class="" >{$v.name}</a>
+        </li>
+        {/volist}
+    </ul>
+</li>
+<!--<dl>-->
+    <!--<dt><i class="type-ico ico-trade rha-icon">&#xe6f0;</i>应用配置</dt></dt>-->
+    <!--<dd class="{eq name="$action_name" value="index"}selected{/eq}"><a href="{:url('mp/App/index',['name'=>$addonInfo.addon,'type'=>'news'])}">入口配置</a></dd>-->
+    <!--<dd class="{eq name="$action_name" value="config"}selected{/eq}"><a href="{:url('mp/App/config',['name'=>$addonInfo.addon])}">参数设置</a></dd>-->
+<!--</dl>-->
+<!--<dl>-->
+    <!--<dt><i class="type-ico ico-trade rha-icon">&#xe6f0;</i>业务菜单</dt></dt>-->
+    <!--{volist name="$addonMenu" id="v"}-->
+    <!--<dd class="{eq name="$Mkey" value="$key"}selected{/eq}">-->
+    <!--<a href="{:url('mp/App/toview',['name'=>$addonInfo.addon,'key'=>$key])}"><i class="rha-icon">{$v.icon}</i>{$v.name}</a>-->
+    <!--</dd>-->
+    <!--{/volist}-->
+<!--</dl>-->
+{/block}
+{block name="body"}
+
+{/block}

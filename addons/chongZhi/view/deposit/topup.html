@@ -1,0 +1,32 @@
+{extend name="./common/base" /}
+{block name="body"}
+<div class="weui-cells weui-cells_form" style="margin-top: 20%">
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">充值金额:</label></div>
+        <div class="weui-cell__bd">
+            <input class="weui-input money" type="number" name="money" placeholder="请输入金额 单位：元">
+
+        </div>
+    </div>
+</div>
+<br><br>
+<div style="padding: 15px;">
+    <a onclick="callpay()" class="weui-btn weui-btn_primary">去充值</a>
+</div>
+{:hook('Jssdk')}
+<script>
+    function callpay() {
+        $(function () {
+            var money=$('.money').val();
+            $.post("",{money:money},function (res) {
+                if(res.status==1){
+                    window.location.href=res.url;
+                }else{
+                    $.alert(res.msg);
+                }
+            })
+        })
+    }
+
+</script>
+{/block}

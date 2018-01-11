@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>{$info.vote_title}</title>
+    {js href='__STATIC__/jquery/jquery-1.11.0.min.js' /}
+    {js href='__STATIC__/layui/layui.js' /}
+    {CSS href="__STATIC__/layui/css/layui.css" /}
+    {CSS href="__ADDONSTATIC__/css/style.css" /}
+    {:hook('Jssdk')}
+    <script>
+        wx.ready(function () {
+            var shareData = {
+                title: '{$info.vote_title}',
+                desc: '{$info.vote_desc}',
+                link: "{:getHostDomain()}{:addonUrl('index')}",
+                imgUrl: '{$info.vote_logo}'
+            };
+            wx.onMenuShareAppMessage(shareData);
+            wx.onMenuShareTimeline(shareData);
+            wx.hideAllNonBaseMenuItem({
+                success: function () {
+                }
+            });
+            wx.showMenuItems({
+                menuList: [
+                    'menuItem:share:timeline', // 分享到朋友圈
+                    'menuItem:share:appMessage',
+                ]
+            });
+        });
+    </script>
+</head>
+<style>
+    .am-slider-default{margin-bottom: 0;}.am-slider-default .am-control-nav{bottom: 10px;}
+</style>
+<body class="vote_body">
+<div class="layui-carousel" id="Votebanner">
+    <div carousel-item>
+        {notempty name="$info.banner"}
+        {volist name="$info.banner" id="v"}
+        <img src="{$v}" /></li>
+        {/volist}
+        {/notempty}
+    </div>
+</div>
+<div class="layui-row head_nav" style="background-color: {$info.text_color}">
+    <div class="vote_btn_no layui-col-xs4">
+        <a><i class="layui-icon nav_icon">&#xe600;</i>参与选手</a>
+        <a>{$records.baoming}位</a>
+    </div>
+    <div class="vote_btn_no_nav2 layui-col-xs4">
+        <a><i class="layui-icon nav_icon">&#xe756;</i>总投票数</a>
+        <a>{$records.vote_total}票</a>
+    </div>
+    <div class="vote_btn_no layui-col-xs4">
+        <a><i class="layui-icon nav_icon">&#xe609;</i>访问量</a>
+        <a>{$records.view}次</a>
+    </div>
+</div>
+<div class="layui-row" style="text-align: center;margin-bottom: 10px;">
+    <a href="{:addonUrl('vote/baoming')}" class="layui-btn btn layui-btn-sm" style="background-color: {$info.text_color}">
+        <i class="layui-icon">&#xe608;</i> 我要报名
+    </a>
+</div>
+<form class="layui-form" action="{:addonUrl('search')}">
+    <div class="layui-row" style="padding: 10px 50px; line-height: 38px;">
+        <div class="layui-col-xs9">
+            <input name="keyword" lay-verify="text" placeholder="选手号或者呢称" autocomplete="off" class="layui-input" type="text">
+        </div>
+        <div class="layui-col-xs3">
+            <button   class="layui-btn btn layui-btn-sm" style="margin-left: 10px;background-color: {$info.text_color}">
+                <i class="layui-icon">&#xe615;</i> 搜索
+            </button>
+        </div>
+    </div>
+</form>
+<div id="END_TIME"><i class="layui-icon">&#xe60e;</i>活动于{$end_time}结束</div>
+<div class="content_body">
+    {block name="body"}{/block}
+</div>
+<footer class="vote_footer">
+    <div class="layui-row vote_footer_btn">
+        <div class="vote_btn_no1 layui-col-xs4">
+            <a href="{:addonUrl('index')}">全部选手</a>
+        </div>
+        <div class="vote_btn_no2 layui-col-xs4">
+            <a href="{:addonUrl('ranking')}">当前排名</a>
+        </div>
+        <div class="vote_btn_no3 layui-col-xs4">
+            <a href="{:addonUrl('rule')}">活动规则</a>
+        </div>
+    </div>
+</footer>
+</body>
+<script>
+    layui.use(['carousel','util'], function(){
+        var carousel = layui.carousel;
+        var util = layui.util;
+        carousel.render({
+            elem: '#Votebanner'
+            ,width: '100%'
+            ,height:'250'
+            ,arrow: 'hover'
+            ,autoplay:true
+        });
+    });
+</script>
+</html>

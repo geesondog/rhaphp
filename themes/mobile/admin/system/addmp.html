@@ -1,0 +1,93 @@
+{extend name="common/base" /}
+{block name="body"}
+<form class="layui-form" action="" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">公众号名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" required lay-verify="required" placeholder="请输入公众号名称" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block">
+            <input type="radio" name="type" value="1" title="普通订阅号" checked>
+            <input type="radio" name="type" value="2" title="认证订阅号">
+            <input type="radio" name="type" value="3" title="普通服务号">
+            <input type="radio" name="type" value="4" title="认证服务号/认证媒体/政府订阅号">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">APPID</label>
+        <div class="layui-input-block">
+            <input type="text" name="appid" required lay-verify="required" placeholder="请输入APPID" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">APPSECRET</label>
+        <div class="layui-input-block">
+            <input type="text" name="appsecret" required lay-verify="required" placeholder="请输入APPSECRET"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">原始ID</label>
+        <div class="layui-input-block">
+            <input type="text" name="origin_id"  placeholder="请输入原始ID" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">微信号:</label>
+        <div class="layui-input-block">
+            <input type="text" name="mp_number"  placeholder="请输入公众号微信号"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">LOGO</label>
+        <div class="layui-input-block">
+            {:hook('Upload',['type'=>'image','name'=>'logo'])}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">二维码</label>
+        <div class="layui-input-block">
+            {:hook('Upload',['type'=>'image','name'=>'qrcode'])}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">开关状态</label>
+        <div class="layui-input-block">
+            <input type="checkbox" checked="checked" name="status" lay-skin="switch">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">关闭回复</label>
+        <div class="layui-input-block">
+            <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="sbm">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            $.post('')
+            return false;
+        });
+    });
+</script>
+{/block}

@@ -1,0 +1,50 @@
+{extend name="./common/base" /}
+{block name="body"}
+<style>
+    #baomingList .layui-flow-more{margin-right: -170%}
+</style>
+<div style="padding: 0px 10px">
+<table class="layui-table" lay-even lay-skin="nob" lay-size="sm">
+    <thead>
+    <tr>
+        <th>选号</th>
+        <th>呢称</th>
+        <th>总票数</th>
+    </tr>
+    </thead>
+    <tbody id="baomingList" style="">
+    </tbody>
+</table>
+</div>
+<script>
+    layui.use('flow', function(){
+        var flow = layui.flow;
+        flow.load({
+            elem: '#baomingList' //流加载容器
+            ,done: function(page, next){ //执行下一页的回调
+                var lis = [];
+                $.get("{:addonUrl('getRanking')}?page="+page,function (res) {
+                    layui.each(res.data, function(index, item){
+                        if(item.username){
+                            lis.push('<tr><td>'+item.bm_id+'</td><td>'+item.username+'</td><td>'+item.vote_total+'</td></tr>');
+                        }
+                    });
+                    next(lis.join(''), parseInt(res.current_page)+1 < res.last_page);
+                })
+
+            }
+        });
+    });
+    function toVote(id) {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            var index=layer.load(1)
+            $.post("{:addonUrl('toVote')}",{'bm_id':id},function (res) {
+                layer.close(index);
+                layer.msg(res.msg);
+            })
+            return false;
+        });
+    }
+</script>
+{/block}

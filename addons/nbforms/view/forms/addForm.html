@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {js href='/public/static/jquery/jquery-1.11.0.min.js' /}
+    {js href='/public/static/layui/layui.js' /}
+    {CSS href="/public/static/layui/css/layui.css" /}
+    {CSS href="__ADDONSTATIC__/css/style.css" /}
+</head>
+<body>
+<div class="forms-content">
+    <form name="form2" class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">关键词</label>
+            <div class="layui-input-block">
+                <input type="text" name="keyword" required lay-verify="required" placeholder="请输入关键词" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">封面图</label>
+            <div class="layui-input-block">
+                {:hook('Upload',['type'=>'image','name'=>'picurl'])}
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea name="content" placeholder="请输入描述" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">信息属性</label>
+            <div class="layui-input-block">
+                <div class="layui-form">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col width="60">
+                            <col width="160">
+                            <col width="130">
+                            <col width="">
+                            <col width="60">
+                            <col width="150">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>排序</th>
+                            <th>字段名称</th>
+                            <th>类型</th>
+                            <th>字段值</th>
+                            <th>必填</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="goods_m_t_t" class="addHtml">
+                        <tr>
+                            <td><a class="up" href="javascript:;">↑</a><a class="dm" href="javascript:;">↓</a>
+                                <input type="hidden" name="attribute_sort[]" placeholder="" autocomplete="off" value="0" class="layui-input" type="text">
+                            </td>
+                            <!--<td><input name="attribute_sort[]" placeholder="" autocomplete="off" value="0" class="layui-input" type="text"></td>-->
+                            <td><input name="attribute_name[]" required lay-verify="required" placeholder="" autocomplete="off" value="" class="layui-input" type="text"></td>
+                            <td>
+                                <select name="attribute_type[]" lay-filter="gooods_model_type">
+                                    <option value="1" selected="">单行输入</option>
+                                    <option value="2">多行输入</option>
+                                    <option value="3">单选框</option>
+                                    <option value="4">复选框</option>
+                                    <option value="5">下拉选择</option>
+                                    <option value="6">时间选择器</option>
+                                    <option value="7">图片上传</option>
+                                </select>
+                            </td>
+                            <td><input name="attribute_values[]" value=""  readonly="readonly" placeholder="多个值,号分开.如：男，女，保密" class="layui-input gooods_m_t_val"  type="text"></td>
+                            <td><input type="checkbox" class="checkbox2" name="attribute_need[]"  value="1" lay-skin="switch"></td>
+                            <td>
+                                <div class="box" style="display: none">
+                                    <div class="layui-layer layui-layer-page layui-layer-prompt" id="layui-layer9"
+                                         type="page" times="9" showtime="0" contype="string" style="top: 166px; left: 30%; z-index: 19891023;">
+                                        <div class="layui-layer-title" style="cursor: move;">请输入你的内容</div>
+                                        <div id="" class="layui-layer-content">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label" style="text-align: center;">默认值</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="attribute_defval[]" value=""  placeholder="请输入默认值" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label" style="text-align: center;">备注提示</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="attribute_tip[]"  value="" placeholder="如：请输入本人手机号" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label" style="text-align: center;">正则规则</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="attribute_regular[]"  value="" placeholder="如：/^\d*$/" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label" style="text-align: center;">不匹配提示</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="attribute_regularMsg[]" value="" placeholder="如：手机号格式不正确" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="layui-layer-setwin setting-dis-no"><a class="layui-layer-ico layui-layer-close layui-layer-close1" href="javascript:;"></a></span>
+                                        <div class="layui-layer-btn layui-layer-btn-"><a class="layui-layer-btn0 setting-dis-no">确定</a><a
+                                                class="layui-layer-btn1 setting-dis-no">取消</a></div>
+                                    </div>
+                                </div>
+                                <a class="rha-bt-a nbformsSetingBox" href="javascript:;">响应设置</a>
+                                <a class="rha-bt-a del-btn"  href="javascript:;">删除</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <span id="add_goods_model_type" class="layui-btn layui-btn-sm layui-btn-normal">增加一个</span>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">副标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="title2" required lay-verify="required" placeholder="请输入副标题" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">规则说明</label>
+            <div class="layui-input-block">
+                <textarea name="content2" placeholder="请输入规则说明" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">成功提示</label>
+            <div class="layui-input-block">
+                <input type="text" name="success_msg" required lay-verify="required" placeholder="如果：恭喜你，报名成功" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">成功跳转</label>
+            <div class="layui-input-block">
+                <input type="text" name="jump_url" placeholder="提交成功后跳转的地址如：http://www.rhaphp.com/" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    var layer;
+    layui.use('layer', function () {
+        var form = layui.form;
+        var layer = layui.layer;
+    });
+    $(function () {
+
+        $('#goods_m_t_t').on('click','tr .up',function(){
+            var $up = $(".up");
+            var $tr = $(this).parents("tr");
+            console.log('tr index '+$tr.index() );
+            if ($tr.index() != 0) {
+                $tr.fadeOut().fadeIn();
+                $tr.prev().before($tr);
+            }else{
+                layer.alert('已经到顶啦');
+            }
+        })
+        $('#goods_m_t_t').on('click','tr .dm',function(){
+            var $down = $(".dm");
+            var len = $down.length;
+            var $tr = $(this).parents("tr");
+            if ($tr.index() != len - 1) {
+                $tr.fadeOut().fadeIn();
+                $tr.next().after($tr);
+            }else{
+                layer.alert('我已经是最后一个了');
+            }
+        })
+
+        //感谢晓俊，给DOM出处理方案
+        $(document).on("click",".del-btn",function (e) {
+          $(this).parents("tr").remove();
+        })
+        $(document).on("click",".nbformsSetingBox",function(){
+            $(this).parents("td").children(".box").show();
+        })
+        $(document).on("click",".setting-dis-no",function(){
+            $(this).parents(".box").hide();
+        })
+        $('#add_goods_model_type').click(function () {
+            var html;
+            html = $('.addHtml tr:first-child').prop("outerHTML");
+            $('#goods_m_t_t').append(html);
+            var num = $("#goods_m_t_t tr").length;
+            var curr=num-1;
+            //$("#goods_m_t_t tr").eq(curr).find(".checkbox2").attr("name","arcID["+curr+"]");
+            $("#goods_m_t_t tr").eq(curr).find(".checkbox2").val(num);
+            layui.use('form', function () {
+                var form = layui.form;
+                form.render('select');
+                form.render('checkbox');
+            })
+        })
+    })
+    layui.use(['form', 'layer'], function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        form.on('select(gooods_model_type)', function (data) {
+            if (data.value == 1 || data.value == 2 || data.value == 6 || data.value == 7) {
+                $(this).parents('tr').find('.gooods_m_t_val').attr("readonly", true);
+            } else {
+                $(this).parents('tr').find('.gooods_m_t_val').attr("readonly", false);
+            }
+        });
+        form.on('submit(formDemo)', function (data) {
+            var loadIndex = layer.load(1)
+            $.post('', $('.layui-form').serialize(), function (res) {
+                layer.close(loadIndex)
+                if (res.status == '0') {
+                    layer.alert(res.msg);
+                }
+                if (res.status == '1') {
+                    layer.msg(res.msg, {time: 1000}, function () {
+                        location.href = "{:addonUrl('lists')}";
+                    });
+                }
+            }).error(function (error) {
+                layer.alert('500 Internal Server Error');
+                layer.close(loadIndex)
+            })
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

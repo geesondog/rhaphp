@@ -1,0 +1,38 @@
+{extend name="../admin/common/base" /}
+{block name="body"}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+        <li {eq name="$status" value="0"} class="layui-this" {/eq} ><a href="{:url('message/messagelist',['status'=>0])}">未读消息</a></li>
+        <li {eq name="$status" value="1"} class="layui-this" {/eq}><a href="{:url('message/messagelist',['status'=>1])}">已读消息</a></li>
+    </ul>
+</div>
+<div class="doc-example" style="padding: 0px 10px 0px 10px;">
+    <ul class="am-comments-list am-comments-list-flip">
+        {volist name="msgList" id="vo"}
+        <li onclick="replyMsg('{:url(\'replyMsg\',[\'openid\'=>$vo.openid])}')" class="am-comment am-comment-primary"><img src="{$vo.headimgurl}" class="am-comment-avatar" height="48" width="48">
+                <div class="am-comment-main">
+                    <header class="am-comment-hd">
+                        <div class="am-comment-meta"><a href="#link-to-user" class="am-comment-author">{$vo.nickname}</a>
+                            {eq name="$status" value ="0"}
+                            <span class="msg_total show">{$vo.msg_total}</span>
+                            {else/}
+                            <span style="font-size: 11px;">共有{$vo.msg_total}条记录</span>
+                            {/eq}
+                            &nbsp;发起于
+                            <time>{:date('m-d H:s',strtotime($vo.create_time))}</time>
+                        </div>
+                    </header>
+                    <div class="am-comment-bd"><p> {$vo.content}</p></div>
+                </div>
+        </li>
+        {/volist}
+    </ul>
+</div>
+    {$msgList->render()|raw}
+<script>
+    function replyMsg(url) {
+        window.location.href=url;
+    }
+</script>
+
+{/block}

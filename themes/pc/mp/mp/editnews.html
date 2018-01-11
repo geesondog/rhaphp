@@ -1,0 +1,567 @@
+{extend name="../admin/common/base" /}
+{block name="nav_title"}
+<a href="javascript:delNews('{$news_id}');" id="addkw" class="layui-btn layui-btn-danger layui-btn-sm rha-nav-title delNews">删除图文</a>
+{/block}
+{block name="jscss"}
+{CSS href="__STATIC__/admin/css/media_news.css" /}
+{js href='__STATIC__/admin/ueditor/ueditor.config.js' /}
+{js href='__STATIC__/admin/ueditor/ueditor.all.js' /}
+{js href='__STATIC__/js/ajax_file_upload.js' /}
+{/block}
+{block name="body"}
+{php}$type_def=0;{/php}
+<div class="set-style">
+    <dl>
+        <dt>消息类型:</dt>
+        <dd>
+            <div style="margin-left: 10px;">
+                {switch name="type"}
+                {case value="1"}
+                <label class="check-box"><input type="radio" name="type" id="type1" value="1" checked>&nbsp;文本</label>
+                {/case}
+                {case value="2"}
+                <label class="check-box"><input type="radio" name="type" id="type2" value="2" checked>&nbsp;单图文</label>
+                {/case}
+                {case value="3"}
+                <label class="check-box"><input type="radio" name="type" id="type3" value="3" checked>&nbsp;多图文</label>
+                {/case}
+                {/switch}
+            </div>
+        </dd>
+    </dl>
+</div>
+{switch name="type"}
+{case value="1"}
+<div class="set-style type1" style="display: block;">
+    <dl>
+        <dt>内容:</dt>
+        <dd>
+            <p>
+                <textarea id="type1_desc">{$content|raw}</textarea>
+            </p>
+
+        </dd>
+    </dl>
+</div>
+{/case}
+{case value="2"}
+{php}$type_def=2;{/php}
+<div class="type2 media" style="display: block;">
+    <div class="media-left">
+        <div class="media-border">
+            <h5 class="type-title">{$info.title}</h5>
+            <div style="text-align:center;">
+                <img class="type2-img" src="{$info.cover}" style="max-width:275px;max-height:150px; width: 100%;">
+                <!--<span class="img-text">封面图片</span>-->
+            </div>
+        </div>
+    </div>
+    <div class="media-right">
+        <p><span style="color:red;"> * </span> 标题 </p>
+        <input style="width: 98%;" type="text" id="title" value="{$info.title}">
+        <p>作者（选填）</p>
+        <input style="width: 98%;" type="text" id="author" value="{$info.author}">
+        <p>
+            <span style="color:red;"> *</span> 封面
+        </p>
+        <div>
+            <div class="class-logo" style="background: #f8f8f8;">
+                <p style="width: 270px; height: 150px;">
+                    <img id="imgLogo" src="{$info.cover}" style="max-width:270px;max-height:150px;">
+                </p>
+            </div>
+            <p class="hint">
+                <span style="color: orange;">建议上传小于1M的图片。</span>
+            </p>
+            <input type="hidden" id="type2-img-hidden" value="{$info.cover}"/>
+            <div class="rhaphp-upload-btn">
+                <a href="javascript:void(0);"><span> <input
+                        hidefocus="true" size="1" class="input-file" name="file_upload"
+                        id="uploadImg" nc_type="change_store_label" type="file"
+                        onchange="imgUpload(this, 'type2-img', 'type2-img-hidden');"> <input type="hidden" id="Logo"
+                                                                                             value="{$info.cover}"/></span>
+                    <p class="layui-btn layui-btn-sm layui-btn-normal">
+                        <i  class="fa fa-upload "></i>上传图片
+                    </p></a>
+            </div>
+        </div>
+        <p></p>
+        <p class="isshowcover">
+            <input type="checkbox" id="show_cover_pic"  {eq name="$info.show_cover_pic" value="1" }checked{/eq} style="margin-top: -2px; margin-right: 5px;"><label
+                for="show_cover_pic"
+                style="font-weight: normal; display: inline-block;">封面图片显示在正文中</label>
+        </p>
+        <p class="rha_news_content"><span style="color:red;"> *</span> 摘要</p>
+        <p>
+            <textarea id="desc" style="width: 98%;">{$info.digest}</textarea>
+        </p>
+        <p class="rha_news_content"><span style="color:red;"> *</span> 正文</p>
+        <div class="controls" id="discripContainer">
+            <textarea id="tareaProductDiscrip1" name="discripArea" style=" width: 100%; display: none;"></textarea>
+            <script id="editor" type="text/plain" style="width: 100%; height: 400px;">{$info.content|raw}</script>
+        </div>
+        <p></p>
+        <p>原文链接</p>
+        <input style="width: 98%;" type="text" id="content_source_url" value="{$info.content_source_url}">
+    </div>
+</div>
+{/case}
+{case value="3"}
+{php}$type_def=3;{/php}
+<div class="type3 media">
+    <div class="media-left">
+    {volist name="info" id="v" offset="0" length="1"}
+        <div class="media-border-title js-action action" onmouseover="show(this)" onmouseout="hide(this)"
+             onclick="edit(this, 0)">
+            <div style="position: relative;text-align:center;">
+                <img class="type3-img-0" src="{$v.cover}" style="max-width:275px;max-height:150px;width: 100%;">
+                <!--<span class="img-text">封面图片</span> -->
+                <h5 class="type3-title-0"
+                    style="position: absolute; bottom: 0; width: 100%; background: #000; opacity:0.5; color: #fff; margin: 0; padding: 5px 0;text-align:left;">
+                    {$v.title}</h5>
+            </div>
+            <div class="actions"><span class="edit">编辑</span></div>
+            <span class="editting">编辑中</span>
+            <input type="hidden" name="hidden0" id="title0" value="{$v.title}">
+            <input type="hidden" name="hidden0" id="author0" value="{$v.author}">
+            <input type="hidden" name="hidden0" id="cover0" value="{$v.cover}">
+            <input type="hidden" name="hidden0" id="show_cover_pic0" value="{$v.show_cover_pic}">
+            <input type="hidden" name="hidden0" id="summary0" value="{$v.digest}">
+            <input type="hidden" name="hidden0" id="content0" value="{:htmlspecialchars($v.content)}">
+            <input type="hidden" name="hidden0" id="content_source_url0" value="{$v.content_source_url}">
+        </div>
+        {/volist}
+        {volist name="info" id="v" offset="1" length="7"}
+
+        <div class="media-body js-action" onmouseover="show(this)" onmouseout="hide(this)" onclick="edit(this, {$i})">
+            <p class="type3-title-{$i}">{$v.title}</p>
+            <div class="media-body-div">
+                <img class="type3-img-{$i}" src="{$v.cover}" style="width: 100%;max-height:62px;">
+
+            </div>
+                {if condition="$i > 1"}
+            <div class="actions" style="display: none;"><span class="edit">编辑</span><span class="del" onclick="removeMedia(this)">删除</span></div>
+            {else/}
+            <div class="actions"><span class="edit">编辑</span></div>
+                {/if}
+            <span class="editting">编辑中</span>
+            <input type="hidden" name="hidden{$i}" id="title{$i}" value="{$v.title}">
+            <input type="hidden" name="hidden{$i}" id="author{$i}" value="{$v.author}">
+            <input type="hidden" name="hidden{$i}" id="cover{$i}" value="{$v.cover}">
+            <input type="hidden" name="hidden{$i}" id="show_cover_pic{$i}" value="{$v.show_cover_pic}">
+            <input type="hidden" name="hidden{$i}" id="summary{$i}" value="{$v.digest}">
+            <input type="hidden" name="hidden{$i}" id="content{$i}" value="{:htmlspecialchars($v.content)}">
+            <input type="hidden" name="hidden{$i}" id="content_source_url{$i}" value="{$v.content_source_url}">
+        </div>
+        {/volist}
+        <div class="media-body">
+                <span class="media-plus"><a href="javascript:;"><i
+                        class="fa fa-plus  layui-icon ">&#xe654;</i></a></span>
+        </div>
+    </div>
+    <div class="media-right" id="dir" dir="0">
+        <p><span style="color:red;"> * </span>标题</p>
+        <input style="width: 98%;" type="text" id="form_title" value="{$info.0.title}"
+               onchange="changeElement('title')">
+        <p>
+        <p>作者</p>
+        <input style="width: 98%;" type="text" id="form_author" value="{$info.0.author}"
+               onchange="changeElement('author')">
+        <p><span style="color:red;"> * </span>
+            封面<span></span>
+        </p>
+        <div>
+            <div class="class-logo" style="background: #f8f8f8;">
+                <p style="width: 270px; height: 150px;">
+                    <img id="imgLogo1" src="{$info.0.cover}" style="max-width:270px;max-height:150px;">
+                </p>
+            </div>
+            <p class="hint">
+                <span style="color: orange;">建议上传小于1M的图片。</span>
+            </p>
+            <div class="rhaphp-upload-btn">
+                <a href="javascript:void(0);"><span> <input
+                        hidefocus="true" size="1" class="input-file" name="file_upload"
+                        id="uploadImg1" nc_type="change_store_label" type="file"
+                        onchange="imgUpload(this, 'type3-img-', 'cover');"> <input type="hidden"
+                                                                                   id="Logo1" value="{$info.0.cover}"/></span>
+                    <p class="layui-btn layui-btn-sm layui-btn-normal">
+                        <i class="fa fa-upload"></i>上传图片
+                    </p></a>
+            </div>
+        </div>
+        <p></p>
+        <p class="isshowcover">
+            <input type="checkbox"  {eq name="$info.0.show_cover_pic" value="1"} checked {/eq}  id="form_show_cover_pic" onchange="changeElement('show_cover_pic')"
+                   style="margin-top: -2px; margin-right: 5px;"><label
+                for="show_cover_pic"
+                style="font-weight: normal; display: inline-block;">封面图片显示在正文中</label>
+        </p>
+        <p class="rha_news_content"><span style="color:red;"> * </span>摘要</p>
+        <p>
+            <textarea id="form_summary" style="width: 98%;" onchange="changeElement('summary')">{$info.0.digest}</textarea>
+        </p>
+        <p class="rha_news_content"><span style="color:red;"> * </span>正文</p>
+        <div class="controls" id="discripContainer">
+                <textarea id="tareaProductDiscrip" name="discripArea" style=" width: 100%; display: none; "></textarea>
+            <script id="editor1" type="text/plain" style="width: 100%; height: 400px;">{$info.0.content|raw}</script>
+        </div>
+        <p></p>
+        <p>原文链接</p>
+        <input style="width: 98%;" type="text" id="form_content_source_url"
+               value="{$info.0.content_source_url}" onchange="changeElement('content_source_url')">
+    </div>
+</div>
+{/case}
+{/switch}
+<div class="layui-form-item" style="margin-top: 20px;">
+    <div class="layui-input-block">
+        <button class="layui-btn" style="margin-left: 300px;" onclick="save();">立即提交</button>
+    </div>
+</div>
+{eq name="$type_def" value="2"}
+<script>
+    UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
+    UE.Editor.prototype.getActionUrl = function(action) {
+        if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
+            return '{$uploadImg}';
+        } else if (action == 'uploadvideo') {
+            return 'video';
+        }else if (action == 'listimage') {
+            return "{:url('getNewsMediaMeterial')}";
+        }else {
+            return this._bkGetActionUrl.call(this, action);
+        }
+    }
+    UE.getEditor('editor1').addListener("selectionchange", function () {
+        changeElement('content');
+    });
+
+</script>
+{/eq}
+<script>
+    var l_index;
+    function changeElement(name) {
+        var dir = $("#dir").attr('dir');
+        if (name == 'show_cover_pic') {
+            if ($("#form_" + name).prop("checked")) {
+                var form_show_cover_pic = 1;
+            } else {
+                var form_show_cover_pic = 0;
+            }
+            $("#" + name + dir).val(form_show_cover_pic);
+        } else if (name == 'content') {
+            var content = UE.getEditor('editor1').getContent();
+            $("#" + name + dir).val(content);
+        } else {
+            $("#" + name + dir).val($("#form_" + name).val());
+        }
+        if (name == 'title') {
+            if ($("#form_" + name).val() == '') {
+                $(".type3-title-" + dir).html('标题');
+            } else {
+                $(".type3-title-" + dir).html($("#form_" + name).val());
+            }
+        }
+    }
+
+    function edit(event, num) {
+        $(".js-action").removeClass('action');
+        $(event).addClass('action');
+        $("#dir").attr('dir', num);
+        var title = $("#title" + num).val();
+        var author = $("#author" + num).val();
+        var cover = $("#cover" + num).val();
+        var show_cover_pic = $("#show_cover_pic" + num).val();
+        var summary = $("#summary" + num).val();
+        var content = $("#content" + num).val();
+        var content_source_url = $("#content_source_url" + num).val();
+        $("#form_title").val(title);
+        $("#form_author").val(author);
+        $("#imgLogo1").attr('src', '');
+        if (cover != "") {
+            $("#imgLogo1").attr('src', cover);
+        }
+        if (show_cover_pic == 1) {
+            $("#form_show_cover_pic").prop("checked", "checked");
+        } else {
+            $("#form_show_cover_pic").prop("checked", "");
+        }
+        $("#form_summary").val(summary);
+        UE.getEditor('editor1').setContent(content);
+        $("#form_content_source_url").val(content_source_url);
+    }
+
+    function save() {
+
+        var type = $("input[type='radio'][name='type']:checked").val();
+        if (type == 1) {
+            var title = $("#type1_desc").val();
+            var content = '';
+            if (title == '') {
+                showMessage('error', '内容不能为空');
+                return false;
+            }
+        } else if (type == 2) {
+            var title = $("#title").val();
+            var author = $("#author").val();
+            var cover = $("#type2-img-hidden").val();
+            if ($("#show_cover_pic").prop("checked")) {
+                var show_cover_pic = 1;
+            } else {
+                var show_cover_pic = 0;
+            }
+            var summary = $("#desc").val();
+            var content = UE.getEditor('editor').getContent();
+            var content_source_url = $("#content_source_url").val();
+            var contents = title + '`|`' + author + '`|`' + cover + '`|`' + show_cover_pic + '`|`' + summary + '`|`' + content + '`|`' + content_source_url;
+            if (title == '') {
+                showMessage('error', '标题不能为空');
+                return false;
+            } else if (cover == '') {
+                showMessage('error', '请上传封面图片');
+                return false;
+            } else if (summary == '') {
+                showMessage('error', '摘要不能为空');
+                return false;
+            } else if (content == '') {
+                showMessage('error', '正文不能为空');
+                return false;
+            }
+        } else if (type == 3) {
+            var title = $("#title0").val();
+            var contents = '';
+            var num = $(".js-action").length;
+            var lok=true;
+            for (var i = 0; i < num; i++) {
+                var content_new = '';
+                $("input[name='hidden" + i + "']").each(function () {
+                    if ($("input[name='hidden" + i + "']").eq(0).val() == "") {
+                        showMessage('error', '第' + (i + 1) + '篇文章的标题不能为空');
+                        lok=false;
+                        return false;
+                    } else if ($("input[name='hidden" + i + "']").eq(2).val() == "") {
+                        showMessage('error', '第' + (i + 1) + '篇文章的封面图片不能为空');
+                        lok=false;
+                        return false;
+                    } else if ($("input[name='hidden" + i + "']").eq(4).val() == "") {
+                        showMessage('error', '第' + (i + 1) + '篇文章的摘要不能为空');
+                        lok=false;
+                        return false;
+                    } else if ($("input[name='hidden" + i + "']").eq(5).val() == "") {
+                        showMessage('error', '第' + (i + 1) + '篇文章的正文不能为空');
+                        lok=false;
+                        return false;
+                    } else {
+                        content_new = content_new + '`|`' + $(this).val();
+                    }
+                });
+                content_new = content_new.substring(3);
+                contents = contents + '`$`' + content_new;
+            }
+            contents = contents.substring(3);
+
+
+        } else {
+            showMessage('error', '请选择消息类型');
+            return false;
+        }
+        if(lok==false){
+            return false;
+        }
+        var load;
+        $.ajax({
+            type: "post",
+            url: "",
+            async: true,
+            data: {
+                "type": type, "title": title, "content": contents
+            },
+            success: function (res) {
+                layer.close(load);
+                if (res.status == 1) {
+                    layer.msg(res.msg,{time:2000},function () {
+                        window.location.href="{$back_url}";
+                    });
+                    return false;
+                }
+                if (res.status == 0){
+                    layer.alert(res.msg)
+                    return false;
+                }
+            },beforeSend:function(res){
+                 load = layer.load(1);
+                 return load;
+            },error:function (res) {
+                layer.close(load);
+            }
+        });
+    }
+
+    function showMessage(type, msg, url) {
+
+        layer.alert(msg);
+        return false;
+
+    }
+
+    $(".media-plus").click(
+        function () {
+
+            var num = $(this).parents(".media-left").find(
+                ".media-body").length;
+            if (num > 7) {
+                showMessage('error', '最多只可以加入8条图文消息。');
+                return false;
+            }
+            var html = '';
+            html += '<div class="media-body js-action" onmouseover="show(this)" onmouseout="hide(this)" onclick="edit(this, ' + num + ')">';
+            html += '<p class="type3-title-' + num + '">标题</p><div class="media-body-div"><img class="type3-img-' + num + '" src="" style="max-width:62px;max-height:62px;display:none;"><span class="img-text">缩略图</span></div>';
+            html += '<div class="actions"><span class="edit">编辑</span><span class="del" onclick="removeMedia(this)">删除</span></div>';
+            html += '<span class="editting">编辑中</span>';
+            html += '<input type="hidden" name="hidden' + num + '" id="title' + num + '" value="">';
+            html += '<input type="hidden" name="hidden' + num + '" id="author' + num + '" value="">';
+            html += '<input type="hidden" name="hidden' + num + '" id="cover' + num + '" value="">';
+            html += '<input type="hidden" name="hidden' + num + '" id="show_cover_pic' + num + '" value="0">';
+            html += '<input type="hidden" name="hidden' + num + '" id="summary' + num + '" value="">';
+            html += '<input type="hidden" name="hidden' + num + '" id="content' + num + '" value="">';
+            html += '<input type="hidden" name="hidden' + num + '" id="content_source_url' + num + '" value="">';
+            html += '</div>';
+            $(this).parents(".media-left").find(".media-body").eq(num - 2).after(html);
+        });
+
+
+    function removeMedia(event) {
+        $(event).parents(".media-body").remove();
+    }
+
+    function imgUpload(event, imgsrc, imghidden) {
+        if (imghidden == 'cover') {
+            var dir = $("#dir").attr('dir');
+            imgsrc = imgsrc + dir;
+            imghidden = imghidden + dir;
+        }
+        var fileid = $(event).attr("id");
+        var str = $(event).next().attr("id");
+        var url = 'UPLOAD_URL';
+        var path = '';
+        var result = '';
+        var imgpath = "#img" + str;
+        var imgval = "#" + str;
+
+        var data = {'file_path': 'uploads/media/'};
+        uploadFile(fileid, data, function (res) {
+            if (res.code) {
+                $("." + imgsrc).attr("src", res.data);
+                $("." + imgsrc).show();
+                $("." + imgsrc).next(".img-text").hide();
+                $("#" + imghidden).val(res.data);
+                $(imgpath).attr("src", res.data);
+                $(imgval).val(res.data);
+                showTip(res.message, "success");
+            } else {
+                showTip(res.message, "error");
+            }
+        });
+    }
+
+    $("#title").change(function () {
+        if ($(this).val() == '') {
+            $(this).parents(".media").find("h5.type-title").html('标题');
+        } else {
+            $(this).parents(".media").find("h5.type-title").html($(this).val());
+        }
+    });
+
+    $("input[type=radio][name='type']").click(function () {
+        var type = $(this).val();
+        $(".type1").hide();
+        $(".type2").hide();
+        $(".type3").hide();
+        $(".type" + type).show();
+    });
+    var ue = UE.getEditor('editor', {scaleEnabled: false});
+    var ue1 = UE.getEditor('editor1', {scaleEnabled: false});
+
+    function show(event) {
+        $(event).children('.actions').show();
+    }
+
+    function hide(event) {
+        $(event).children('.actions').hide();
+    }
+
+    var upload;
+    layui.use('upload', function () {
+        upload = layui.upload;
+    });
+
+    function uploadFile(fileid, data, callBack) {
+        var dom = document.getElementById(fileid);
+        var file = dom.files[0];
+        $.ajaxFileUpload({
+            url: "{:url('Upload/uploaderMediaNewsImg')}",
+            secureuri: false,
+            fileElementId: fileid,
+            dataType: 'json',
+            data: data,
+            async: false,
+            contentType: "text/json;charset=utf-8",
+            success: function (res) {
+                callBack.call(this, res);
+            }
+        });
+    }
+
+    function delNews(id) {
+        var load;
+        $.ajax({
+            type: "post",
+            url: "{:url('delMediaNews')}",
+            async: true,
+            data: {
+                "id": id
+            },
+            success: function (res) {
+                layer.close(load);
+                if (res.status == 1) {
+                    layer.msg(res.msg,{time:2000},function () {
+                        window.location.href="{$back_url}";
+                    });
+                    return false;
+                }
+                if (res.status == 0){
+                    layer.alert(res.msg)
+                    return false;
+                }
+            },beforeSend:function(res){
+                load = layer.load(1);
+                return load;
+            },error:function (res) {
+                layer.close(load);
+            }
+        });
+    }
+
+</script>
+{eq name="$type_def" value="3"}
+<script>
+    UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
+    UE.Editor.prototype.getActionUrl = function(action) {
+        if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
+            return '{$uploadImg}';
+        } else if (action == 'uploadvideo') {
+            return 'video';
+        }else if (action == 'listimage') {
+            return "{:url('getNewsMediaMeterial')}";
+        }else {
+            return this._bkGetActionUrl.call(this, action);
+        }
+    }
+    UE.getEditor('editor1').addListener("selectionchange", function () {
+        changeElement('content');
+    });
+
+</script>
+{/eq}
+{/block}

@@ -1,0 +1,60 @@
+{extend name="../admin/common/base" /}
+{block name="nav_title"}
+<a href="{:url('mp/Index/addMp')}"class="layui-btn layui-btn-normal layui-btn-sm rha-nav-title">增加公众号</a>
+{/block}
+{block name="body"}
+<div style="padding: 0px 10px 0px 10px;">
+    <table class="layui-table" lay-skin="line" lay-size="sm">
+        <thead>
+        <tr>
+            <th>公众信息</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="mpList" id="vo"}
+            <tr>
+                <td>
+                    <div class="mp-logo">
+                        <div class="logo-left">
+                            <img style="width: 38px;height: 38px;" src="{$vo.logo}">
+                            <span style="overflow: hidden" class="p1">{$vo.name}</span>
+                        </div>
+                    </div>
+                </td>
+                <th>{if condition="$vo.status=='1'"} 正常{else/}停用{/if}</th>
+                <td>
+                    <a class="rha-bt-a" href="{:url('mp/Mp/index',['mid'=>$vo['id']])}">进入</a>
+                    <a class="rha-bt-a" href="{:url('mp/Index/updateMp',['id'=>$vo.id])}">配置</a>
+                    <a class="rha-bt-a" href="{:url('mp/Index/index',['mid'=>$vo['id']])}">接入信息</a>
+                    <a class="rha-bt-a" href="javascript:;" onclick="delReply('{$vo.id}')">删除</a>
+                </td>
+            </tr>
+        {/volist}
+        </tbody>
+    </table>
+</div>
+<script>
+    function delReply(id) {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.confirm('请谨慎操作，你确定需要删除吗？', {
+                btn: ['是','不'] //按钮
+            }, function(){
+                $.post("{:url('mp/Index/delMp')}",{'id':id},function (res) {
+                    if(res.status==1){
+                        layer.alert(res.msg,function (index) {
+                            window.location.reload();
+                            layer.close(index);
+                        })
+                    }else{
+                        layer.alert(res.msg)
+                    }
+                })
+            });
+        });
+
+    }
+</script>
+{/block}

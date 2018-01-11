@@ -1,0 +1,211 @@
+{extend name="../admin/common/base" /}
+{block name="body"}
+<div style="padding: 0px 10px 0px 10px">
+    <div class="layui-btn-group" style=" margin-bottom: 5px;">
+        <button onclick="sycMaterial('image')" class="layui-btn layui-btn-sm"><i class="layui-icon">&#x1002;</i>同步图片</button>
+        <button onclick="sycMaterial('news')" class="layui-btn layui-btn-normal layui-btn-sm "><i class="layui-icon">&#x1002;</i>同步图文</button>
+        <button onclick="sycMaterial('voice')" class="layui-btn layui-btn-normal layui-btn-sm "><i class="layui-icon">&#x1002;</i>同步语音</button>
+        <button onclick="sycMaterial('video')" class="layui-btn layui-btn-warm layui-btn-sm"><i class="layui-icon">&#x1002;</i>同步视频</button>
+    </div>
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li {eq name="fron_type" value="1"}class="layui-this"{/eq}><a href="{:url('mp/Material/index',['type'=>'image','from_type'=>1])}"> 微信服务器</a></li>
+            <!--<li {eq name="fron_type" value="0"}class="layui-this"{/eq}><a href="{:url('mp/Material/index',['type'=>'image','from_type'=>0])}">本地素材</a></li>-->
+        </ul>
+    </div>
+</div>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item {eq name="fron_type" value="1"}layui-show{/eq}">
+
+
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                <ul class="layui-tab-title">
+                    <li {eq name="type" value="image"}class="layui-this"{/eq}><a href="{:url('mp/Material/index',['type'=>'image','from_type'=>1])}">图片</a></li>
+                    <li {eq name="type" value="news"}class="layui-this"{/eq}><a href="{:url('mp/Material/index',['type'=>'news','from_type'=>1])}">图文</a></li>
+                    <li {eq name="type" value="voice"}class="layui-this"{/eq}><a href="{:url('mp/Material/index',['type'=>'voice','from_type'=>1])}">语音</a></li>
+                    <li {eq name="type" value="video"}class="layui-this"{/eq}><a href="{:url('mp/Material/index',['type'=>'video','from_type'=>1])}">视频</a></li>
+                </ul>
+                <div class="layui-tab-content">
+                    {switch name="type"}
+                    {case value="news"}
+                    <ul class="type_image">
+                        {volist name="data" id="v"}
+                        <li class="material_li">
+                            <div>
+
+                                    {volist name="v.news_item" id="news"}
+                                        {if condition="$key eq '0'"}
+                                        <p>
+                                            <p>{$news.title}</p>
+                                            <img width="169" height="140" src="{$news.thumb_url}">
+                                        </p>
+                                        {else /}
+                                        <p>
+                                            <p>{$news.title}</p>
+                                            <img width="30" height="30" src="{$news.thumb_url}">
+                                        </p>
+                                        {/if}
+                                     {/volist}
+                            </div>
+                            <div>
+                                <div class="layui-btn-group">
+                                  <button onclick="sendMaterial('{$v.media_id}','image')" style="width: 50%" class="layui-btn layui-btn-primary layui-btn-sm">
+                                    <i class="layui-icon">&#xe609;</i>群发
+                                  </button>
+                                  <button onclick="delMaterial('{$v.media_id}','image')" style="width: 50%;" class="layui-btn layui-btn-primary layui-btn-sm">
+                                    <i class="layui-icon">&#xe640;</i>删除
+                                  </button>
+                                </div>
+                            </div>
+                        </li>
+                        {/volist}
+                    </ul>
+                    {$page|raw}
+                    {/case}
+                    {case value="voice"}
+                    <table class="layui-table" lay-skin="line">
+                        <thead>
+                        <tr>
+                            <th>语音名称</th>
+                            <th>媒体 ID</th>
+                            <th>创建时间</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {volist name="data" id="vo"}
+                        <tr>
+                            <td>{$vo.title}</td>
+                            <td>{$vo.media_id}</td>
+                            <td>{$vo.create_time}</td>
+                            <td>
+                                <div class="">
+                                    <button onclick="delMaterial('{$vo.media_id}','voice')" class="layui-btn layui-btn-xs layui-btn-danger">
+                                        <i class="layui-icon">&#xe640;删除</i>
+                                    </button>
+                                </div>
+
+                            </td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+                    {$data->render()|raw}
+                    {/case}
+                    {case value="image"}
+                    <ul class="type_image">
+                    {volist name="data" id="v"}
+                    <li class="material_li">
+                            <span><img src="{$v.url}" width="169" height="169"></span>
+                            <span>
+                                <div class="layui-btn-group">
+                                  <button onclick="sendMaterial('{$v.media_id}','image')" style="width: 50%" class="layui-btn layui-btn-primary layui-btn-sm">
+                                    <i class="layui-icon">&#xe609;</i>群发
+                                  </button>
+                                  <button onclick="delMaterial('{$v.media_id}','image')" style="width: 50%;" class="layui-btn layui-btn-primary layui-btn-sm">
+                                    <i class="layui-icon">&#xe640;</i>删除
+                                  </button>
+                                </div>
+                            </span>
+                    </li>
+
+                    {/volist}
+                    </ul>
+                    {$data->render()|raw}
+                    {/case}
+                    {case value="video"}
+                    <table class="layui-table" lay-skin="line">
+                        <thead>
+                        <tr>
+                            <th>视频名称</th>
+                            <th>媒体 ID</th>
+                            <th>创建时间</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {volist name="data" id="vo"}
+                        <tr>
+                            <td>{$vo.title}</td>
+                            <td>{$vo.media_id}</td>
+                            <td>{$vo.create_time}</td>
+                            <td>
+                                <div class="">
+                                    <button onclick="delMaterial('{$vo.media_id}','video')" class="layui-btn layui-btn-xs layui-btn-danger">
+                                        <i class="layui-icon">&#xe640;删除</i>
+                                    </button>
+                                </div>
+
+                            </td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+                    {$data->render()|raw}
+                    {/case}
+                    {/switch}
+                </div>
+            </div>
+
+        </div>
+        <div class="layui-tab-item {eq name="fron_type" value="0"}layui-show{/eq}"><!--内容2--></div>
+    </div>
+<script>
+    function sendMaterial(media_id,type) {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.confirm('你确定需要群发吗？认证号可用、订阅号一天1条，服务号一个月四条。', {
+                btn: ['是','不'] //按钮
+            }, function(){
+                $.post("{:url('mp/Material/sendMaterial')}",{'media_id':media_id,'type':type},function (res) {
+                    if(res.status==1){
+                        layer.alert(res.msg);
+                    }else{
+                        layer.alert(res.msg);
+                    }
+
+                })
+            }, function(){
+
+            });
+        });
+
+    }
+    function delMaterial(media_id,type) {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.confirm('你确定需要删除吗？', {
+                btn: ['是','不'] //按钮
+            }, function(){
+                $.post("{:url('mp/Material/delMaterial')}",{'media_id':media_id,'type':type},function (res) {
+                    if(res.status==1){
+                        layer.alert(res.msg)
+                    }else{
+                        layer.alert(res.msg)
+                    }
+                })
+            }, function(){
+
+            });
+        });
+
+    }
+    function sycMaterial(type) {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.open({
+                type: 2,
+                title: '正在同步',
+                shadeClose: true,
+                shade: 0.5,
+                area: ['680px', '200px'],
+                content: '{:url("mp/Material/sycMaterial","","")}/type/'+type+'/offset/0',
+                cancel: function(index, layero){
+                    window.location.reload();
+                }
+            })
+        });
+
+    }
+</script>
+{/block}

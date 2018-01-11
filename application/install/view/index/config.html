@@ -1,0 +1,158 @@
+{extend name="public/base"/}
+{block name="body"}
+<h2 class="text-center">
+	创建数据库
+</h2>
+<form method="post" target="_self">
+	<div class="create-database">
+		<h2>
+			数据库类型
+		</h2>
+		<table class="table-hover table">
+			<tr>
+				<td>
+					<select class="form-control" name="db[]">
+						<option>
+							mysql
+						</option>
+						<option>
+							Sqlsrv
+						</option>
+						<option>
+							Sqlite
+						</option>
+						<option>
+							Pgsql
+						</option>
+					</select>
+				</td>
+				<td>
+					系统默认使用mysql数据库，如使用Sqlsrv、Sqlite、Pgsql请自行做相关配置
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input class="form-control" name="db[]" type="text" value="127.0.0.1">
+				</td>
+				<td>
+					<span>
+						数据库服务器，数据库服务器IP，一般为127.0.0.1与localhost
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input class="form-control" name="db[]" type="text" value="">
+				</td>
+				<td>
+					<span>
+						数据库名
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input class="form-control" name="db[]" type="text" value="">
+				</td>
+				<td>
+					<span>
+						数据库用户名
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input class="form-control" name="db[]" type="password" value="">
+				</td>
+				<td>
+					<span>
+						数据库密码
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input class="form-control" name="db[]" type="text" value="3306">
+					</input>
+				</td>
+				<td>
+					<span>
+						数据库端口，数据库服务连接端口，一般为3306
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input class="form-control" name="db[]" type="text" value="rh_" class="form-control">
+				</td>
+				<td>
+					<span>
+						数据表前缀，同一个数据库运行多个系统时请修改为不同的前缀
+					</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="create-database">
+		<h2>
+			创始人帐号信息
+		</h2>
+		<table class="table-hover table">
+			<tr>
+				<td>
+					<input class="form-control" name="admin[]" type="text" value="admin">
+				</td>
+				<td>
+					<span>
+						用户名(
+						<span class="text-danger">
+							英文+数字，严禁中文与特殊字符
+						</span>
+						)
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input class="form-control" name="admin[]" type="password" value="">
+				</td>
+				<td>
+					<span>
+						密码
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input class="form-control" name="admin[]" type="password" value="">
+				</td>
+				<td>
+					<span>
+						确认密码
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input class="form-control" name="admin[]" type="text" value="admin@admin.com">
+				</td>
+				<td>
+					<span>
+						邮箱，请填写正确的邮箱便于收取提醒邮件
+					</span>
+				</td>
+			</tr>
+		</table>
+		<div>
+		</div>
+	</div>
+	<div class="text-center">
+		<button class="btn btn-primary" id="submit" type="submit">
+			下一步
+		</button>
+		<a class="btn btn-default" href="{:url('install/index/check')}">
+			上一步
+		</a>
+	</div>
+</form>
+{/block}

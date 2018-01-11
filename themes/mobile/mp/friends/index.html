@@ -1,0 +1,162 @@
+{extend name="../admin/common/base" /}
+{block name="body"}
+<style>
+    #layui-laydate17{}
+    .layui-laydate-range{width: inherit;}
+</style>
+<form action="" class="layui-form" method="get" style="padding: 10px 10px 0px;">
+<div class="layui-form-item">
+    <div class="layui-inline">
+            <label class="layui-form-label">呢称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="nickname" value="{$post.nickname}" placeholder="请输入呢称" autocomplete="off" class="layui-input">
+            </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">关注时间</label>
+        <div class="layui-input-inline">
+            <input name="times" id="rhaphp-time1" value="{$post.times}" class="layui-input" placeholder="开始时间 到 结束时间" lay-key="17" type="text">
+        </div>
+    </div>
+
+    <div class="layui-inline">
+        <label class="layui-form-label">互动时间</label>
+        <div class="layui-input-block">
+            <input  name="need" {eq name="$post.need" value="1" } checked {/eq} lay-skin="primary" value="1" title="有效"  type="checkbox">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">性别：</label>
+        <div class="layui-input-block">
+            <input name="sex" {eq name="$post.sex" value="1" } checked {/eq} value="1" title="男" checked="" type="radio">
+            <input name="sex" {eq name="$post.sex" value="2" } checked {/eq} value="2" title="女" type="radio">
+            <input name="sex" {eq name="$post.sex" value="0" } checked {/eq} value="0" title="不限" type="radio">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn layui-btn-sm layui-btn-normal">
+                <i class="layui-icon">&#xe615;</i>
+                搜索</button>
+        </div>
+    </div>
+</div>
+</form>
+<form class="layui-form" action="" style="padding: 0px 10px 0px 10px;">
+    <a id="synselect" class="layui-btn layui-btn-sm" href="javascript:;">同步选中数丝信息</a><a id="getAllFriend" class="layui-btn layui-btn-sm" href="javascript:;">同步全部数丝</a>
+<table class="layui-table" lay-skin="line" lay-size="sm">
+    <thead>
+    <tr>
+        <th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {volist name="friendList" id="v"}
+    <tr>
+        <td><input name="openid" value="{$v.openid}" lay-skin="primary" type="checkbox"></td>
+        <td>
+            <div  style="padding: 2px; border: #e6e6e6 solid 1px; float: left; ">
+                <img class="form_logo" src="{$v.headimgurl}" width="28" height="28">
+            </div>
+        </td>
+        <td>{$v.nickname}</td>
+        <td>{$v.subscribe_time|date="y-m-d"}</td>
+        <td><a class="rha-bt-a" href="{:url('Message/replyMsg',['openid'=>$v.openid])}">发送消息</a></td>
+    </tr>
+    {/volist}
+    </tbody>
+</table>
+</form>
+{$friendList->render()|raw}
+<script>
+    layui.use('laydate', function() {
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#rhaphp-time1'
+            ,type: 'datetime'
+            ,range: '到'
+            ,format: 'yyyy-M-d'
+        });
+    })
+    layui.use('form', function(){
+        var $ = layui.jquery, form = layui.form;
+
+        //全选
+        form.on('checkbox(allChoose)', function(data){
+            var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+            child.each(function(index, item){
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+    });
+    layui.use('layer', function(){
+        var $ = layui.jquery, layer = layui.layer;
+        var  lastOpenid='';
+        var page='1';
+        $(function () {
+
+            $('#getAllFriend').click(function () {
+                //send(lastOpenid,page);
+                layer.open({
+                    type: 2,
+                    title: '同步全部粉丝',
+                    shadeClose: true,
+                    shade: 0.5,
+                  //  area: ['680px', '200px'],
+                    content: '{:url("mp/Friends/SynFriends")}',
+                    cancel: function(index, layero){
+                        window.location.reload();
+                    }
+                });
+            });
+            //这里有问题的js处理逻辑，后期记得更改
+            function send (lastOpenid,page){
+                $.post("{:url('mp/Friends/SynFriends')}",{'lastOpenid':lastOpenid,'page':page},function (result) {
+                    console.log(result);
+                    if(result.status==1){
+                        layer.msg('正在同步第'+result.page+'页', {
+                            icon: 16
+                            ,shade: 0.01,
+                            time:0,
+                        });
+                        send(result.lastOpenid,result.page)
+                    }
+                    if(result.status==2){
+                      //  layer.close(index);
+                        layer.alert('同步完成', {
+                            skin: 'layui-layer-lan'
+                            ,closeBtn: 0
+                        });
+                        location.reload()
+
+                    }
+                    if(result.status==0){
+                        layer.alert(result.msg, {
+                            skin: 'layui-layer-lan'
+                            ,closeBtn: 0
+                        });
+                    }
+
+                })
+            }
+            $('#synselect').click(function () {
+               var openids=[];
+                $("input[name='openid']:checked").each(function (key,value) {
+                    openids[key]=$(this).val();
+                })
+                $.post("{:url('mp/Friends/SynSelect')}",{'openids':openids},function (result) {
+                    layer.alert(result.msg, {
+                        closeBtn: 0
+                    });
+                })
+            })
+        })
+    });
+</script>
+
+{/block}

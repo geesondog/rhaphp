@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{$title}</title>
+    <link rel="stylesheet" href="//cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
+    {js href='__STATIC__/jquery/jquery-1.11.0.min.js' /}
+</head>
+<body>
+
+<div class="weui-form-preview">
+    <div class="weui-form-preview__hd">
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">付款金额</label>
+            <em class="weui-form-preview__value">¥{$payment.money}</em>
+        </div>
+    </div>
+    <div class="weui-form-preview__bd">
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">商品</label>
+            <span class="weui-form-preview__value">{$payment.title}</span>
+        </div>
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">附加信息</label>
+            <span class="weui-form-preview__value">{$payment.attach}</span>
+        </div>
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">订单号</label>
+            <span class="weui-form-preview__value">{$payment.order_number}</span>
+        </div>
+    </div>
+</div><br>
+<div style="padding: 15px;">
+    <a onclick="callpay()" class="weui-btn weui-btn_primary">立即支付</a>
+</div>
+{:hook('Jssdk')}
+<script>
+    function callpay() {
+        $(function () {
+            var money=$('.money').val();
+            $.post("",{'payment_id':"{$payment.payment_id}"},function (res) {
+                if(res.status==1){
+                    WeixinJSBridge.invoke(
+                        'getBrandWCPayRequest',
+                    res.jsApiParameters,
+                    function(res){
+                        if(res.err_msg == 'get_brand_wcpay_request:ok') {
+                            $.post("{:url('queryOrderByWxpay')}",{'ordernumber':"{$payment.order_number}"},function (res) {
+                                if(res.status==1){
+                                    $.toast(res.msg);
+                                }else{
+                                    $.alert(res.msg);
+                                }
+                            })
+                        } else {
+                           // $.alert('启动微信支付失败, 请检查你的支付参数');
+                        }
+                    }
+                );
+                }else{
+                    $.alert(res.msg);
+                }
+            })
+        })
+    }
+
+</script>
+</body>
+</html>

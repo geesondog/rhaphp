@@ -1,0 +1,44 @@
+{extend name="base" /}
+{block name="main"}
+<form class="layui-form">
+    <div class="layui-form-item">
+        <input type="text" name="name" value="{$info.name}" placeholder="公众号名称" />
+    </div>
+    <div class="layui-form-item">
+        <input type="text" name="appid" value="{$info.origin_id}" placeholder="公众号原始ID" />
+    </div>
+    <div class="layui-form-item">
+        <input type="text" name="appid" value="{$info.appid}" placeholder="appid" />
+    </div>
+    <div class="layui-form-item">
+    <input type="text" name="appsecret" value="{$info.appsecret}" placeholder="appsecret" />
+    </div>
+    <div class="layui-form-item">
+        <button lay-submit lay-filter="*">提交</button>
+    </div>
+    <input type="hidden" name="wid" value="{$info.appsecret}" />
+</form>
+<script>
+    layui.use('form', function(){
+        var form = layui.form();
+
+        //监听提交
+        form.on('submit(*)', function(data){
+//            layer.msg(JSON.stringify(data.field));
+            $.post(
+                "{:url('basesetting')}",
+                data.field,
+                function (res) {
+                    if(res.status == 1){
+                        layer.msg('保存成功',{'icon':1});
+                    }
+                },
+                'json'
+
+            )
+
+            return false;
+        });
+    });
+</script>
+{/block}

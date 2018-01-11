@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>RhaPHP管理登录</title>
+    {CSS href="__STATIC__/admin/css/admin_base.css" /}
+    {css href="__STATIC__/layui/css/layui.css" /}
+    {js href="__STATIC__/jquery.js" /}
+    {js href='__STATIC__/layui/layui.js' /}
+</head>
+<body class="login_body">
+<div id="login_wrapper">
+    <div class="rha_login">
+        <div class="mod-body ">
+            <div class="content">
+                <h2>RhaPHP信公众号管理营销系统</h2>
+                <form class="layui-form" id="loginform">
+                    <ul>
+                        <li>
+                            <input name="user_name" lay-verify="required" placeholder="请输入登录用户名"  type="text" autocomplete="off" class="layui-input">
+                        </li>
+                        <li>
+                            <input name="password" lay-verify="required" placeholder="请输入登录密码"  type="password" autocomplete="off" class="layui-input">
+                        </li>
+                        <li class="alert alert-danger collapse error_message">
+                            <i class="icon icon-delete"></i> <em></em>
+                        </li>
+                        <li class="last">
+                            <div class="layui-input-inline login-btn">
+                            <button type="submit" lay-submit="" lay-filter="login" class="layui-btn">登录</button>
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer" style="position: fixed;bottom: 0;left: 0;right: 0;">
+    <div class="wrap">
+        <!--请遵守安装使用协议，未经允许不得删除或者屏蔽有关RhaPHP字样-->
+        <a href="http://www.rhaphp.com" target="_blank">官方社区</a>
+        <i class="vs">|</i>
+        Powered By RhaPHP 二哈系统 Copyright © 2017 All Rights Reserved.
+    </div>
+</div>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+        form.on('submit(login)', function(data){
+            $.post(
+                "{:url('Login/index')}",
+                data.field,
+                function(obj) {
+                    if(obj.code == 200){
+                        layer.msg(obj.msg,{icon:1,time:2000},function () {
+                            location.href="{:url('mp/Mp/index')}";
+                        });
+                    }else {
+                        layer.alert(obj.msg);
+                    }
+                },
+                "json"
+            );
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

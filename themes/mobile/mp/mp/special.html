@@ -1,0 +1,521 @@
+{extend name="../admin/common/base" /}
+{block name="body"}
+{include file="/common/autoreplay_nav" /}
+<form class="layui-form" action="">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户关注</label>
+        <div id="replyType_subscribe" class="layui-input-block">
+            <input type="radio" {eq name="$subscribe['event']" value="nocol"} checked {/eq}  name="subscribe" value="nocol" title="不处理">
+            <input type="radio" {notempty name="$subscribe['keyword']"} checked {/notempty} name="subscribe" value="keyword" title="触发关键词" >
+            <input type="radio" {notempty name="$subscribe['addon']"} checked {/notempty} name="subscribe" value="addon" title="触发应用">
+        </div>
+    </div>
+    <div id="tapNodesubscribe">
+        <div class="layui-tab-content subscribe">
+            <div class=" image_text layui-tab-item  {eq name="$subscribe['event']" value="nocol"} layui-show {/eq}">
+            <div class="layui-form-item layui-form-text">
+            </div>
+        </div>
+        <div class="subscribe_keyword layui-tab-item {notempty name="$subscribe['keyword']"} layui-show {/notempty}">
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <input type="text" name="subscribe_keyword" value="{$subscribe['keyword']}" placeholder="请输入关键词" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="subscribe_addon layui-tab-item {notempty name="$subscribe['addon']"} layui-show  {/notempty}">
+    <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <div class="layui-input-block">
+            <select name="subscribe_addons">
+                <option value="">请选择应用</option>
+                {volist name="addons" id="v"}
+                <option {eq name="$subscribe['addon']" value="$v.addon"} selected {/eq}  value="{$v.addon}">{$v.name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">取消关注</label>
+        <div id="replyType_unsubscribe" class="layui-input-block">
+            <input type="radio" {eq name="$unsubscribe['event']" value="nocol"} checked {/eq}  name="unsubscribe" value="nocol" title="不处理">
+            <input type="radio" {notempty name="$unsubscribe['keyword']"} checked {/notempty} name="unsubscribe" value="keyword" title="触发关键词" >
+            <input type="radio" {notempty name="$unsubscribe['addon']"} checked {/notempty} name="unsubscribe" value="addon" title="触发应用">
+        </div>
+    </div>
+    <div id="tapNodeunsubscribe">
+        <div class="layui-tab-content unsubscribe">
+            <div class=" image_text layui-tab-item  {eq name="$unsubscribe['event']" value="nocol"} layui-show {/eq}">
+            <div class="layui-form-item layui-form-text">
+            </div>
+        </div>
+        <div class="unsubscribe_keyword layui-tab-item {notempty name="$unsubscribe['keyword']"} layui-show {/notempty}">
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <input type="text" name="unsubscribe_keyword" value="{$unsubscribe['keyword']}" placeholder="请输入关键词" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="unsubscribe_addon layui-tab-item {notempty name="$unsubscribe['addon']"} layui-show  {/notempty}">
+    <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <div class="layui-input-block">
+            <select name="unsubscribe_addons">
+                <option value="">请选择应用</option>
+                {volist name="addons" id="v"}
+                <option {eq name="$unsubscribe['addon']" value="$v.addon"} selected {/eq}  value="{$v.addon}">{$v.name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">图片消息</label>
+        <div id="replyType_image" class="layui-input-block">
+            <input type="radio" {eq name="$image['event']" value="nocol"} checked {/eq}  name="image" value="nocol" title="不处理">
+            <input type="radio" {notempty name="$image['keyword']"} checked {/notempty} name="image" value="keyword" title="触发关键词" >
+            <input type="radio" {notempty name="$image['addon']"} checked {/notempty} name="image" value="addon" title="触发应用">
+        </div>
+    </div>
+    <div id="tapNode">
+        <div class="layui-tab-content image">
+            <div class=" image_text layui-tab-item  {eq name="$image['event']" value="nocol"} layui-show {/eq}">
+                <div class="layui-form-item layui-form-text">
+                </div>
+            </div>
+            <div class="image_keyword layui-tab-item {notempty name="$image['keyword']"} layui-show {/notempty}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <input type="text" name="image_keyword" value="{$image['keyword']}" placeholder="请输入关键词" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="image_addon layui-tab-item {notempty name="$image['addon']"} layui-show  {/notempty}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <select name="image_addons">
+                            <option value="">请选择应用</option>
+                            {volist name="addons" id="v"}
+                            <option {eq name="$image['addon']" value="$v.addon"} selected {/eq}  value="{$v.addon}">{$v.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">语音消息</label>
+        <div id="replyType_voice" class="layui-input-block">
+            <input type="radio"  {eq name="$voice['event']" value="nocol"} checked {/eq} name="voice" value="nocol" title="不处理">
+            <input type="radio" {notempty name="$voice['keyword']"} checked {/notempty} name="voice" value="keyword" title="触发关键词" >
+            <input type="radio" {notempty name="$voice['addon']"} checked {/notempty} name="voice" value="addon" title="触发应用">
+        </div>
+    </div>
+    <div id="tapNodevoice">
+        <div class="layui-tab-content voice">
+            <div class=" image_text layui-tab-item {eq name="$voice['event']" value="nocol"} layui-show {/eq}">
+                <div class="layui-form-item layui-form-text">
+                </div>
+            </div>
+            <div class="voice_keyword layui-tab-item {notempty name="$voice['keyword']"} layui-show {/notempty}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <input type="text" name="voice_keyword" value="{$voice['keyword']}" placeholder="请输入关键词" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="voice_addon layui-tab-item {notempty name="$voice['addon']"} layui-show {/notempty}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <select name="voice_addons">
+                            <option value="">请选择应用</option>
+                            {volist name="addons" id="v"}
+                            <option {eq name="$voice['addon']" value="$v.addon"} selected {/eq} value="{$v.addon}">{$v.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">视频消息</label>
+        <div id="replyType_video" class="layui-input-block">
+            <input type="radio"  {eq name="$video['event']" value="nocol"} checked {/eq} name="video" value="nocol" title="不处理">
+            <input type="radio" {notempty name="$video['keyword']"} checked {/notempty} name="video" value="keyword" title="触发关键词" >
+            <input type="radio" {notempty name="$video['addon']"} checked {/notempty} name="video" value="addon" title="触发应用">
+        </div>
+    </div>
+    <div id="tapNodevideo">
+        <div class="layui-tab-content video">
+            <div class=" image_text layui-tab-item {eq name="$video['event']" value="nocol"} layui-show {/eq}">
+                <div class="layui-form-item layui-form-text">
+                </div>
+            </div>
+            <div class="video_keyword layui-tab-item {notempty name="$video['keyword']"} layui-show {/notempty}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <input type="text" name="video_keyword" value="{$video['keyword']}" placeholder="请输入关键词" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="video_addon layui-tab-item {notempty name="$video['addon']"} layui-show {/notempty}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <select name="video_addons">
+                            <option value="">请选择应用</option>
+                            {volist name="addons" id="v"}
+                            <option {eq name="$video['addon']" value="$v.addon"} selected {/eq} value="{$v.addon}">{$v.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">短视频消息</label>
+        <div id="replyType_shortvideo" class="layui-input-block">
+            <input type="radio"  {eq name="$shortvideo['event']" value="nocol"} checked {/eq} name="shortvideo" value="nocol" title="不处理">
+            <input type="radio" {notempty name="$shortvideo['keyword']"} checked {/notempty} name="shortvideo" value="keyword" title="触发关键词" >
+            <input type="radio" {notempty name="$shortvideo['addon']"} checked {/notempty} name="shortvideo" value="addon" title="触发应用">
+        </div>
+    </div>
+    <div id="tapNodeshortvideo">
+        <div class="layui-tab-content shortvideo">
+            <div class=" image_text layui-tab-item layui-show {eq name="$shortvideo['event']" value="nocol"} layui-show {/eq}">
+                <div class="layui-form-item layui-form-text">
+                </div>
+            </div>
+            <div class="shortvideo_keyword layui-tab-item {notempty name="$shortvideo['keyword']"} layui-show {/notempty}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <input type="text" name="shortvideo_keyword" value="{$shortvideo['keyword']}" placeholder="请输入关键词" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="shortvideo_addon layui-tab-item {notempty name="$shortvideo['addon']"} layui-show {/notempty}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <select name="shortvideo_addons">
+                            <option value="">请选择应用</option>
+                            {volist name="addons" id="v"}
+                            <option {eq name="$shortvideo['addon']" value="$v.addon"} selected {/eq} value="{$v.addon}">{$v.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">位置消息</label>
+        <div id="replyType_location" class="layui-input-block">
+            <input type="radio"  {eq name="$location['event']" value="nocol"} checked {/eq} name="location" value="nocol" title="不处理">
+            <input type="radio" {notempty name="$location['keyword']"} checked {/notempty} name="location" value="keyword" title="触发关键词" >
+            <input type="radio" {notempty name="$location['addon']"} checked {/notempty} name="location" value="addon" title="触发应用">
+        </div>
+    </div>
+    <div id="tapNodelocation">
+        <div class="layui-tab-content location">
+            <div class=" image_text layui-tab-item {eq name="$location['event']" value="nocol"} layui-show {/eq}">
+                <div class="layui-form-item layui-form-text">
+                </div>
+            </div>
+            <div class="location_keyword layui-tab-item {notempty name="$location['keyword']"} layui-show {/notempty}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <input type="text" name="location_keyword" value="{$location['keyword']}" placeholder="请输入关键词" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="location_addon layui-tab-item {notempty name="$location['addon']"} layui-show {/notempty}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <select name="location_addons">
+                            <option value="">请选择应用</option>
+                            {volist name="addons" id="v"}
+                            <option {eq name="$location['addon']" value="$v.addon"} selected {/eq} value="{$v.addon}">{$v.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">上报位置</label>
+        <div id="replyType_event_location" class="layui-input-block">
+            <input type="radio"  {eq name="$event_location['event']" value="nocol"} checked {/eq} name="event_location" value="nocol" title="不处理">
+            <input type="radio" {notempty name="$event_location['keyword']"} checked {/notempty} name="event_location" value="keyword" title="触发关键词" >
+            <input type="radio" {notempty name="$event_location['addon']"} checked {/notempty} name="event_location" value="addon" title="触发应用">
+        </div>
+    </div>
+    <div id="tapNodeevent_location">
+        <div class="layui-tab-content event_location">
+            <div class=" image_text layui-tab-item {eq name="$event_location['event']" value="nocol"} layui-show {/eq}">
+                <div class="layui-form-item layui-form-text">
+                </div>
+            </div>
+            <div class="event_location_keyword layui-tab-item {notempty name="$event_location['keyword']"} layui-show {/notempty}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <input type="text" name="event_location_keyword"  value="{$event_location['keyword']}" placeholder="请输入关键词" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="event_location_addon layui-tab-item {notempty name="$event_location['addon']"} layui-show {/notempty}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <select name="event_location_addons">
+                            <option value="">请选择应用</option>
+                            {volist name="addons" id="v"}
+                            <option {eq name="$event_location['addon']" value="$v.addon"} selected {/eq} value="{$v.addon}">{$v.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">链接消息</label>
+        <div id="replyType_link" class="layui-input-block">
+            <input type="radio"  {eq name="$link['event']" value="nocol"} checked {/eq} name="link" value="nocol" title="不处理">
+            <input type="radio" {notempty name="$link['keyword']"} checked {/notempty} name="link" value="keyword" title="触发关键词" >
+            <input type="radio" {notempty name="$link['addon']"} checked {/notempty} name="link" value="addon" title="触发应用">
+        </div>
+    </div>
+    <div id="tapNodelink">
+        <div class="layui-tab-content link">
+            <div class=" image_text layui-tab-item {eq name="$link['event']" value="nocol"} layui-show {/eq}">
+                <div class="layui-form-item layui-form-text">
+                </div>
+            </div>
+            <div class="link_keyword layui-tab-item {notempty name="$link['keyword']"} layui-show {/notempty}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <input type="text" name="link_keyword" value="{$link['keyword']}" placeholder="请输入关键词" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="link_addon layui-tab-item {notempty name="$link['addon']"} layui-show {/notempty}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <select name="link_addons">
+                            <option value="">请选择应用</option>
+                            {volist name="addons" id="v"}
+                            <option {eq name="$link['addon']" value="$v.addon"} selected {/eq} value="{$v.addon}">{$v.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单链接</label>
+        <div id="replyType_view" class="layui-input-block">
+            <input type="radio"  {eq name="$view['event']" value="nocol"} checked {/eq} name="view" value="nocol" title="不处理">
+            <input type="radio" {notempty name="$view['keyword']"} checked {/notempty} name="view" value="keyword" title="触发关键词" >
+            <input type="radio" {notempty name="$view['addon']"} checked {/notempty} name="view" value="addon" title="触发应用">
+        </div>
+    </div>
+    <div id="tapNodeview">
+        <div class="layui-tab-content view">
+            <div class=" image_text layui-tab-item {eq name="$view['event']" value="nocol"} layui-show {/eq}">
+                <div class="layui-form-item layui-form-text">
+                </div>
+            </div>
+            <div class="view_keyword layui-tab-item {notempty name="$view['keyword']"} layui-show {/notempty}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <input type="text" name="view_keyword" value="{$view['keyword']}" placeholder="请输入关键词" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="view_addon layui-tab-item {notempty name="$view['addon']"} layui-show {/notempty}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <select name="view_addons">
+                            <option value="">请选择应用</option>
+                            {volist name="addons" id="v"}
+                            <option {eq name="$view['addon']" value="$v.addon"} selected {/eq} value="{$v.addon}">{$v.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">未被识别</label>
+        <div id="replyType_unidentified" class="layui-input-block">
+            <input type="radio"  {eq name="$unidentified['event']" value="nocol"} checked {/eq} name="unidentified" value="nocol" title="转客服">
+            <input type="radio" {notempty name="$unidentified['keyword']"} checked {/notempty} name="unidentified" value="keyword" title="触发关键词" >
+            <input type="radio" {notempty name="$unidentified['addon']"} checked {/notempty} name="unidentified" value="addon" title="触发应用">
+        </div>
+    </div>
+    <div id="tapNodeunidentified">
+        <div class="layui-tab-content link">
+            <div class=" image_text layui-tab-item {eq name="$unidentified['event']" value="nocol"} layui-show {/eq}">
+            <div class="layui-form-item layui-form-text">
+            </div>
+        </div>
+        <div class="unidentified_keyword layui-tab-item {notempty name="$unidentified['keyword']"} layui-show {/notempty}">
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <input type="text" name="unidentified_keyword" value="{$unidentified['keyword']}" placeholder="请输入关键词" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="unidentified_addon layui-tab-item {notempty name="$unidentified['addon']"} layui-show {/notempty}">
+    <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <div class="layui-input-block">
+            <select name="unidentified_addons">
+                <option value="">请选择应用</option>
+                {volist name="addons" id="v"}
+                <option {eq name="$unidentified['addon']" value="$v.addon"} selected {/eq} value="{$v.addon}">{$v.name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    $(function () {
+        $("#replyType_subscribe").click(function(){
+            var class_a='subscribe_'+ $("input[name='subscribe']:checked").val();
+            $('.subscribe div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_unsubscribe").click(function(){
+            var class_a='unsubscribe_'+ $("input[name='unsubscribe']:checked").val();
+            $('.unsubscribe div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_image").click(function(){
+            var class_a='image_'+ $("input[name='image']:checked").val();
+            $('.image div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_voice").click(function(){
+            var class_a='voice_'+ $("input[name='voice']:checked").val();
+            $('.voice div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_video").click(function(){
+            var class_a='video_'+ $("input[name='video']:checked").val();
+            $('.video div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_shortvideo").click(function(){
+            var class_a='shortvideo_'+ $("input[name='shortvideo']:checked").val();
+            $('.shortvideo div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_location").click(function(){
+            var class_a='location_'+ $("input[name='location']:checked").val();
+            $('.location div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_event_location").click(function(){
+            var class_a='event_location_'+ $("input[name='event_location']:checked").val();
+            $('.event_location div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_link").click(function(){
+            var class_a='link_'+ $("input[name='link']:checked").val();
+            $('.link div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_view").click(function(){
+            var class_a='view_'+ $("input[name='view']:checked").val();
+            $('.view div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_unidentified").click(function(){
+            var class_a='unidentified_'+ $("input[name='unidentified']:checked").val();
+            $('.link div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+    })
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            $.post('',data.field,function (res) {
+                if(res.status=='0'){
+                    layer.msg(res.msg);
+                }
+                if(res.status=='1'){
+                    layer.msg(res.msg);
+
+                }
+            })
+            return false;
+        });
+
+    });
+</script>
+
+{/block}

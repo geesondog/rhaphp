@@ -1,0 +1,59 @@
+{extend name="common/base" /}
+{block name="body"}
+
+<div style="padding: 0px 10px;">
+    <blockquote class="layui-elem-quote layui-quote-nm" style="text-align: center;">{$upgradeMsg}</blockquote><br>
+
+    <div style="text-align: center;">
+        <button onclick="toUp()" class="layui-btn layui-btn-sm layui-btn-danger">立即更新系统</button>
+    </div>
+    <br>
+    <p class="tip_for_p">温馨提示：在更新升级系统前，我们建议你先备份你的数据,避免网络不可用或者更新中断的情况造成不必要的麻烦。</p>
+    <br>
+    <div class="layui-row" style="padding:10px 0px 10px 0px;">
+        <div class="layui-col-md12">
+            <div class="layui-collapse">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">更新通知</h2>
+                    <div class="layui-colla-content layui-show">
+                        <ul>
+                            {volist name="data" id="vo" empty="暂时没有通知" }
+                            <li><a href="{$vo.link}" target="_blank">{$vo.title}<span style="right: 0px;">{$vo.create_time}</span></a> </li>
+                            {/volist}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use('layer',function () {
+        var layer=layui.layer;
+    })
+    function toUp(id) {
+        layer.confirm('你确定要升级系统吗？', {
+            btn: ['确定','不的']
+        }, function(load_index){
+            layer.close(load_index);
+            var index = layer.load(1,{
+                shade: [0.1,'#000']
+            });
+        $.post("{:url('toUp')}",'',function (res) {
+            layer.close(index);
+            if(res.code==0){
+                layer.alert(res.msg,function () {
+                    location.reload()
+                })
+            }else{
+                layer.alert(res.msg);
+            }
+        }).error(function (error) {
+            layer.alert('啊欧~遇到了点问题，请稍后再试!');
+        })
+        }, function(){
+
+        });
+    }
+</script>
+{/block}

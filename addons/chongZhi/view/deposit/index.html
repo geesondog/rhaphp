@@ -1,0 +1,43 @@
+{extend name="./common/base" /}
+{block name="body"}
+<div class="weui-flex">
+    <div class="header-home">
+        <div class="weui-flex__item" style="text-align: center"><img style="border-radius: 80px;" width="80" height="80"
+                                                                     src="{$member.headimgurl}"></div>
+        <div class="weui-flex__item">
+            <div class="weui-flex__item" style="text-align: center">
+                <div class="weui-flex__item">{$member.nickname}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="weui-flex score">
+    <div class="weui-flex__item conter money-b"><i class="rha-icon">&#xe62b;</i>金额：{$member.money}元</div>
+    <div class="weui-flex__item conter"><i class="rha-icon">&#xe650;</i>积分：{$member.score}</div>
+</div>
+<div class="weui-cells" style="margin-top: 7px;">
+    <a class="weui-cell weui-cell_access" href="{:addonUrl('topup')}">
+        <div class="weui-cell__hd"><i class="rha-icon">&#xe6b3;</i></div>
+        <div class="weui-cell__bd">
+            <p>我要充值</p>
+        </div>
+        <div class="weui-cell__ft font11"></div>
+    </a>
+    <a class="weui-cell weui-cell_access" href="{:addonUrl('queryorder')}">
+        <div class="weui-cell__hd"><i class="rha-icon">&#xe65b;</i></div>
+        <div class="weui-cell__bd">
+            <p>充值记录</p>
+        </div>
+        <div class="weui-cell__ft font11"></div>
+    </a>
+
+</div>
+</div>
+<script>
+    function lout() {
+        $.post("{:url('Login/lout')}",{},function (res) {
+            $.alert(res.msg);
+        })
+    }
+</script>
+{/block}

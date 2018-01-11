@@ -1,0 +1,25 @@
+{extend name="./app/base" /}
+{block name="body"}
+{if condition="isset($addonInfo['name']) OR $menu_title neq ''"}
+<div class="content-hd">
+    <h2><img class="rhaphp-addon-admin-logo" src="{$addonInfo.logo}">{$addonInfo.name}</h2>
+</div>
+{/if}
+{if condition="isset($tips) && $tips neq ''"}
+<div class="rha-10">
+    <blockquote  class="layui-elem-quote layui-text">
+        {$tips}
+    </blockquote>
+</div>
+{/if}
+<iframe id="iframe" onload="changeFrameHeight()" frameborder="no" border="0" width="100%"  marginwidth="0" marginheight="0"  allowtransparency="yes" src="{$url}"></iframe>
+<script type="text/javascript">
+    function changeFrameHeight(){
+        var ifm= document.getElementById("iframe");
+        ifm.height=document.documentElement.clientHeight;
+    }
+    window.onresize=function(){
+        changeFrameHeight();
+    }
+</script>
+{/block}

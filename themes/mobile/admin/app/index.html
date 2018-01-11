@@ -1,0 +1,138 @@
+{extend name="common/base" /}
+{block name="body"}
+<div style="padding: 0px 10px 0px 10px;">
+<div class="layui-tab">
+    <ul class="layui-tab-title">
+        <li {eq name="type" value="index"}class="layui-this"{/eq}> <a href="{:url('index')}">应用中心</a></li>
+        <li {eq name="type" value="uninstall"}class="layui-this"{/eq}> <a href="{:url('index',['type'=>'uninstall'])}">卸载应用</a></li>
+        <li {eq name="type" value="notinstall"}class="layui-this"{/eq}><a href="{:url('index',['type'=>'notinstall'])}">安装应用</a></li>
+    </ul>
+</div>
+{switch name="type"}
+{case value="index"}
+<table class="layui-table" lay-even lay-skin="nob" lay-size="sm">
+    <thead>
+    <tr>
+        <th>Logo</th>
+        <th>应用名称</th>
+        <!--<th>应用标识</th>-->
+        <!--<th>简介</th>-->
+        <!--<th>版本</th>-->
+        <!--<th>新版本</th>-->
+        <th>作者</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {volist name="addons" id="vo"}
+    <tr>
+        <td><img width="28" height="28" style="border-radius: 2px;" src="{$vo.logo}"></td>
+        <td>{$vo.name}</td>
+        <!--<td>{$vo.addon}</td>-->
+        <!--<td>{$vo.desc}</td>-->
+        <!--<td>{$vo.version}</td>-->
+        <!--<td>{:getAddonConfigByFile($vo['addon'],'version')}</td>-->
+        <td>{$vo.author}</td>
+        <td>
+            <a class="layui-btn layui-btn-xs layui-btn-normal" href="{:url('mp/App/index',['name'=>$vo.addon,'type'=>'news','mid'=>$mpInfo.id])}">进入</a> </td>
+    </tr>
+    {/volist}
+    </tbody>
+</table>
+{/case}
+    {case value="uninstall"}
+    <table class="layui-table" lay-even lay-skin="nob" lay-size="sm">
+        <thead>
+        <tr>
+            <th>Logo</th>
+            <th>应用名称</th>
+            <!--<th>应用标识</th>-->
+            <!--<th>简介</th>-->
+            <!--<th>版本</th>-->
+            <!--<th>新版本</th>-->
+            <th>作者</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="addons" id="vo"}
+        <tr>
+            <td><img width="28" height="28" style="border-radius: 2px;" src="{$vo.logo}"></td>
+            <td>{$vo.name}</td>
+            <!--<td>{$vo.addon}</td>-->
+            <!--<td>{$vo.desc}</td>-->
+            <!--<td>{$vo.version}</td>-->
+            <!--<td>{:getAddonConfigByFile($vo['addon'],'version')}</td>-->
+            <td>{$vo.author}</td>
+            <td><button class="layui-btn layui-btn-xs layui-btn-danger" onclick="closeApp('{$vo.addon}')">卸载</button></td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    {/case}
+
+    {case value="notinstall"}
+<table class="layui-table" lay-even lay-skin="nob" lay-size="sm">
+    <thead>
+    <tr>
+        <th>Logo</th>
+        <th>应用名称</th>
+        <!--<th>应用标识</th>-->
+        <!--<th>简介</th>-->
+        <th>版本</th>
+        <!--<th>新版本</th>-->
+        <th>作者</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {volist name="addons" id="vo"}
+    <tr >
+        <td><img width="15" height="15" style="border-radius: 2px;" src="{:getAddonLogo($vo['addon'])}"></td>
+        <td>{$vo.name}</td>
+        <!--<td>{$vo.addon}</td>-->
+        <!--<td>{$vo.desc}</td>-->
+        <td>{$vo.version}</td>
+        <!--<td>{:getAddonConfigByFile($vo['addon'])}</td>-->
+        <td>{$vo.author}</td>
+        <td><button class="layui-btn layui-btn-xs" onclick="installApp('{$vo.addon}')">安装</button> </td>
+    </tr>
+    {/volist}
+    </tbody>
+</table>
+{/case}
+{/switch}
+</div>
+<script>
+    function installApp(name) {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            $.post("{:url('admin/app/install')}",{'name':name},function (res) {
+                if(res.status=='0'){
+                    layer.alert(res.msg);
+                }
+                if(res.status=='1'){
+                    layer.msg(res.msg,{time:1000},function () {
+                        location.href="{:url('admin/app/index',['type'=>'notinstall'])}";
+                    });
+                }
+            })
+        });
+    }
+    function closeApp(name) {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            $.post("{:url('admin/app/close')}",{'name':name},function (res) {
+                if(res.status=='0'){
+                    layer.alert(res.msg);
+                }
+                if(res.status=='1'){
+                    layer.msg(res.msg,{time:1000},function () {
+                        location.href="{:url('admin/app/index')}";
+                    });
+                }
+            })
+        });
+    }
+</script>
+{/block}

@@ -1,0 +1,142 @@
+{extend name="./app/base" /}
+{block name="body"}
+{if condition="isset($addonInfo['name']) OR $menu_title neq ''"}
+<div id="rhaphp-app-title" class="content-hd">
+    <h2 style="margin-bottom: 0;"><img class="rhaphp-addon-admin-logo" src="{$addonInfo.logo}">{$addonInfo.name}</h2>
+</div>
+{/if}
+{if condition="isset($tips) && $tips neq ''"}
+<div class="rha-10">
+    <blockquote  class="layui-elem-quote layui-text">
+        {$tips}
+    </blockquote>
+</div>
+{/if}
+<!--<h1 class="site-h1">入口配置：<img src="$addonInfo.logo" width="30" height="30"> $addonInfo.name</h1>-->
+{if condition="$addonInfo.entry_url neq ''"}
+<div style="padding: 0px 10px 0px 10px;">
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th>二维码</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><img src="{:url('mp/material/qrcode',['url'=>urlencode($entryUrl)])}" width="100" height="100"></td>
+            <td><a target="_blank" href="{$entryUrl}">打开</a> </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+{/if}
+<form class="layui-form" action="" style="padding: 0px 10px 0px 10px;">
+    <div class="layui-tab">
+        <ul class="layui-tab-title" >
+            {if condition="$addonInfo.entry_url neq ''"}
+            <li {eq name="type" value="news" }class="layui-this" {/eq} > <a href="{:url('mp/App/index',['name'=>$addonInfo.addon,'type'=>'news'])}">响应图文</a></li>
+            {/if}
+            <li {eq name="type" value="addon" }class="layui-this" {/eq}><a href="{:url('mp/App/index',['name'=>$addonInfo.addon,'type'=>'addon'])}">响应应用</a></li>
+        </ul>
+        <div class="layui-tab-content">
+            {if condition="$addonInfo.entry_url neq ''"}
+            {eq name="type" value="news" }
+            <div class="layui-tab-item layui-show">
+                <br>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">回复关键词</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="keyword"   value="{$news.keyword}"  placeholder="请输入关键词" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" value="{$news.title}" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">封面图</label>
+                    <div class="layui-input-block">
+                        {:hook('Upload',['type'=>'image','name'=>'picurl','value'=>$news.url])}
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">图文描述</label>
+                    <div class="layui-input-block">
+                        <textarea name="news_content" placeholder="请输入图文描述" class="layui-textarea">{$news.content}</textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">连接地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="link" value="{$news.link}"  placeholder="请输入连接地址如：http://xxxx.com/……" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <input hidden name="addonName" value="{$addonInfo.addon}">
+                        <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </div>
+
+            {/eq}
+            {/if}
+            {eq name="type" value="addon" }
+            <div class="layui-tab-item layui-show">
+                <br>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">响应关键词</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="keyword"   value="{$addon.keyword}"  placeholder="请输入关键词" autocomplete="off" class="layui-input">
+                        <p style="font-size: 12px; padding: 7px;">此关键词响应addons/{$addonInfo.addon}/下的Api.php</p>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <input hidden name="addonName" value="{$addonInfo.addon}">
+                        <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </div>
+            {/eq}
+        </div>
+    </div>
+
+</form>
+<script>
+    layui.use(['form', 'layedit'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit;
+        var editIndex = layedit.build('LAY_demo_editor');
+        form.on('submit(demo1)', function(data){
+            $.post('',data.field,function (res) {
+                if(res.status=='0'){
+                    layer.msg(res.msg);
+                }
+                if(res.status=='1'){
+                    layer.msg(res.msg,{time:1000},function () {
+
+                    });
+
+                }
+            })
+            return false;
+        });
+
+
+    });
+    layui.use('element', function(){
+        var element = layui.element;
+    });
+</script>
+{/block}

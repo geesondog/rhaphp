@@ -1,0 +1,355 @@
+{extend name="../admin/common/base" /}
+{block name="body"}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+        <!--为了适合大众开发主页、积分、余额、等应该在扩展应用中开发，这样自由扩展使用。-->
+        <!--<li {eq name="do" value="page"}class="layui-this"{/eq}><a href="{:url('mp/Member/index',['do'=>'page'])}"> 会员主页</a></li>-->
+        <!--<li {eq name="do" value="friend"}class="layui-this"{/eq}><a href="{:url('mp/Member/index',['do'=>'friend'])}"> 会员列表</a></li>-->
+        <li {eq name="do" value="group"}class="layui-this"{/eq}><a href="{:url('mp/Member/index',['do'=>'group'])}">会员等级</a></li>
+        <!--<li {eq name="do" value="score"}class="layui-this"{/eq}><a href="{:url('mp/Member/index',['do'=>'score'])}">积分管理</a></li>-->
+        <!--<li {eq name="do" value="withdrawal"}class="layui-this"{/eq}><a href="{:url('mp/Member/index',['do'=>'withdrawal'])}">会员提现</a></li>-->
+        <!--<li {eq name="do" value="balance"}class="layui-this"{/eq}><a href="{:url('mp/Member/index',['do'=>'balance'])}">会员余额</a></li>-->
+        <li {eq name="do" value="register"}class="layui-this"{/eq}><a href="{:url('mp/Member/index',['do'=>'register'])}">注册设置</a></li>
+    </ul>
+    <div class="layui-tab-content">
+        {switch name="do"}
+
+            {case value="group"}
+                {if condition="$to neq 'updateGroup'"}
+                <div class="layui-tab" >
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">会员等级</li>
+                        <li>增加等级</li>
+                    </ul>
+                    <div class="layui-tab-content" style="padding: 0;">
+                        <div class="layui-tab-item layui-show">
+                            <table class="layui-table" lay-size="sm">
+                                <colgroup>
+
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>名称</th>
+                                    <th>所需积分</th>
+                                    <th>所需金额</th>
+                                    <th>折扣</th>
+                                    <!--<th>升级条件</th>-->
+                                    <!--<th>描述</th>-->
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {volist name="data" id="v"}
+                                <tr>
+                                    <td>{$v.gid}</td>
+                                    <td>{$v.group_name}</td>
+                                    <td>{$v.up_score}</td>
+                                    <td>{$v.up_money}</td>
+                                    <td>{$v.discount}%</td>
+                                    <!--<td>{eq name="$v.up_type" value="0"}积分与金额其中一个满足即升级{/eq}{eq name="$v.up_type" value="1"}积分与金额两者都满足即升级{/eq}</td>-->
+                                    <!--<td>{$v.description}</td>-->
+                                    <td>
+                                            <a href="{:url('mp/Member/index',['do'=>'group','to'=>'updateGroup','id'=>$v.gid])}" class="rha-bt-a">更改</a>
+                                            <a href="javascript:;" onclick="delGroup('{$v.gid}')" class="rha-bt-a">
+                                                删除
+                                            </a>
+                                    </td>
+                                </tr>
+                                {/volist}
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                        <div class="layui-tab-item">
+                            <form class="layui-form" action="">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">等级名称</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="group_name" required  lay-verify="required" placeholder="请输入等级名称" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item" style="border-top:1px solid #e2e2e2;border-bottom: 1px solid #e2e2e2">
+                                    <label class="layui-form-label">升级条件</label>
+                                    <div class="layui-input-block" style="margin-left: 76px;">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label layui-word-aux">累计积分满</label>
+                                            <div class="layui-input-inline" style="width: 100px;">
+                                                <input type="text" name="up_score" value="0" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                                            </div>
+                                            <div class="layui-form-mid layui-word-aux">分，设置会员等级所需要的累计积分且必须大于等于0</div>
+                                        </div>
+                                       <div class="layui-form-item">
+                                            <label class="layui-form-label layui-word-aux">消费额度满</label>
+                                            <div class="layui-input-inline" style="width: 100px;">
+                                                <input type="text" name="up_money" value="0" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                                            </div>
+                                            <div class="layui-form-mid layui-word-aux">元，设置会员等级所需要的消费额度且必须大于等于0</div>
+                                       </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label layui-word-aux">会员升级条件</label>
+                                            <div class="layui-input-inline" style="width: 140px;">
+                                                <input type="radio" name="up_type" value="0" title="或">
+                                                <input type="radio" name="up_type" value="1" title="且" checked>
+                                            </div>
+                                            <div class="layui-form-mid layui-word-aux">或：满足一个条件即可升级，且两个条件必须满足才可升级。</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">折扣率(%):</label>
+                                    <div class="layui-input-block">
+                                        <div class="layui-input-inline" style="width: 70px;">
+                                            <input type="text"  name="discount" value="98" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item layui-form-text">
+                                    <label class="layui-form-label">描述</label>
+                                    <div class="layui-input-block">
+                                        <textarea name="description" placeholder="请输入会员描述" class="layui-textarea"></textarea>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-input-block">
+                                        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+        <script>
+            layui.use('form', function(){
+                var form = layui.form;
+                form.on('submit(formDemo)', function(data){
+                    $.post("{:url('mp/Member/addGroup')}",data.field,function (res) {
+                        if(res.status==1){
+                            layer.msg(res.msg,{time:1000},function () {
+                                window.location.href="{:url('mp/Member/index',['do'=>'group'])}";
+                            });
+                        }else{
+                            layer.msg(res.msg);
+                        }
+                    })
+                    return false;
+                });
+            });
+            function delGroup(gid) {
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.confirm('你确定需要删除吗？', {
+                        btn: ['是','不'] //按钮
+                    }, function(){
+                        $.post("{:url('mp/Member/delGroup')}",{'gid':gid},function (res) {
+                            if(res.status==1){
+                                layer.msg(res.msg,{time:1000},function () {
+                                    window.location.href="{:url('mp/Member/index',['do'=>'group'])}";
+                                });
+                            }else{
+                                layer.msg(res.msg);
+                            }
+                        })
+                    }, function(){
+
+                    });
+                });
+            }
+        </script>
+                {elseif condition="$to eq 'updateGroup'"/}
+                    <br>
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">等级名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="group_name" value="{$group.group_name}" required  lay-verify="required" placeholder="请输入等级名称" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="border-top:1px solid #e2e2e2;border-bottom: 1px solid #e2e2e2">
+                            <label class="layui-form-label">升级条件</label>
+                            <div class="layui-input-block" style="margin-left: 76px;">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label layui-word-aux">累计积分满</label>
+                                    <div class="layui-input-inline" style="width: 100px;">
+                                        <input type="text" name="up_score" value="{$group.up_score}" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">分，设置会员等级所需要的累计积分且必须大于等于0</div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label layui-word-aux">消费额度满</label>
+                                    <div class="layui-input-inline" style="width: 100px;">
+                                        <input type="text" name="up_money" value="{$group.up_money}" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">元，设置会员等级所需要的消费额度且必须大于等于0</div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label layui-word-aux">会员升级条件</label>
+                                    <div class="layui-input-inline" style="width: 140px;">
+                                        <input type="radio" {eq name="$group.up_type" value="0"}checked{/eq} name="up_type" value="0" title="或">
+                                        <input type="radio" {eq name="$group.up_type" value="1"}checked{/eq} name="up_type" value="1" title="且" >
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">或：满足一个条件即可升级，且两个条件必须满足才可升级。</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">折扣率:</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline" style="width: 70px;">
+                                    <input type="text"  name="discount" value="{$group.discount}" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">%</div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">描述</label>
+                            <div class="layui-input-block">
+                                <textarea name="description" placeholder="请输入会员描述" class="layui-textarea">{$group.description}</textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+
+                            <div class="layui-input-block">
+                                <input type="hidden" name="gid" value="{$group.gid}">
+                                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                    <script>
+                        layui.use('form', function(){
+                            var form = layui.form;
+                            form.on('submit(formDemo)', function(data){
+                                $.post("{:url('mp/Member/updateGroup')}",data.field,function (res) {
+                                    if(res.status==1){
+                                        layer.msg(res.msg,{time:1000},function () {
+                                            window.location.href="{:url('mp/Member/index',['do'=>'group'])}";
+                                        });
+                                    }else{
+                                        layer.msg(res.msg);
+                                    }
+                                })
+                                return false;
+                            });
+                        });
+                    </script>
+                {/if}
+
+            {/case}
+            {case value="register"}
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">注册设置</label>
+                <div class="layui-input-block">
+                    <!--<input type="radio" {eq name="st.register_type" value="1" }checked {/eq} name="register_type" value="1" title="手机号注册">-->
+                    <div id="login_auto">
+                        <input type="radio" {eq name="st.register_type" value="3" }checked {/eq} checked name="register_type" value="3" title="回复注册|登录" >
+                        <input  type="radio" {eq name="st.register_type" value="2" }checked {/eq} name="register_type" value="2" title="系统自动注册" >
+                    </div>
+                    <div id="registerType" {eq name="st.register_type" value="2"} style="display: none" {/eq} >
+                        <p class="tip_for_p">注：没有认证的公众号，请选择回复登录|注册，系统自动注册需要认证公众号可用，已经认证公众号建议选择系统自动注册。<br>
+                        若选择回复注册，必须要填写你的关键词。保存成功后也可以在菜单设置中配置此关键词方可注册或者登录。
+                        </p><br>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">关键词*</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="keyword" placeholder="请输入关键词" value="{$st.keyword}" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">封面图*</label>
+                            <div class="layui-input-block">
+                                {:hook('Upload',['type'=>'image','name'=>'picurl','material'=>true,'value'=>$st.picurl])}
+                            </div>
+                        </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">设置密码</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="ispwd" value="1" title="是" checked {eq name="st.ispwd" value="1" }checked {/eq}>
+                            <input type="radio" name="ispwd" value="0" title="否" {eq name="st.ispwd" value="0" }checked {/eq}>
+                            <p class="tip_for_p">设为“是”那么需要密码登录,设为“否”侧反。</p>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">跳转地址*</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="redirect_url" placeholder="请输入址址"  value="{$st.redirect_url}" autocomplete="off" class="layui-input">
+                            <p class="tip_for_p">注册|登录后跳转的地址；如：http://www.rhaphp.com/</p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">验证手机</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="verify" value="1" title="是" checked {eq name="st.verify" value="1" }checked {/eq}>
+                    <input type="radio" name="verify" value="0" title="否" {eq name="st.verify" value="0" }checked {/eq}>
+                    <p class="tip_for_p">注：若要验证手机号请先配置短信发送所需参数。</p>
+                </div>
+            </div>
+            <div class="layui-form-item" style="border-top:1px solid #e2e2e2;border-bottom: 1px solid #e2e2e2">
+                <label class="layui-form-label">注册福利</label>
+                <div class="layui-input-block" style="margin-left: 76px;">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label layui-word-aux">会员注册送</label>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="text" name="up_score" value="{$st.up_score}" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">分</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label layui-word-aux">会员注册送</label>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="text" name="up_money" value="{$st.up_money}" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">元，单位：元</div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+        </form>
+        <script>
+            $(function () {
+                $("#login_auto").click(function(){
+                    var values= $("input[name='register_type']:checked").val();
+                    if(values ==2){
+                        $('#registerType').hide();
+                    }else{
+                        $('#registerType').show();
+                    }
+                });
+            })
+            layui.use('form', function(){
+                var form = layui.form;
+                form.on('submit(formDemo)', function(data){
+                    $.post("{:url('mp/Member/registerConfig')}",data.field,function (res) {
+                        if(res.status==1){
+                            layer.msg(res.msg,{time:1000},function () {
+                               // window.location.href="{:url('mp/Member/index',['do'=>'group'])}";
+                            });
+                        }else{
+                            layer.msg(res.msg);
+                        }
+                    })
+                    return false;
+                });
+            });
+        </script>
+            {/case}
+
+
+        {/switch}
+    </div>
+</div>
+
+{/block}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <title></title>
+    {js href='/public/static/jquery/jquery-1.11.0.min.js' /}
+    {js href='/public/static/layui/layui.js' /}
+    {CSS href="/public/static/layui/css/layui.css" /}
+</head>
+<body>
+<div style="padding: 0px 10px 0px 10px;">
+    当前红包活动总共发出{$record.total_record}份红包，红包总额为{$record.total_money}元。
+    <a onclick="delRedPack()" class="layui-btn layui-btn-sm layui-btn-normal"> 设为过去活动</a>
+    <hr>
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+        <ul class="layui-tab-title">
+            <a href="{:addonUrl('index/index',['status'=>'1'])}"><li {eq name="$status" value="1"}class="layui-this"{/eq}>当前活动</li></a>
+            <a href="{:addonUrl('index/index',['status'=>'0'])}"><li {eq name="$status" value="0"}class="layui-this"{/eq}>过去活动</li></a>
+        </ul>
+    </div>
+    <table class="layui-table" lay-skin="nob" lay-size="sm">
+        <thead>
+        <tr>
+            <th>呢称</th>
+            <th>头像</th>
+            <th>金额</th>
+            <th>领取时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="data" id="vo"}
+        <tr>
+            <td>{$vo.nickname}</td>
+            <td><img src="{$vo.headimgurl}" style="width: 28px;height: 28px; border-radius: 3px;"></td>
+            <td>{$vo.money}</td>
+            <td>{$vo.create_time}</td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    {$data->render()}
+</div>
+<script>
+    function delRedPack() {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.confirm('确定设为过去活动吗？！', {
+                btn: ['是','不'], //按钮
+                offset: ['15%', '20%'],
+                shade: 0.1,
+            }, function(){
+                $.post("{:addonUrl('index/delRedPack')}",{},function (res) {
+                    if(res.status==1){
+                        layer.alert(res.msg,function (index) {
+                            window.location.reload();
+                            layer.close(index);
+                        })
+
+                    }else{
+                        layer.alert(res.msg)
+                    }
+                })
+            }, function(){
+
+            });
+        });
+
+    }
+</script>
+</body>
+</html>

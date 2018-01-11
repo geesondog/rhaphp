@@ -1,0 +1,68 @@
+{extend name="./common/base" /}
+    {block name="body"}
+    <div id="list">
+        {volist name="orders" id="v"}
+            <div class="weui-form-preview">
+                <div class="weui-form-preview__hd">
+                    <label class="weui-form-preview__label">付款金额</label>
+                    <em class="weui-form-preview__value">¥{$v.money}</em>
+                </div>
+                <div class="weui-form-preview__bd">
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">商品</label>
+                        <span class="weui-form-preview__value">{$v.title}</span>
+                    </div>
+
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">交易状态</label>
+                        <span class="weui-form-preview__value">{eq name="$v.status" value="1"}交易完成{else/}未付款{/eq}</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">订单状态</label>
+                        <span class="weui-form-preview__value">
+                            {switch name="$v.refund" }
+                            {case value="0"}正常{/case}
+                            {case value="1"}申请退款中{/case}
+                            {case value="2"}已退款{/case}
+
+                        {/switch}</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">交易时间</label>
+                        <span class="weui-form-preview__value">{$v.create_time}</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">定单号</label>
+                        <span class="weui-form-preview__value">{$v.order_number}</span>
+                    </div>
+
+                </div>
+                <div class="weui-form-preview__ft" style="line-height: 35px;">
+                    <a class="weui-form-preview__btn weui-form-preview__btn_default" href="javascript:"></a>
+                    {eq name="$v.status" value="1"}
+                    <a class="weui-form-preview__btn weui-form-preview__btn_default" onclick="refund('{$v.order_number}')" href="javascript:">申请退款</a>
+                    {else/}
+                    <a class="weui-form-preview__btn weui-form-preview__btn_default" href="javascript:">立即付款</a>
+                    {/eq}
+                </div>
+            </div>
+            <p style="margin-bottom: 7px;"></p>
+        {/volist}
+    </div>
+
+    <script>
+        function refund(order_number) {
+            $.confirm("你确定要退款吗？为了更快得到退款请先联系客服", function() {
+                $.post("{:url('service/Payment/refund')}",{'order_number':order_number},function (res) {
+                    if(res.status==1){
+                        $.toast(res.msg);
+                    }else{
+                        $.toast(res.msg, "cancel");
+                    }
+                })
+            }, function() {
+
+            });
+        }
+    </script>
+    {/block}
