@@ -7,8 +7,8 @@
 把系统所需要文件上传到你的网站根目录，addons,data,uploads,runtime,config权限为777。访问http:域名/index.php/install/即可进入安装。PHP5.6或以上，但是为了最佳运行效果我们建议你使用PHP7.0或以上的版本，MYSQL建议在5.5或以上注意字符是utf8mb4。如果你在使用过程中遇到问题，请访问官方网站或者联系我们。也可邮件方式：qimengkeji@vip.qq.com
 
 <p align=center>
-  <a href="http://www.layui.com">
-    <img src="http://cdn.layui.com/upload/2016_10/168_1476644144774_50450.png" alt="layui" width="520">
+  <a href="https://www.rhaphp.com/">
+    <img src="https://rhaphp.com/static/home/images/rhaphp_pc.png" alt="rhaphp" width="520">
   </a>
 </p>
 ## 系统目录结构
