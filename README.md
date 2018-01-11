@@ -1,5 +1,5 @@
 
-![](https://rhaphp.com/static/home/images/rhaphp_pc.png)
+![](https://raw.githubusercontent.com/geesondog/rhaphp/master/public/static/images/rhaphp_pc.png)
 
 #官方网站：https://www.rhaphp.com/
 
