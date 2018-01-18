@@ -243,7 +243,7 @@ CREATE TABLE IF NOT EXISTS `rh_mp_friends` (
   `city` varchar(50) DEFAULT NULL COMMENT '城市',
   `remark` varchar(50) DEFAULT NULL COMMENT '备注',
   `group_id` int(10) DEFAULT '0' COMMENT '分组ID',
-  `groupid` int(11) NOT NULL COMMENT '公众号分组标识',
+  `groupid` int(11) NOT NULL DEFAULT '0' COMMENT '公众号分组标识',
   `tagid_list` varchar(255) DEFAULT NULL COMMENT '标签',
   `score` int(10) DEFAULT '0' COMMENT '积分',
   `money` decimal(10,2) DEFAULT '0.00' COMMENT '金钱',
