@@ -13,18 +13,19 @@ namespace app\common\controller;
 use think\facade\Config;
 use \traits\controller\Jump;
 use app\common\model\Addons;
+
 class Addon extends Common
 {
 
     use Jump;
-    public $mpInfo;
-    private $addonName;
+    public $mpInfo;//当前公众号信息
+    private $addonName;//应用名称
     private $addonController;
     private $addonAction;
-    public $addonInfoByDb;
-    public $addonInfoByFile;
-    public $getAaddonConfigByMp;
-    public $addonRoot;
+    public $addonInfoByDb;//应用配置已保存的信息
+    public $addonInfoByFile;//应用配置Config文件信息
+    public $getAaddonConfigByMp;//获取应用对应当前的公众号保存的配置信息
+    public $addonRoot;//应用的根目录
 
     public function initialize()
     {
@@ -39,9 +40,17 @@ class Addon extends Common
         $this->addonInfoByDb = $model->getAddonByDb($this->addonName);
         $this->getAaddonConfigByMp = $model->getAaddonConfigByMp($this->addonName, $this->mid);
         $this->addonRoot = ADDON_PATH . $this->addonName . '/';
+        if ($this->addonInfoByDb['status'] == 0) {
+            if(!empty($this->getAaddonConfigByMp) && is_array($this->getAaddonConfigByMp)){
+               if(isset($this->getAaddonConfigByMp['close_msg']) && !empty($this->getAaddonConfigByMp['close_msg'])){
+                   $this->error($this->getAaddonConfigByMp['close_msg']);
+               }else{
+                   $this->error('此应用已经设置为停止状态');
+               }
+            }
+        }
         session('addonName', $this->addonName);
         session('mid', $this->mid);
-
     }
 
     public function fetch($template = '', $vars = [], $replace = [], $config = [])
