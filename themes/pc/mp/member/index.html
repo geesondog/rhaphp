@@ -9,7 +9,7 @@
         <!--<li {eq name="do" value="score"}class="layui-this"{/eq}><a href="{:url('mp/Member/index',['do'=>'score'])}">积分管理</a></li>-->
         <!--<li {eq name="do" value="withdrawal"}class="layui-this"{/eq}><a href="{:url('mp/Member/index',['do'=>'withdrawal'])}">会员提现</a></li>-->
         <!--<li {eq name="do" value="balance"}class="layui-this"{/eq}><a href="{:url('mp/Member/index',['do'=>'balance'])}">会员余额</a></li>-->
-        <li {eq name="do" value="register"}class="layui-this"{/eq}><a href="{:url('mp/Member/index',['do'=>'register'])}">注册设置</a></li>
+        <li {eq name="do" value="register"}class="layui-this"{/eq}><a href="{:url('mp/Member/index',['do'=>'register'])}">注册授权</a></li>
     </ul>
     <div class="layui-tab-content">
         {switch name="do"}
@@ -296,15 +296,15 @@
             {case value="register"}
         <form class="layui-form" action="">
             <div class="layui-form-item">
-                <label class="layui-form-label">注册设置</label>
+                <label class="layui-form-label">注册方式</label>
                 <div class="layui-input-block">
                     <!--<input type="radio" {eq name="st.register_type" value="1" }checked {/eq} name="register_type" value="1" title="手机号注册">-->
                     <div id="login_auto">
                         <input type="radio" {eq name="st.register_type" value="3" }checked {/eq} checked name="register_type" value="3" title="回复注册|登录" >
-                        <input  type="radio" {eq name="st.register_type" value="2" }checked {/eq} name="register_type" value="2" title="系统自动注册" >
+                        <input  type="radio" {eq name="st.register_type" value="2" }checked {/eq} name="register_type" value="2" title="微信授权注册" >
                     </div>
                     <div id="registerType" {eq name="st.register_type" value="2"} style="display: none" {/eq} >
-                        <p class="tip_for_p">注：没有认证的公众号，请选择回复登录|注册，系统自动注册需要认证公众号可用，已经认证公众号建议选择系统自动注册。<br>
+                        <p class="tip_for_p">注：没有认证的公众号，请选择回复登录|注册，系统自动注册需要认证公众号可用，已经认证公众号建议选择微信授权自动注册。<br>
                         若选择回复注册，必须要填写你的关键词。保存成功后也可以在菜单设置中配置此关键词方可注册或者登录。
                         </p><br>
                         <div class="layui-form-item" style="width: 560px;">

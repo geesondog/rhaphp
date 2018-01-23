@@ -61,7 +61,7 @@ class Base extends Controller
                 }
             }
             $parent=\Tree::getParents($allMenu,$nowMenu['id']);
-            $tree=tree_to_list($menu2,'child');
+            $tree=tree_to_list($menu2,'child','sort');
             if($tree){
                 foreach ($tree as $key =>$val){
                     foreach ($parent as $key2=>$val2){

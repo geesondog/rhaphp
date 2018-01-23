@@ -49,7 +49,7 @@ class Call
                     if (!method_exists($model, $this->act)) {
                         abort(500, lang($this->act.'方法不存在'));
                     }
-                    call_user_func_array([$model, $this->act],[]);
+                    return call_user_func_array([$model, $this->act],[]);
                 } else {
                     abort(500, lang($class.'不存在'));
                 }

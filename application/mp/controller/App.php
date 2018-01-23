@@ -228,6 +228,14 @@ class App extends Base
                                         }
                                     }
                                 }
+                            } elseif ($val1['type'] == 'select') {
+                                foreach ($val1['value'] as $key3 => $val3) {
+                                    if ($val3['value'] == $val2) {
+                                        $config[$key1]['value'][$key3]['selected'] = 1;
+                                    } else {
+                                        $config[$key1]['value'][$key3]['selected'] = 0;
+                                    }
+                                }
                             } else {
                                 $config[$key1]['value'] = $val2;
                             }

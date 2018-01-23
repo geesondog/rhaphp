@@ -77,7 +77,7 @@ class Index extends \think\Controller {
 				$db  = \think\Db::connect($DB);
 				$sql = "CREATE DATABASE IF NOT EXISTS `{$dbname}` DEFAULT CHARACTER SET utf8";
 				if (!$db->execute($sql)) {
-					return $this->error($db->getError());
+					return $this->error('创建数据库失败');
 				} else {
 					return $this->redirect('install/index/sql');
 				}

@@ -72,6 +72,19 @@
                                 </div>
                             </div>
                         {/case}
+                {case value="select"}
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$v.title}</label>
+                    <div class="layui-input-block">
+                        <select name="{$v.name}">
+                            {volist name="$v.value" key="k" id="rd"}
+                            <option value="{$rd.value}" {if isset($rd.selected)}{eq name="$rd.selected" value="1"}selected{/eq}{/if}>{$rd.title}</option>
+                            {/volist}
+                        </select>
+                        <p class="tip_for_p">{$v.tip}</p>
+                    </div>
+                </div>
+                {/case}
                 {case value="checkbox"}
                             <div class="layui-form-item" pane="">
                                 <label class="layui-form-label">{$v.title}</label>
