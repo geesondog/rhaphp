@@ -83,7 +83,7 @@ class Subfms extends Addon
             }
 
             $this->assign('form', $forms);
-            $this->fetch($forms['template'] . '/index');
+            $this->fetch('@'.$forms['template'] . '/index');
         }
 
     }
