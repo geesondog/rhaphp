@@ -8,6 +8,7 @@
 // +----------------------------------------------------------------------
 
 namespace app\mp\controller;
+use app\common\model\Setting;
 use think\Db;
 use think\facade\Request;
 use app\admin\controller\Base;
@@ -78,6 +79,18 @@ class Index extends Base
             $data['encodingaeskey']=getRandChar('43');
             $mid = Db::name('mp')->insertGetId($data);
             if($mid){
+                $setingData=[
+                    'register_type'=>2,
+                    'verify'=>0,
+                    'up_score'=>0,
+                    'up_money'=>0,
+                    'keyword'=>'',
+                    'picurl'=>'/public/static/images/def.jpg',
+                    'ispwd'=>1,
+                    'redirect_url'=>''
+                ];
+                $setingModel= new Setting();
+                $setingModel->addSetting(['mpid' => $mid, 'name' => 'register'], $setingData);
                 ajaxMsg(1,'操作成功');
             }else{
                 ajaxMsg(0,'操作失败');
