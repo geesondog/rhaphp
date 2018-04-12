@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>{$form.title}</title>
+    {js href='/public/static/jquery/jquery-1.11.0.min.js' /}
+    {js href='/public/static/layui/layui.js' /}
+    {CSS href="/public/static/layui/css/layui.css" /}
+    {CSS href="__ADDONSTATIC__/css/style.css" /}
+</head>
+<body>
+<div class="layui-row">
+    <img width="100%" src="{$form.picurl}">
+</div>
+<div class="layui-row form_body">
+    <div class="forms_desc">
+        <h2 class="form-title">{$form.title2}</h2>
+        <p class="title-desc">{$form.content2|raw}</p>
+    </div>
+    <div class="form_body-sub">
+        <form class="layui-form" action="">
+            {volist name="$form.attr_value" id="v"}
+            {switch name="$v.type" }
+            {case value="1"}
+            <div class="layui-form-item">
+                <label class="layui-form-label">{$v.name}{eq name="$v.need" value="1"} <i style="color: red">*</i> {/eq}</label>
+                <div class="layui-input-block">
+                    <input type="text" name="{$v.name}" value="{$v.defval}" placeholder="" autocomplete="off" class="layui-input">
+                    <div class="layui-form-mid layui-word-aux">{$v.tip}</div>
+                </div>
+            </div>
+            {/case}
+            {case value="2"}
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">{$v.name}{eq name="$v.need" value="1"} <i style="color: red">*</i> {/eq}</label>
+                <div class="layui-input-block">
+                    <textarea name="{$v.name}" class="layui-textarea">{$v.defval}</textarea>
+                    <div class="layui-form-mid layui-word-aux">{$v.tip}</div>
+                </div>
+            </div>
+            {/case}
+            {case value="3"}
+            <div class="layui-form-item">
+                <label class="layui-form-label">{$v.name}{eq name="$v.need" value="1"} <i style="color: red">*</i> {/eq}</label>
+                <div class="layui-input-block">
+                    {volist name="$v.values" key="k" id="t"}
+                    <input type="radio" name="{$v.name}" {eq name="$k" value="1"} checked {/eq} value="{$t}" title="{$t}">
+                    {/volist}
+                    {notempty name="$v.tip"}
+                    <div class="layui-form-mid layui-word-aux">{$v.tip}</div>
+                    {/notempty}
+                </div>
+            </div>
+            {/case}
+            {case value="4"}
+            <div class="layui-form-item">
+                <label class="layui-form-label">{$v.name}{eq name="$v.need" value="1"} <i style="color: red">*</i> {/eq}</label>
+                <div class="layui-input-block">
+                    {volist name="$v.values" key="k" id="t"}
+                    <input type="checkbox" name="{$v.name}[]" value="{$t}"  title="{$t}">
+                    {/volist}
+                    <div style="display: none">
+                    <input type="checkbox" name="{$v.name}[]" checked value="0">
+                    </div>
+                </div>
+                {notempty name="$v.tip"}
+                <div class="layui-form-mid layui-word-aux">{$v.tip}</div>
+                {/notempty}
+            </div>
+            {/case}
+            {case value="5"}
+            <div class="layui-form-item">
+                <label class="layui-form-label">{$v.name}{eq name="$v.need" value="1"} <i style="color: red">*</i> {/eq}</label>
+                <div class="layui-input-block">
+                    <select name="{$v.name}">
+                    {volist name="$v.values" id="t"}
+                        <option value="{$t}">{$t}</option>
+                    {/volist}
+                    </select>
+                    <div class="layui-form-mid layui-word-aux">{$v.tip}</div>
+                </div>
+            </div>
+            {/case}
+            {case value="6"}
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">{$v.name}{eq name="$v.need" value="1"} <i style="color: red">*</i> {/eq}</label>
+                    <div class="layui-input-inline">
+                        <input name="{$v.name}"  class="layui-input" id="date_{$i}" placeholder="yyyy-MM-dd"  type="text">
+                        <div class="layui-form-mid layui-word-aux">{$v.tip}</div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                layui.use(['laydate'], function(){
+                    laydate = layui.laydate;
+                    laydate.render({
+                        elem: '#date_{$i}'
+                        ,type: 'datetime'
+                    });
+                });
+            </script>
+            {/case}
+            {case value="7"}
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">{$v.name}{eq name="$v.need" value="1"} <i style="color: red">*</i> {/eq}</label>
+                <div class="layui-input-block">
+                    {:hook('Upload',['type'=>'image','name'=>$v.name])}
+                    <div class="rhaphp-upload-image">
+                        <p class="tip_for_p">{$v.tip}</p>
+                    </div>
+                </div>
+            </div>
+            {/case}
+            {/switch}
+            {/volist}
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="sub">立即提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="layui-row rha-copy">RhaPHP技术支持</div>
+<script>
+    layui.use(['form','laydate'], function(){
+        var form = layui.form;
+        var laydate = layui.laydate;
+        form.on('submit(sub)', function(data){
+            var loadIndex = layer.load(1)
+            $.post('', $('.layui-form').serialize(), function (res) {
+                layer.close(loadIndex)
+                if (res.status == '0') {
+                    layer.msg(res.msg);
+                }
+                if (res.status == '1') {
+                    layer.msg(res.msg, {time: 1000}, function () {
+                        {if condition="$form.jump_url neq ''"}
+                            location.href = "{$form.jump_url}";
+                            {/if}
+                    });
+                }
+            }).error(function (error) {
+                layer.alert('500 Internal Server Error');
+                layer.close(loadIndex)
+            })
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

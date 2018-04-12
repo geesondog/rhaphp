@@ -1,0 +1,145 @@
+{extend name="../admin/common/base" /}
+{block name="jscss"}
+{js href='__STATIC__/zclip/jquery.zclip.min.js' /}
+{/block}
+{block name="nav_title"}
+<a href="{:url('qrcodeAdd')}" id="addkw" class="layui-btn layui-btn-normal layui-btn-sm rha-nav-title">增加二维码</a>
+{/block}
+{block name="body"}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+        <li {eq name="type" value="list"}class="layui-this"{/eq} ><a href="{:url('mp/Mp/qrcode',['type'=>'list'])}">二维码列表</a></li>
+        <li {eq name="type" value="statistics"}class="layui-this"{/eq}><a href="{:url('mp/Mp/qrcode',['type'=>'statistics'])}">二维码扫描统计</a></li>
+    </ul>
+    <div class="layui-tab-content">
+        {switch name="type"}
+        {case value="list"}
+
+        <table class="layui-table" lay-skin="line">
+            <thead>
+            <tr>
+                <th>二维码</th>
+                <th>场景名称</th>
+                <th>对应关键字</th>
+                <th>类型</th>
+                <th>到期时间</th>
+                <th>短链接</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="data" id="vo"}
+            <tr>
+                <td><div  style="padding: 1px; border: #e6e6e6 solid 1px; width:50px; float: left; ">
+                    <img  class="form_logo" src="{$vo.qrcode_url}" width="50" height="50">
+                </div></td>
+                <td>{$vo.scene_name}</td>
+                <td>{$vo.keyword}</td>
+                <td>{if condition="$vo.qr_type eq '0'"}临时
+                    {else /} 永久
+                    {/if}</td>
+                <td>{if condition="$vo.qr_type eq '0'"}{$vo.create_time}
+                    {else /} 长期有效
+                    {/if}</td>
+                <td>
+                    {$vo.short_url}
+                </td>
+                <td>
+                    <a class="rha-bt-a" href="javascript:;" onclick="delQrcode('{$vo.id}')">删除</a>
+                    <a target="_blank" href="{$vo.short_url}" class="rha-bt-a">查看</a>
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+        {$data->render()|raw}
+        {/case}
+        {case value="statistics"}
+        <table class="layui-table" lay-skin="line">
+            <thead>
+            <tr>
+                <th>二维码</th>
+                <th>场景名称</th>
+                <th>触发关键字</th>
+                <th>类型</th>
+                <th>被扫总数</th>
+                <th>粉丝增加</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="data" id="vo"}
+            <tr>
+                <td><div  style="padding: 1px; border: #e6e6e6 solid 1px; width:50px; float: left; ">
+                    <img class="form_logo" src="{$vo.qrcode_url}" width="50" height="50">
+                </div></td>
+                <td>{$vo.scene_name}</td>
+                <td>{$vo.keyword}</td>
+                <td>{if condition="$vo.qr_type eq '0'"}临时
+                    {else /} 永久
+                    {/if}</td>
+                <td>{$vo.scan_count}</td>
+                <td>{$vo.gz_count}</td>
+                <td>
+                    <a href="{:url('qrcode',['scene_id'=>$vo.scene_id,'type'=>'friend'])}" class="rha-bt-a">查看增加粉丝</a>
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+        {$data->render()|raw}
+        {/case}
+        {case value="friend"}
+        <table class="layui-table" lay-skin="line">
+            <thead>
+            <tr>
+                <th>场景 ID</th>
+                <th>呢称</th>
+                <th>头像</th>
+                <th>扫码次数</th>
+                <th>扫码时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="data" id="vo"}
+            <tr>
+                <td>{$vo.scene_id}</td>
+                <td>{$vo.nickname}</td>
+                <td><img height="38" width="38" style="border-radius: 3px;" src="{$vo.headimgurl}"></td>
+                <td>{$vo.scan_count}</td>
+                <td>{:date('Y-m-d H:s:i',$vo.create_time)}</td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+        {$data->render()|raw}
+        {/case}
+        {/switch}
+    </div>
+</div>
+<script>
+    function delQrcode(id) {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.confirm('你确定需要删除吗？', {
+                btn: ['是','不'] //按钮
+            }, function(){
+                $.post("{:url('mp/Mp/delQrcode')}",{'id':id},function (res) {
+                    if(res.status==1){
+                        layer.alert(res.msg,function (index) {
+                            window.location.reload();
+                            layer.close(index);
+                        })
+
+                    }else{
+                        layer.alert(res.msg)
+                    }
+                })
+            }, function(){
+
+            });
+        });
+
+    }
+</script>
+{/block}

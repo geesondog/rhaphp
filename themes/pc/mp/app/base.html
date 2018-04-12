@@ -1,0 +1,65 @@
+{extend name="../admin/common/base" /}
+{block name="leftMenu"}
+<dl>
+    <dt><i class="type-ico ico-trade rha-icon">&#xe617;</i>应用配置</dt></dt>
+    <dd class="{eq name="$action_name" value="index"}selected{/eq}"><a href="{:url('mp/App/index',['name'=>$addonInfo.addon,'type'=>'news'])}">入口配置</a></dd>
+    {if condition="isset($addonInfo.config) && !empty($addonInfo.config)"}
+    <dd class="{eq name="$action_name" value="config"}selected{/eq}"><a href="{:url('mp/App/config',['name'=>$addonInfo.addon])}">参数设置</a></dd>
+    {/if}
+</dl>
+<dl>
+    <dt><i class="type-ico ico-trade rha-icon">&#xe670;</i>业务菜单</dt></dt>
+    <div id="addon_menu" class="addon_menu-left-container">
+        <div class="addon_menu-left">
+            <ul class="addon_menu-left-nav">
+                {volist name="$addonMenu" id="v"}
+                {if isset($v.child) && is_array($v.child)}
+                <li class="addon_menu-left-nav-item addon_menu_parent {if $v.show =='1'}on{/if}">
+                    <a class="addon_menu-left-nav-a" href="javascript:void(0);">
+                        <i class="item-icon type-ico ico-trade rha-icon"  width="25px" height="25px">{$v.icon|raw}</i>
+                        <span>{$v.name}</span>
+                        <span class="addon_menu-left-a-icon {if $v.show =='1'}addon_menu_down{else/}addon_menu_up{/if}"></span>
+                    </a>
+                    <ul class="child-item-nav" style="display: {if $v.show =='1'}block{else/}none{/if} ">
+                        {volist name="$v.child" key="k" id="c"}
+                        <li class="addon_menu-left-nav-item {eq name="$node" value="$c.url"}selected{/eq}">
+                        <a class="addon_menu-left-nav-a" href="{:url('mp/App/toview',['name'=>$addonInfo.addon,'node'=>$c.url])}">{$c.name}</a>
+                        </li>
+                        {/volist}
+                    </ul>
+                </li>
+                {else/}
+                <li class="addon_menu-left-nav-item addon_menu_parent {eq name="$node" value="$v.url"}selected{/eq}">
+                <a class="addon_menu-left-nav-a" href="{:url('mp/App/toview',['name'=>$addonInfo.addon,'node'=>$v.url])}">
+                    <i class="item-icon type-ico ico-trade rha-icon"  width="25px" height="25px">{$v.icon|raw}</i>
+                    <span>{$v.name}</span>
+                </a>
+                </li>
+                {/if}
+                {/volist}
+            </ul>
+        </div>
+    </div>
+</dl>
+<script>
+    $('#addon_menu').on('click','.addon_menu-left-nav-a',function(){
+
+        if($(this).parents('.addon_menu-left-nav-item').hasClass('on')){
+            $(this).parents('.addon_menu-left-nav-item').removeClass('on');
+            $(this).parents('.addon_menu-left-nav-item').find('.addon_menu-left-a-icon').removeClass('addon_menu_down').addClass('addon_menu_up');
+            $(this).siblings('.child-item-nav').hide();
+        }else{
+            $('.addon_menu-left-nav-item .addon_menu-left-a-icon').removeClass('addon_menu_down').addClass('addon_menu_up');
+            $(this).parents('.addon_menu-left-nav-item').addClass('on').siblings('#addon_menu .addon_menu-left-nav-item ').removeClass('on');
+            $(this).parents('.addon_menu-left-nav-item').find('.addon_menu-left-a-icon').addClass('addon_menu_down').removeClass('addon_menu_up');
+            $('#addon_menu .addon_menu-left-nav-item .child-item-nav').hide();
+            $(this).siblings('#addon_menu .addon_menu-left-nav-item .child-item-nav').show();
+        }
+
+    })
+</script>
+
+{/block}
+{block name="body"}
+
+{/block}

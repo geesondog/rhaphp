@@ -1,0 +1,196 @@
+{extend name="../admin/common/base" /}
+{block name="body"}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+        <li {eq name="type" value="wxpay"}class="layui-this"{/eq} ><a href="{:url('mp/Mp/mpsetting',['type'=>'wxpay'])}">微信支付</a></li>
+        <li {eq name="type" value="sms"}class="layui-this"{/eq}><a href="{:url('mp/Mp/mpsetting',['type'=>'sms'])}">短信配置</a></li>
+        <li {eq name="type" value="uploadjsfile"}class="layui-this"{/eq}><a href="{:url('mp/Mp/mpsetting',['type'=>'uploadjsfile'])}">上传验证文件</a></li>
+        <li {eq name="type" value="cloud"}class="layui-this"{/eq}><a href="{:url('mp/Mp/mpsetting',['type'=>'cloud'])}">云存储</a></li>
+    </ul>
+    <div class="layui-tab-content">
+
+        {switch name="type"}
+            {case value="wxpay"}
+        <form class="layui-form" action="">
+            <blockquote class="layui-elem-quote">
+                支付授权目录: {$payUrl}
+            </blockquote>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">AppId</label>
+                    <div class="layui-input-block">
+                        <input type="text"   name="appid" value="{$config.appid}" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">AppSecret</label>
+                    <div class="layui-input-block">
+                        <input type="text"  name="appsecret" value="{$config.appsecret}" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">商户ID</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="mchid" value="{$config.mchid}"  autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">支付密钥</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="paysignkey" value="{$config.paysignkey}"  autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">支付证书cert</label>
+                    <div class="layui-input-block">
+                        <textarea name="apiclient_cert" class="layui-textarea">{$config.apiclient_cert}</textarea>
+                        <p class="tip_for_p">请在微信商户后台下载支付证书，用记事本打开<span style="color: red">apiclient_cert.pem</span>，并复制里面的内容粘贴到这里。</p>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">支付证书key</label>
+                    <div class="layui-input-block">
+                        <textarea name="apiclient_key"   class="layui-textarea">{$config.apiclient_key}</textarea>
+                        <p class="tip_for_p">请在微信商户后台下载支付证书，使用记事本打开<span style="color: red">apiclient_key.pem</span>，并复制里面的内容粘贴到这里。</p>
+                    </div>
+
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <input type="hidden" name="setting_name" value="wxpay">
+                        <button class="layui-btn" lay-submit lay-filter="setting">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+                </form>
+
+            {/case}
+        {case value="sms"}
+        <form class="layui-form" action="">
+            <blockquote class="layui-elem-quote">
+                腾讯云短信
+            </blockquote>
+            <div class="layui-form-item">
+                <label class="layui-form-label">AppId</label>
+                <div class="layui-input-block">
+                    <input type="text"   name="txsms[appid]" value="{$config.txsms.appid}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">AppSecret</label>
+                <div class="layui-input-block">
+                    <input type="text"  name="txsms[appsecret]" value="{$config.txsms.appsecret}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">
+                阿里大鱼短信
+            </blockquote>
+            <div class="layui-form-item">
+                <label class="layui-form-label">AppId</label>
+                <div class="layui-input-block">
+                    <input type="text"   name="alisms[appid]" value="{$config.alisms.appid}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">AppSecret</label>
+                <div class="layui-input-block">
+                    <input type="text"  name="alisms[appsecret]" value="{$config.alisms.appsecret}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <input type="hidden" name="setting_name" value="sms">
+                    <button class="layui-btn" lay-submit lay-filter="setting">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+
+        {/case}
+        {case value="cloud"}
+        <form class="layui-form" action="">
+
+            <blockquote class="layui-elem-quote">
+                七牛云存储
+            </blockquote>
+            <div class="layui-form-item">
+                <label class="layui-form-label">AccessKey</label>
+                <div class="layui-input-block">
+                    <input type="text"   name="qiniu[accessKey]" value="{$config.qiniu.accessKey}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">SecretKey</label>
+                <div class="layui-input-block">
+                    <input type="text"  name="qiniu[secretKey]" value="{$config.qiniu.secretKey}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">Bucke空间名称</label>
+                <div class="layui-input-block">
+                    <input type="text"  name="qiniu[bucke]" value="{$config.qiniu.bucke}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">空间域名</label>
+                <div class="layui-input-block">
+                    <input type="text"  name="qiniu[domain]" value="{$config.qiniu.domain}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否开启</label>
+                <div class="layui-input-block">
+                    {if condition="$config.qiniu.status eq ''"}
+                    <input type="radio" name="qiniu[status]" value="1" title="开启">
+                    <input type="radio" name="qiniu[status]" value="0" title="关闭" checked>
+                    {else/}
+                    <input type="radio" name="qiniu[status]" value="1" title="开启" {eq name="$config.qiniu.status" value="1"} checked {/eq}>
+                    <input type="radio" name="qiniu[status]" value="0" title="关闭" {eq name="$config.qiniu.status" value="0"} checked {/eq}>
+                    {/if}
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <input type="hidden" name="setting_name" value="cloud">
+                    <button class="layui-btn" lay-submit lay-filter="setting">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+
+        {/case}
+        {case value="uploadjsfile"}
+        <form class="layui-form" action="">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">验证文件</label>
+                <div class="layui-input-block">
+                    {:hook('Upload',['type'=>'file_mp','name'=>'mp_verify','bt_title'=>'选择文件'])}
+                    <p class="tip_for_p">设置JS接口安全域名或者授权回调页面域名时，需要上传的文件。上传后返回公众平台后台确定验证即可。 </p>
+                </div>
+            </div>
+
+        </form>
+        {/case}
+        {/switch}
+    </div>
+</div>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+        form.on('submit(setting)', function(data){
+            $.post('',data.field,function (res) {
+                if(res.status=='0'){
+                    layer.msg(res.msg);
+                }
+                if(res.status=='1'){
+                    layer.msg(res.msg,{time:1000},function () {
+
+                    });
+                }
+            })
+            return false;
+        });
+
+    });
+</script>
+{/block}

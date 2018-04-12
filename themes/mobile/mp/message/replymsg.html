@@ -1,0 +1,112 @@
+{extend name="../admin/common/base" /}
+{block name="body"}
+{js href='__STATIC__/js/voice-2.0.js' /}
+<div style="margin: 10px 10px 0px 10px;">
+   <textarea class="layui-textarea msg_content"></textarea>
+    <div class="site-demo-button" style="margin-top: 15px;">
+        <button  onclick="replyMsg()" class="layui-btn layui-btn-normal layui-btn-sm"><i class="layui-icon">&#xe63a;</i>回复消息</button>
+        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" id="replyMsgImg"> <i class="layui-icon">&#xe67c;</i>图片回复</button>
+    </div>
+</div>
+<div class="doc-example" style="padding: 0px 10px 0px 10px;">
+    <ul class="am-comments-list am-comments-list-flip">
+        {volist name="msgList" id="vo"}
+        <li class="am-comment {eq name="$vo.is_reply" value="1"}am-comment-flip{/eq} am-comment-primary"><a href="#link-to-user-home"><img src="{$vo.headimgurl}" class="am-comment-avatar" height="48" width="48"></a>
+            <div class="am-comment-main">
+                <header class="am-comment-hd">
+                    <div class="am-comment-meta"><a href="#link-to-user" class="am-comment-author">{$vo.nickname}</a>&nbsp;发起于
+                        <time>{:date('m-d H:s',strtotime($vo.create_time))}
+                        </time>
+                        <a class="rha-bt-a" href="javascript:;" onclick="delMsg('{$vo.msg_id}','{$vo.openid}')">删除</a>
+                    </div>
+                </header>
+                <div class="am-comment-bd"><p>
+                        {if condition="strpos($vo.content,'msg_image') neq false"}
+                            <figure id="rhaphp-mp-msg" data-am-widget="figure" class="am am-figure " data-am-figure="{pureview:'true'}">
+                                {$vo.content}
+                            </figure>
+                            {else/}
+                            {$vo.content}
+                        {/if}
+
+                </p></div>
+            </div>
+        </li>
+        {/volist}
+    </ul>
+</div>
+{$msgList->render()|raw}
+<script>
+    var layer;
+    layui.use('layer', function(){
+        layer = layui.layer;
+    })
+    function replyMsg() {
+        load = layer.load(1);
+            var msg_content= $('.msg_content').val();
+           $.post('',{'msg_content':msg_content},function (res) {
+               if(res.status==1){
+                   layer.close(load);
+                   layer.msg(res.msg,{time:2000},function (index) {
+                       window.location.reload();
+                   })
+               }else{
+                   layer.close(load);
+                   layer.alert(res.msg)
+               }
+           })
+    }
+    function delMsg(id,openid) {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.confirm('你确定需要删除吗？', {
+                btn: ['是','不'] //按钮
+            }, function(){
+                $.post("{:url('message/delMsg')}",{'id':id,'openid':openid},function (res) {
+                    if(res.status==1){
+                        layer.msg(res.msg,{time:2000},function (index) {
+                            window.location.reload();
+                        })
+                    }else{
+                        layer.alert(res.msg)
+                    }
+                })
+            }, function(){
+
+            });
+        });
+    }
+
+    function openMsgImsg(obj) {
+    }
+
+    layui.use('upload', function(){
+        var upload = layui.upload;
+        var uploadInst = upload.render({
+            elem: '#replyMsgImg'
+            ,url: "{:url('replyImgByMsg',['openid'=>$openid])}"
+            ,exts:'jpg|png|gif|bmp|jpeg'
+            ,size: 2048
+            ,field:'image'
+            ,before: function(input){
+                load = layer.load(1);
+            }
+            ,done: function(res){
+                if(res.code==0){
+                    layer.close(load);
+                    layer.msg(res.msg,{time:2000},function () {
+                        window.location.reload();
+                    })
+                }else{
+                    layer.close(load);
+                    layer.alert(res.msg);
+                }
+            }
+            ,error: function(){
+                layer.msg('请求出现异常');
+            }
+        });
+    });
+
+</script>
+{/block}

@@ -1,0 +1,162 @@
+{extend name="common/base" /}
+{block name="body"}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+        <li {eq name="type" value="getVisittrendTrendByDay"}class="layui-this"{/eq} ><a href="{:url('index',['type'=>'getVisittrendTrendByDay'])}">访问趋势</a></li>
+        <li {eq name="type" value="getSummaryTrend"}class="layui-this"{/eq}><a href="{:url('index',['type'=>'getSummaryTrend'])}">概况趋势</a></li>
+        <!--<li {eq name="type" value="getVisitDistribution"}class="layui-this"{/eq}><a href="{:url('index',['type'=>'getVisitDistribution'])}">访问分布</a></li>-->
+        <li {eq name="type" value="getDailyRetainInfo"}class="layui-this"{/eq}><a href="{:url('index',['type'=>'getDailyRetainInfo'])}">访问留存</a></li>
+        <li {eq name="type" value="getVisitPage"}class="layui-this"{/eq}><a href="{:url('index',['type'=>'getVisitPage'])}">访问页面</a></li>
+        <!--<li {eq name="type" value="getUserPortrait"}class="layui-this"{/eq}><a href="{:url('index',['type'=>'getUserPortrait'])}">用户画像</a></li>-->
+    </ul>
+    <div class="layui-tab-content">
+        {switch name="type"}
+        {case value="getVisittrendTrendByDay"}
+        <table class="layui-table" lay-skin="line">
+            <thead>
+            <tr>
+                <th>时间</th>
+                <th>打开次数</th>
+                <th>访问次数</th>
+                <th>访问人数</th>
+                <th>新用户数</th>
+                <th>人均停留时长/秒</th>
+                <th>次均停留时长/秒</th>
+                <th>平均访问深度</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                {volist name="$data2['list']" id="v"}
+                    {volist name="$v" id="v"}
+                    {if $key =='ref_date'}
+                    <td>昨日</td>
+                    {else /}
+                    <td>{$v}</td>
+                    {/if}
+                    {/volist}
+                {/volist}
+            </tr>
+            <tr>
+                {volist name="$data2['week']" id="v"}
+                {volist name="$v" id="v"}
+                {if $key =='ref_date'}
+                <td>本周</td>
+                {else /}
+                <td>{$v}</td>
+                {/if}
+
+                {/volist}
+                {/volist}
+
+            </tr>
+            <tr>
+                {volist name="$data2['month']" id="v"}
+                {volist name="$v" id="v"}
+                {if $key =='ref_date'}
+                <td>本月</td>
+                {else /}
+                <td>{$v}</td>
+                {/if}
+                {/volist}
+                {/volist}
+            </tr>
+            </tbody>
+        </table>
+        {/case}
+        {case value="getSummaryTrend"}
+        <table class="layui-table" lay-skin="line">
+            <thead>
+            <tr>
+                <th>时间</th>
+                <th>累计用户数</th>
+                <th>转发次数</th>
+                <th>转发人数</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                {volist name="$data" id="v"}
+                {volist name="$v" id="v"}
+                {if $key =='ref_date'}
+                <td>昨日</td>
+                {else /}
+                <td>{$v}</td>
+                {/if}
+                {/volist}
+                {/volist}
+            </tr>
+            </tbody>
+        </table>
+        {/case}
+        {case value="getVisitDistribution"}
+
+
+        {/case}
+        {case value="getDailyRetainInfo"}
+        <table class="layui-table" lay-skin="line">
+            <thead>
+            <tr>
+                <th>日期</th>
+                <th>新增用户留存</th>
+                <th>活跃用户留存</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="$data2" id="vo"}
+            <tr>
+                {if isset($vo['ref_date'])}
+                    <td>{$vo.ref_date}</td>
+                {/if}
+                {volist name="$vo.visit_uv_new" id="v"}
+                    <td>{$v.value}</td>
+                {/volist}
+                {volist name="$vo.visit_uv" id="v"}
+                <td>{$v.value}</td>
+                {/volist}
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+        {/case}
+        {case value="getVisitPage"}
+        <table class="layui-table" lay-skin="line">
+            <thead>
+            <tr>
+                <th>页面路径</th>
+                <th>访问次数</th>
+                <th>访问人数</th>
+                <th>次均停留时长</th>
+                <th>进入页次数</th>
+                <th>退出页次数</th>
+                <th>转发次数</th>
+                <th>转发人数</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="$data" id="v"}
+            <tr>
+
+                {volist name="$v" id="v"}
+                {if $key =='ref_date'}
+                <td>昨日</td>
+                {else /}
+                <td>{$v}</td>
+                {/if}
+                {/volist}
+
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+        {/case}
+        {case value="getUserPortrait"}
+
+        {/case}
+        {/switch}
+    </div>
+</div>
+
+
+
+{/block}

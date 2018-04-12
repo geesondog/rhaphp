@@ -1,0 +1,92 @@
+<html>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name="keywords" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <title>RhaPHP 二哈公众号管理系统</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="__STATIC__/admin/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    {CSS href="__STATIC__/admin/css/admin_base.css" /}
+    {js href='__STATIC__/jquery/jquery-1.11.0.min.js' /}
+    {js href='__STATIC__/layui/layui.js' /}
+    {CSS href="__STATIC__/layui/css/layui.css" /}
+    {CSS href="__STATIC__/icon/icon.css" /}
+</head>
+<body style="background: #FFFFFF;">
+<div class="layui-container">
+    <br>
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">搜索应用：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name"  placeholder="请输入应用名称" autocomplete="off" class="layui-input">
+            </div>
+            <div class=" layui-word-aux">
+                <button style="margin-top: 3px;" class="layui-btn layui-btn-normal layui-btn-sm" lay-submit lay-filter="formDemo">搜索一下</button>
+            </div>
+        </div>
+    </form>
+<div style="padding: 0px 10px 0px 10px;">
+    <table class="layui-table" lay-even lay-skin="nob">
+        <thead>
+        <tr>
+            <th>应用Logo</th>
+            <th>应用名称</th>
+            <th>应用标识</th>
+            <th>简介</th>
+            <th>新版本</th>
+            <th>作者</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="addons" id="vo"}
+        <tr>
+            <td><img width="30" height="30" src="{$vo.logo}"></td>
+            <td>{$vo.name}</td>
+            <td>{$vo.addon}</td>
+            <td>{$vo.version}</td>
+            <td>{:getAddonConfigByFile($vo['addon'],'version')}</td>
+            <td>{$vo.author}</td>
+            <td width="90">
+                <a class="rha-bt-a" href="javascript:;" onclick="toPlusApp('{$vo.addon}')">选择</a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    {$page|raw}
+</div>
+<script>
+    var layer;
+    layui.use('layer', function(){
+        var layer = layui.layer;
+    });
+    function toPlusApp(name) {
+       var loadIndex = layer.load(1)
+        $.post("{:url('toPlusApp')}",{'name':name},function (res) {
+            if(res.status=='0'){
+                layer.close(loadIndex)
+                layer.alert(res.msg);
+            }
+            if(res.status=='1'){
+                layer.msg(res.msg,{time:1000},function () {
+                    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                    parent.parent.RplusApp();
+                    parent.layer.close(index);
+                });
+            }
+        }).error(function (error) {
+            layer.alert('500 Internal Server Error');
+            layer.close(loadIndex)
+        })
+        return false;
+
+    }
+
+</script>
+</body>
+</html>

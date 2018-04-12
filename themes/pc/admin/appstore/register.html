@@ -1,0 +1,111 @@
+{extend name="common/base" /}
+{block name="body"}
+<div class="rhaphp-srivice-register">
+    <form class="layui-form layui-form-pane" action="" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机号码</label>
+            <div class="layui-input-block">
+                <input type="text" name="phone" required lay-verify="required" placeholder="请输入正确手机号码"  autocomplete="off" id="phone" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">呢称</label>
+            <div class="layui-input-block">
+                <input type="text" name="nickname" required lay-verify="required" placeholder="请输入正确呢称"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">验证码</label>
+            <div class="layui-input-block">
+                <div class="layui-col-xs7">
+                    <input type="text" name="verify_code" required lay-verify="required" placeholder="请输入验证码"  autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-col-xs5">
+                    <div style="margin-left: 4px;">
+                        <button id="getMobileCode"  class="layui-btn layui-btn-primary layui-btn-fluid" type="button">获取验证码</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">域名</label>
+            <div class="layui-input-block">
+                <input type="text" name="domain" required lay-verify="required" value="{$domain}" placeholder="请输入域名" autocomplete="off" class="layui-input">
+                <p class="tip_for_p">注：请你认真并正确填写你的域名，系统默认你当前域名。如:https://www.rhaphp.com </p>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">确认密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="re_password" required lay-verify="required" placeholder="请输入确认密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <input id="rhaphp-token" type="hidden" name="token" value="">
+                    <button class="layui-btn" lay-submit="" lay-filter="sub">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+    </form>
+</div>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        $('#getMobileCode').click(function(){
+            var myregs = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+            if(!myregs.test($("#phone").val())) {
+                layer.msg('请输入有效的手机号码！');
+                return false;
+            }
+            var countdown=60;
+            var t;
+            function settime(obj) {
+                if (countdown == 0) {
+                    obj.removeAttribute("disabled",false);
+                    obj.innerHTML="获取验证码";
+                    countdown = 60;
+                    return;
+                } else {
+                    obj.setAttribute("disabled", true);
+                    obj.innerHTML="重新发送(" + countdown + ")";
+                    countdown--;
+                }
+                t = setTimeout(function() {
+                        settime(obj) }
+                    ,1000)
+            }
+            settime(this);
+            $.post("https://service.rhaphp.com/account/getverifycode",{'phone':$("#phone").val()},function(res){
+                if(res.errcode=='0'){
+                    $('#rhaphp-token').val(res.token);
+                    layer.msg(res.errmsg);
+                }else{
+                    clearTimeout(t);
+                    $('#getMobileCode').attr("disabled",false);
+                    $('#getMobileCode').html('获取验证码');
+                    layer.alert(res.errmsg);
+                }
+            })
+        })
+        form.on('submit(sub)', function (data) {
+                $.post("https://service.rhaphp.com/account/register",data.field,function(res){
+                    if(res.errcode=='0'){
+                        layer.msg(res.errmsg,{time:1000},function () {
+                            location.href="{:url('login')}";
+                        });
+                    }else{
+                        layer.alert(res.errmsg);
+                    }
+                })
+            return false;
+        });
+    });
+</script>
+{/block}

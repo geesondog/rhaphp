@@ -1,0 +1,87 @@
+{extend name="../admin/common/base" /}
+{block name="nav_title"}
+<a href="{:url('mp/Index/addminiapp')}" class="layui-btn layui-btn-normal layui-btn-sm rha-nav-title">增加小程序</a>
+{/block}
+{block name="body"}
+<div style="padding: 0px 10px 0px 10px;">
+    <table class="layui-table" lay-skin="line">
+        <colgroup>
+            <col width="">
+            <col width="80">
+            <col width="120">
+            <col width="300">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>小程序信息</th>
+            <th>状态</th>
+            <th>小程序应用</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="miniappList" id="vo"}
+        <tr>
+            <td>
+                <div class="mp-logo">
+                    <div class="logo-left">
+                        <img src="{$vo.logo}">
+                    </div>
+                </div>
+                <div class="logo-right">
+                    <p class="p1">{$vo.name}</p>
+                    <p class="p2">类型：{if $vo.type==1}认证小程序{else/}普通小程序{/if}</p>
+                </div>
+            </td>
+            <td>{if condition="$vo.status=='1'"} 正常{else/}停用{/if}</td>
+            <td>{if $vo.addon_name == ''}暂无应用{else/}{$vo.addon_name}{/if}</td>
+            <td>
+                <a class="rha-bt-a" href="{:url('miniapp/miniapp/topnav',['_mid'=>$vo['id']])}">进入小程序</a>
+                <a class="rha-bt-a" href="javascript:plusApp('{$vo['id']}');">+应用</a>
+                <a class="rha-bt-a" href="{:url('mp/Index/upMiniapp',['id'=>$vo.id])}">修改</a>
+                <a class="rha-bt-a" href="{:url('mp/Index/miniappSetingInfo',['id'=>$vo['id']])}">配置信息</a>
+                <a class="rha-bt-a" href="javascript:;" onclick="delMiniapp('{$vo.id}')">删除</a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+</div>
+<script>
+    var layer
+    layui.use('layer', function () {
+        layer = layui.layer;
+    });
+
+    function delMiniapp(id) {
+        layer.confirm('请谨慎操作，你确定需要删除吗？', {
+            btn: ['是', '不'] //按钮
+        }, function () {
+            $.post("{:url('mp/Index/delMiniapp')}", {'id': id}, function (res) {
+                if (res.status == 1) {
+                    layer.alert(res.msg, function (index) {
+                        window.location.reload();
+                        layer.close(index);
+                    })
+                } else {
+                    layer.alert(res.msg)
+                }
+            })
+        });
+    }
+
+    function plusApp(mid) {
+        layer.open({
+            type: 2,
+            title: '+应用',
+            shadeClose: true,
+            shade: 0.3,
+            area: ['750px', '480px'],
+            content: '{:url("plusApp","","")}/mid/'+mid
+        });
+    }
+    function RplusApp() {
+        window.location.reload();
+    }
+</script>
+{/block}

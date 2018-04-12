@@ -1,0 +1,64 @@
+{extend name="common/base" /}
+{block name="nav_title"}
+<a href="{:url('addAdminMember')}"  class="layui-btn layui-btn-normal layui-btn-sm rha-nav-title">增加成员</a>
+{/block}
+{block name="body"}
+<div style="padding: 0px 10px 0px 10px;">
+<table class="layui-table" lay-even="" lay-skin="nob">
+    <colgroup>
+        <col width="150">
+        <col width="200">
+        <col>
+    </colgroup>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>成员 ID</th>
+        <th>上次登录时间</th>
+        <th>登录 IP</th>
+        <th>状态</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {volist name="adminList" id="vo"}
+    <tr>
+        <td>{$vo.id}</td>
+        <td>{$vo.admin_name}</td>
+        <td>{:date('Y-m-d H:s:i',$vo.last_time)}</td>
+        <td>{$vo.ip}</td>
+        <td>{if condition="$vo.status eq '1'"}正常{else/}禁用中{/if}</td>
+        <td>
+            {if condition="$vo.status eq '1'"}
+            <a class="rha-bt-a" onclick="disabledAdmin('{$vo.id}','0')" href="javascript:;">禁用</a>
+            {else/}<a class="rha-bt-a" onclick="disabledAdmin('{$vo.id}','1')" href="javascript:;">开启</a>{/if}
+            <a class="rha-bt-a" href="{:url('updatePwd',['id'=>$vo.id])}">改密码</a>
+        </td>
+    </tr>
+    {/volist}
+    </tbody>
+</table>
+</div>
+<script>
+    function disabledAdmin(id,status) {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.confirm('你确定需要禁用吗？', {
+                btn: ['是','不'] //按钮
+            }, function(){
+                $.post("{:url('disabledAdmin')}",{'id':id,'status':status},function (res) {
+                    if(res.status==1){
+                        layer.alert(res.msg,function (index) {
+                            window.location.reload();
+                            layer.close(index);
+                        })
+                    }else{
+                        layer.alert(res.msg)
+                    }
+                })
+            })
+        });
+
+    }
+</script>
+{/block}

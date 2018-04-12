@@ -1,0 +1,247 @@
+{extend name="../admin/common/base" /}
+{block name="nav_title"}
+<a href="{:url('addNews')}" id="addkw" class="layui-btn layui-btn-normal layui-btn-sm rha-nav-title">增加图文</a>
+{/block}
+{block name="body"}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+        <a href="{:url('newsList',['type'=>3])}"><li {eq name="intype" value="3" } class="layui-this" {/eq}>多图文</li></a>
+        <a href="{:url('newsList',['type'=>2])}"><li {eq name="intype" value="2" } class="layui-this" {/eq}>单图文</li></a>
+        <a href="{:url('newsList',['type'=>1])}"><li {eq name="intype" value="1" } class="layui-this" {/eq}>文本</li></a>
+    </ul>
+    <div class="layui-tab-content">
+        {switch name="intype"}
+        {case value="3"}
+        <div class="layui-tab-item  layui-show">
+            <div class="layui-row">
+                {volist name="data" id="val"}
+                <div class="layui-col-md4 rhaphp-media-news">
+                    <div class="media-news-body">
+                        <div class="media-news-time">
+                            发布时间：{:date('Y-m-d : h:i',$val.create_time)}
+                            &nbsp;&nbsp;&nbsp;状态:{if condition="$val.status_type eq '0'"}未上传{elseif condition="$val.status_type eq '1'"/}已上传{else/}已群发{/if}
+                        </div>
+                        <span style="display: block;">
+                            {volist name="val.list" id="item" offset="0" length="1"}
+                            <div class="media-news-content">
+                                <div class="media-news-desc"><p
+                                        class="media-news-desc-sp">{$item.title}</p></div>
+                                <img class="media-news-img"
+                                     src="{$item.cover}">
+                            </div>
+                             {/volist}
+                        </span>
+                        <div>
+                            <ul>
+                                {volist name="val.list" id="item" offset="1" length="10"}
+                                <li>
+                                    <div class="mdedia-news-lists-box">
+                                        <div class="media-news-title-box layui-col-md9">
+                                            {$item.title}
+                                        </div>
+                                        <div class="media-news-img-box layui-col-md3"><img class="media-news-lists-img" src="{$item.cover}">
+                                        </div>
+                                    </div>
+                                </li>
+                                {/volist}
+                            </ul>
+                        </div>
+                        <div class="media-news-item-type2">
+                            <div class="layui-btn-group media-news-btn">
+                                <button onclick="sendMediaNews('{$val.news_id}')" class="layui-btn layui-btn-primary layui-btn-sm">
+                                    <i class="layui-icon">&#xe609;</i>
+                                    群发
+                                </button>
+                                <button onclick="Preview('{$val.news_id}')" class="layui-btn layui-btn-primary layui-btn-sm">
+                                    <i class="layui-icon">&#xe610;</i>
+                                    预览
+                                </button>
+                                <button onclick="uploadNews('{$val.news_id}')" class="layui-btn layui-btn-primary layui-btn-sm">
+                                    <i class="layui-icon">&#xe62f;</i>
+                                    上传
+                                </button>
+                                <a class="layui-btn layui-btn-primary layui-btn-sm" href="{:url('editNews',['news_id'=>$val.news_id,'type'=>'3'])}">
+                                    <i class="layui-icon">&#xe642;</i>
+                                    编辑&删
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/volist}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/case}
+        {case value="2"}
+        <div class="layui-tab-item  layui-show">
+            <div class="layui-row">
+                {volist name="data" id="val"}
+                <div class="layui-col-md4 rhaphp-media-news">
+                    <div class="media-news-body">
+                        <div class="media-news-time">
+                            发布时间：{:date('Y-m-d : h:i',$val.create_time)}
+                            &nbsp;&nbsp;&nbsp;状态:{if condition="$val.status_type eq '0'"}未上传{elseif condition="$val.status_type eq '1'"/}已上传{else/}已群发{/if}
+                        </div>
+                        <span style="display: block;">
+                                    {volist name="val.list" id="item" offset="0" length="1"}
+                                    <div class="media-news-content">
+                                        <div class="media-news-desc"><p
+                                                class="media-news-desc-sp">{$item.title}</p></div>
+                                        <img class="media-news-img"
+                                             src="{$item.cover}">
+                                    </div>
+                                     {/volist}
+                                </span>
+                        <div>
+                            <ul>
+                                {volist name="val.list" id="item" offset="1" length="10"}
+                                <li>
+                                    <div class="mdedia-news-lists-box">
+                                        <div class="media-news-title-box layui-col-md9">
+                                            {$item.title}
+                                        </div>
+                                        <div class="media-news-img-box layui-col-md3"><img class="media-news-lists-img" src="{$item.cover}">
+                                        </div>
+                                    </div>
+                                </li>
+                                {/volist}
+                            </ul>
+                        </div>
+                        <div class="media-news-item-type2">
+                            <div class="layui-btn-group media-news-btn">
+                                <button onclick="sendMediaNews('{$val.news_id}')" class="layui-btn layui-btn-primary layui-btn-sm">
+                                    <i class="layui-icon">&#xe609;</i>
+                                    群发
+                                </button>
+                                <button onclick="Preview('{$val.news_id}')" class="layui-btn layui-btn-primary layui-btn-sm">
+                                    <i class="layui-icon">&#xe610;</i>
+                                    预览
+                                </button>
+                                <button onclick="uploadNews('{$val.news_id}')" class="layui-btn layui-btn-primary layui-btn-sm">
+                                    <i class="layui-icon">&#xe62f;</i>
+                                    上传
+                                </button>
+                                <a class="layui-btn layui-btn-primary layui-btn-sm" href="{:url('editNews',['news_id'=>$val.news_id,'type'=>'2'])}">
+                                    <i class="layui-icon">&#xe642;</i>
+                                    编辑&删
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/volist}
+            </div>
+        </div>
+        </div>
+        </div>
+        {/case}
+{case value="1"}
+<div class="layui-tab-item  layui-show">
+    <div class="layui-row">
+        {volist name="data" id="val"}
+        <div class="layui-col-md4 rhaphp-media-news">
+            <div class="media-news-body">
+                <div class="media-news-time">
+                    发布时间：{:date('Y-m-d : h:i',$val.create_time)}
+                    &nbsp;&nbsp;&nbsp;状态:{if condition="$val.status_type eq '3'"}已群发{else/}未群发{/if}
+                </div>
+                <div>
+                    {$val.title}
+                </div>
+                <div class="media-news-item-type2">
+                    <div class="layui-btn-group media-news-btn">
+                        <button onclick="sendMediaNews('{$val.news_id}')" class="layui-btn layui-btn-primary layui-btn-sm">
+                            <i class="layui-icon">&#xe609;</i>
+                            群发
+                        </button>
+                        <button onclick="Preview('{$val.news_id}')" class="layui-btn layui-btn-primary layui-btn-sm">
+                            <i class="layui-icon">&#xe610;</i>
+                            预览
+                        </button>
+                        <button onclick="uploadNews('{$val.news_id}')" class="layui-btn layui-btn-primary layui-btn-sm">
+                            <i class="layui-icon">&#xe62f;</i>
+                            上传
+                        </button>
+                        <a class="layui-btn layui-btn-primary layui-btn-sm" href="{:url('editNews',['news_id'=>$val.news_id,'type'=>'1'])}">
+                            <i class="layui-icon">&#xe642;</i>
+                            编辑&删
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/volist}
+    </div>
+</div>
+</div>
+</div>
+{/case}
+    {/switch}
+
+<div style="clear: both">{$page|raw}</div>
+<script>
+    layui.use(['layer'],function () {
+        var layer=layui.layer;
+    })
+    function Preview(news_id) {
+        layer.prompt({title: '请输入发送预览者微信号', formType: 0}, function(wxid, index){
+            layer.close(index);
+            var l_index=layer.load(1)
+            $.post("{:url('newsPreview')}",{news_id:news_id,wxid:wxid},function (res) {
+                if(res.status==1){
+                    layer.msg(res.msg);
+                }else{
+                    layer.alert(res.msg);
+                }
+                layer.close(l_index);
+                return false;
+            }).error(function (res) {
+                layer.close(l_index);
+                layer.alert('服务出错');
+            })
+        });
+    }
+        function uploadNews(news_id) {
+            var l_index=layer.load(1)
+            $.post("{:url('uploadMediaNews')}",{news_id:news_id},function (res) {
+                if(res.status==1){
+
+                    layer.msg(res.msg);
+                }else{
+
+                    layer.alert(res.msg);
+                }
+                layer.close(l_index);
+                return false;
+            }).error(function (res) {
+                layer.close(l_index);
+                layer.alert('服务出错');
+            })
+        }
+
+        function sendMediaNews(news_id) {
+            layer.confirm('主人，确定要群发了吗？', {
+                btn: ['确定','取消']
+            }, function(){
+                var l_index=layer.load(1)
+                $.post("{:url('sendall')}",{news_id:news_id},function (res) {
+                    if(res.status==1){
+
+                        layer.msg(res.msg);
+                    }else{
+
+                        layer.alert(res.msg);
+                    }
+                    layer.close(l_index);
+                    return false;
+                }).error(function (res) {
+                    layer.close(l_index);
+                    layer.alert('服务出错');
+                })
+            })
+
+        }
+</script>
+{/block}

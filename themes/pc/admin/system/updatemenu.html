@@ -1,0 +1,82 @@
+{extend name="common/base" /}
+{block name="body"}
+<form class="layui-form" action="" style="padding-right: 10px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" required  lay-verify="required" value="{$meu.name}" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">上级菜单</label>
+        <div class="layui-input-block">
+            <select name="pid">
+                <option value=""></option>
+                <option value="0">顶级菜单</option>
+                {volist name="menu_cate" id="v"}
+                    <option {if condition="$meu.pid eq $v.id" }selected{/if} value="{$v.id}">{$v.name}</option>
+                        {volist name="v['child']" id="c"}
+                            <option {eq name="$meu.pid" value="$c.id" }selected{/eq} value="{$c.id}">   &nbsp;&nbsp;&nbsp; ├{$c.name}</option>
+                            {volist name="c['child']" id="d"}
+                            <option {eq name="$meu.pid" value="$d.id" }selected{/eq} value="{$d.id}">   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ├{$d.name}</option>
+                            {/volist}
+                        {/volist}
+                {/volist}
+
+
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">URL</label>
+        <div class="layui-input-inline">
+            <input name="url" required  lay-verify="required" value="{$meu.url}" autocomplete="off" class="layui-input" type="text">
+        </div>
+        <div class="layui-form-mid layui-word-aux">注意：(小写)模块/控制器/操作方法(空如：NULL)</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-inline">
+            <input name="sort" value="{$meu.sort}"  placeholder="请输入排序" autocomplete="off" class="layui-input" type="text">
+        </div>
+        <div class="layui-form-mid layui-word-aux">数字越小越靠前</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">图标</label>
+        <div class="layui-input-inline">
+            <input name="icon" value="{:htmlspecialchars($meu['icon'])}"  placeholder="请输入图标" autocomplete="off" class="layui-input" type="text">
+        </div>
+        <div class="layui-form-mid layui-word-aux">字符串</div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="ADM">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script>
+
+    layui.use('form', function(){
+        var form = layui.form;
+        form.on('submit(ADM)', function(data){
+            $.post('',data.field,function (res) {
+                if(res.status=='0'){
+                    layer.msg(res.msg);
+                }
+                if(res.status=='1'){
+                    layer.msg(res.msg,{time:1000},function () {
+                        location.href="{:url('System/menuList')}";
+                    });
+                }
+            })
+            return false;
+        });
+    });
+</script>
+{/block}

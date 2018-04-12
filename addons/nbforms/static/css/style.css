@@ -1,0 +1,37 @@
+.forms-content{padding-right: 10px;}
+.tip_for_p{ font-size: 12px;color: #999; margin-top: 5px;clear: both;}
+.rha-bt-a{ color: #459ae9; text-decoration: none; padding: 0px 3px 0px 3px}
+.rha-bt-a:hover{ color: #28a4c9; text-decoration: none;}
+.setingBox{position: fixed; left: 37.5%; width: 25%; border: 1px solid #8c8c8c;padding: 10px;}
+fieldset, img { border: 0px none; }
+a:hover { text-decoration: none; color: rgb(88, 180, 239); }
+.cf::before, .cf::after, .nav::before, .nav::after, .media::before, .media::after, .form-item::before, .form-item::after { display: table; content: ""; }
+.cf::after, .nav::after, .media::after, .form-item::after { clear: both; }
+.regular-checkbox:checked + label::after { content: "✔"; font-size: 14px; position: absolute; top: 0px; left: 3px; color: rgb(153, 161, 167); }
+.big-checkbox:checked + label::after { font-size: 28px; left: 6px; }
+.regular-radio:checked + label::after { content: " "; width: 12px; height: 12px; border-radius: 50px; position: absolute; top: 3px; background: rgb(153, 161, 167) none repeat scroll 0% 0%; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3) inset; left: 3px; font-size: 32px; }
+.big-radio:checked + label::after { width: 24px; height: 24px; left: 4px; top: 4px; }
+.data-table tbody tr:nth-child(2n) { background-color: rgb(248, 248, 248); }
+.page::before, .page::after { display: table; content: ""; }
+.page::after { clear: both; }
+.main-title::before, .main-title::after { display: table; content: ""; }
+.main-title::after { clear: both; }
+.cf::before, .cf::after { display: table; content: ""; }
+.cf::after { clear: both; }
+.top-alert-tips { position: fixed; top: 0px; left: 50%; margin-left: -300px; width: 600px; z-index: 10099; background: rgb(29, 189, 3) none repeat scroll 0% 0%; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; color: rgb(255, 255, 255); height: 50px; line-height: 50px; white-space: nowrap; padding: 0px 20px; }
+.alert-error { background: rgb(251, 29, 15) none repeat scroll 0% 0%; }
+.top-alert-tips .close { position: absolute; top: 10px; right: 0px; width: 30px; height: 30px; line-height: 30px; color: rgb(255, 255, 255); font-size: 22px; }
+.main_data a:nth-of-type(1) { background: rgb(232, 99, 115) none repeat scroll 0% 0%; }
+.main_data a:nth-of-type(2) { background: rgb(50, 164, 212) none repeat scroll 0% 0%; }
+.main_data a:nth-of-type(3) { background: rgb(25, 180, 109) none repeat scroll 0% 0%; }
+.i_usd, .i_yen, .i_money, .i_gift, .i_chart, .i_search, .i_edit, .i_ticket, .i_card, .i_share, .i_empty, .i_chongzhi, .i_shopping, .i_heart::before { text-decoration: inherit; display: inline-block; }
+#phone { margin: 0px auto; width: 510px; height: 814px; background: rgba(0, 0, 0, 0) url('../images/preview_phone.png') no-repeat scroll 0% 0%; }
+#frame { margin: 100px 0px 0px 97px; width: 320px; border: 2px solid rgb(51, 51, 51); }
+#qrcode { position: absolute; top: 200px; left: 50%; margin-left: 230px; width: 200px; height: 300px; text-align: center; line-height: 30px; }
+.form_body{padding: 15px;}
+.forms_desc{border-bottom: 1px dotted rgb(204, 204, 204);padding-bottom: 10px; margin-bottom: 15px;}
+.form-title{ color:#333;font-family: 幼圆;font-size: 160%;font-style: normal;font-weight: bold;}
+.title-desc{color: #6f6f6f; padding-top:5px;font-family: 微软雅黑;font-size: 90%;font-style: normal;font-weight: normal;}
+.rhaphp-upload{margin-top: 7px;}
+.form-image{width: 50px; height: 50px;}
+.rha-copy{text-align: center;color: #9F9F9F; margin-top: 20px;font-family: 微软雅黑;font-size: 12px;margin-bottom: 5px;}

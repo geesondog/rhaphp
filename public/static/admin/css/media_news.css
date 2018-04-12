@@ -1,0 +1,184 @@
+.media {
+    padding: 10px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.media-body .media-plus {
+    font-size: 22px;
+    line-height: 62px;
+    text-align: center;
+    display: block;
+}
+
+.fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: 14px;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.media:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.img-text {
+    display: block;
+    width: 100%;
+    line-height: 150px;
+    background: #ececec;
+    text-align: center;
+    font-size: 22px;
+    color: #c0c0c0;
+    font-weight: 400;
+}
+
+.media-left {
+    width: 30%;
+    margin-right: 2%;
+}
+
+.media-right {
+    width: 62%;
+    background: #f8f8f8;
+    border: 1px solid #d3d3d3;
+    padding: 15px;
+}
+
+.media-left, .media-right {
+    float: left;
+}
+
+.media-border {
+    padding: 10px;
+    border: 1px solid #d3d3d3;
+}
+
+.media-border-title {
+    padding: 10px;
+    border: 1px solid #d3d3d3;
+    position: relative;
+}
+
+.media-body {
+    padding: 10px;
+    border-bottom: 1px solid #d3d3d3;
+    border-left: 1px solid #d3d3d3;
+    border-right: 1px solid #d3d3d3;
+    position: relative;
+}
+
+.media-body:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.media-body p {
+    width: 65%;
+    float: left;
+}
+
+.media-body .media-body-div {
+    width: 30%;
+    float: right;
+}
+
+.media-body .media-body-div span {
+    font-size: 16px;
+    line-height: 62px;
+}
+
+.media-body .media-plus {
+    font-size: 22px;
+    line-height: 62px;
+    text-align: center;
+    display: block;
+}
+
+.actions {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #e5e5e5;
+    opacity: 0.4;
+    color: #fff;
+    text-align: right;
+    z-index: 49;
+    display: none;
+}
+
+.actions span {
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 0 5px;
+    color: #fff;
+    z-index: 50;
+    margin-left: 5px;
+}
+
+.edit, .del {
+    cursor: pointer;
+}
+
+.check-box {
+    width: 10%;
+    float: left;
+}
+
+.editting {
+    display: none;
+}
+
+.action .editting {
+    display: block;
+    color: red;
+    text-align: right;
+}
+.rhaphp-upload-btn .input-file {
+    width: 80px;
+    height: 30px;
+    padding: 0;
+    margin: 0;
+    border: none 0;
+    opacity: 0;
+    filter: alpha(opacity = 0);
+    cursor: pointer;
+}
+input[type="file"] {
+    line-height: 20px;
+    background-color: #FBFBFB;
+    height: 20px;
+    border: solid 1px #D8D8D8;
+    cursor: default;
+}
+.rhaphp-upload-btn span {
+    cursor: pointer;
+    height: 30px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 80px;
+    z-index: 2;
+}
+.rhaphp-upload-btn a {
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+.class-logo p{
+    border: dotted 1px #ffffff;
+    background: #ececec;
+}
+.class-logo p img ,.media-border-title div img{width: 100%;}
+.isshowcover{
+    line-height: 50px;
+    height: 50px;
+}

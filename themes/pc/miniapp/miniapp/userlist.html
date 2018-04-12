@@ -1,0 +1,98 @@
+{extend name="common/base" /}
+{block name="body"}
+<form action="" class="layui-form" method="get">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">会员呢称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="nickname" value="{$post.nickname}" placeholder="请输入呢称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">注册时间</label>
+            <div class="layui-input-inline">
+                <input name="times" id="rhaphp-time1" value="{$post.times|raw}" class="layui-input" placeholder="开始时间 到 结束时间" lay-key="17" type="text">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">性别：</label>
+            <div class="layui-input-block">
+                <input name="sex" {eq name="$post.sex" value="1" } checked {/eq} value="1" title="男" checked="" type="radio">
+                <input name="sex" {eq name="$post.sex" value="2" } checked {/eq} value="2" title="女" type="radio">
+                <input name="sex" {eq name="$post.sex" value="0" } checked {/eq} value="0" title="不限" type="radio">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn layui-btn-sm layui-btn-normal">
+                    <i class="layui-icon">&#xe615;</i>
+                    搜索</button>
+            </div>
+        </div>
+    </div>
+</form>
+<div>
+    <form class="layui-form" action="" style="padding: 0px 10px 0px 10px;">
+    <table class="layui-table" lay-skin="line">
+        <thead>
+        <tr>
+            <th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>
+            <th>头像</th>
+            <th>呢称</th>
+            <th>性别</th>
+            <th>地区</th>
+            <th>积分</th>
+            <th>余额</th>
+            <th>注册时间</th>
+            <th>最后登录</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="users" id="v"}
+        <tr>
+            <td><input name="openid" value="{$v.openid}" lay-skin="primary" type="checkbox"></td>
+            <td>
+                <div  style="padding: 1px; border: #e6e6e6 solid 1px; width:35px; float: left; ">
+                    <img class="form_logo" src="{$v.avatarurl}" width="35" height="35">
+                </div>
+            </td>
+            <td>{$v.nickname}</td>
+            <td>{if $v.gender == 1}男{elseif $v.gender==2}女{else/}未知{/if}</td>
+            <td>{$v.province} {$v.city}</td>
+            <td>{$v.score}</td>
+            <td>{$v.money}</td>
+            <td>{$v.create_time|date="Y-m-d"}</td>
+            <td>{$v.last_time|date="Y-m-d"}</td>
+            <td></td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+</form>
+{$page|raw}
+</div>
+<script>
+    layui.use('laydate', function() {
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#rhaphp-time1'
+            ,type: 'datetime'
+            ,range: '到'
+            ,format: 'yyyy-M-d'
+        });
+    })
+    layui.use('form', function(){
+        var $ = layui.jquery, form = layui.form;
+
+        //全选
+        form.on('checkbox(allChoose)', function(data){
+            var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+            child.each(function(index, item){
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+    });
+</script>
+{/block}

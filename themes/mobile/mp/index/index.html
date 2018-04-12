@@ -1,0 +1,84 @@
+{extend name="../admin/common/base" /}
+{block name="jscss"}
+{js href='__STATIC__/zclip/jquery.zclip.min.js' /}
+{/block}
+{block name="body"}
+
+<div style="padding: 0px 10px 0px 10px;">
+<table class="layui-table" lay-skin="line" lay-size="sm">
+    <thead>
+<tr>
+    <th>接口通信配置</th>
+    <th></th>
+    <th>操作</th>
+</tr>
+</thead>
+    <tbody>
+    <tr>
+        <td>URL(服务器地址)</td>
+        <td class="apiUrl">{$mp.url}<span class="tip1 rha-bt-a"></span></td>
+        <td><a href="javascript:;" id="apiUrl" class="rha-bt-a">复制</a></td>
+    </tr>
+    <tr>
+        <td>Token(令牌)</td>
+        <td class="valid_token">{$mp.valid_token}<span class="tip2 rha-bt-a"></span></td>
+        <td><a id="valid_token" href="javascript:;" class="rha-bt-a">复制</a></td>
+    </tr>
+    <tr>
+        <td>EncodingAESKey<br>(消息加解密密钥)</td>
+        <td class="encodingaeskey">{$mp.encodingaeskey}<span class="tip3 rha-bt-a"></span></td>
+        <td><a id="encodingaeskey" href="javascript:;" class="rha-bt-a">复制</a></td>
+    </tr>
+    <tr>
+        <td>IP白名单</td>
+        <td class="server_ip">{:get_server_ip()}<span class="tip4 rha-bt-a"></span></td>
+        <td><a id="server_ip" href="javascript:;" class="rha-bt-a">复制</a></td>
+    </tr>
+    </tbody>
+</table>
+</div>
+<script type="text/javascript">
+    $(function(){
+        $('#apiUrl').zclip({
+            path: '__STATIC__/zclip/ZeroClipboard.swf',
+            copy: function(){
+                $(".tip1").show();
+                return $('.apiUrl').text();
+            },
+            afterCopy: function(){
+                $(".tip1").insertAfter($('.tip1')).html('复制成功').fadeOut(2000);
+            }
+        });
+        $('#valid_token').zclip({
+            path: '__STATIC__/zclip/ZeroClipboard.swf',
+            copy: function(){
+                $(".tip2").show();
+                return $('.valid_token').text();
+            },
+            afterCopy: function(){
+                $(".tip2").insertAfter($('.tip2')).html('复制成功').fadeOut(2000);
+            }
+        });
+        $('#encodingaeskey').zclip({
+            path: '__STATIC__/zclip/ZeroClipboard.swf',
+            copy: function(){
+                $(".tip3").show();
+                return $('.encodingaeskey').text();
+            },
+            afterCopy: function(){
+                $(".tip3").insertAfter($('.tip3')).html('复制成功').fadeOut(2000);
+            }
+        });
+        $('#server_ip').zclip({
+            path: '__STATIC__/zclip/ZeroClipboard.swf',
+            copy: function(){
+                $(".tip4").show();
+                return $('.server_ip').text();
+            },
+            afterCopy: function(){
+                $(".tip4").insertAfter($('.tip4')).html('复制成功').fadeOut(2000);
+            }
+        });
+    });
+</script>
+{/block}

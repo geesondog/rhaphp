@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    {notempty name="mpInfo"}
+    <title>{$mpInfo.name}</title>
+    {/notempty}
+    {CSS href="__STATIC__/admin/css/admin_base.css" /}
+    {js href='__STATIC__/jquery/jquery-1.11.0.min.js' /}
+    {js href='__STATIC__/layui/layui.js' /}
+    {CSS href="__STATIC__/layui/css/layui.css" /}
+    {CSS href="__STATIC__/icon/icon.css" /}
+    {CSS href="__STATIC__/amaze/css/amazeui.min.css" /}
+    {CSS href="__STATIC__/admin/css/mobile.css" /}
+    {js href='__STATIC__/amaze/js/amazeui.min.js' /}
+    {block name="jscss"}{/block}
+</head>
+<body>
+<div class="rhaphp-base-top-nav">
+    <ul>
+        <li>你好，<a class="name" href="" id="username">{$admin.admin_name}</a>
+            {notempty name="mpInfo"}
+            <span class="quit">公众号:<a href="{:url('mp/index/index',['mid'=>$mpInfo['id']])}">{$mpInfo.name}</a>
+                </span>
+            {/notempty}
+            <a href="{:url('mp/Message/messagelist')}"><i class="layui-icon">&#xe645;</i>用户消息<span
+                    class="num-feed rhaphp-msg-user show" style="display: none;">0</span></a>
+        </li>
+    </ul>
+</div>
+{if condition="isset($menu_tile) OR $menu_title neq ''"}
+<div class="rhaphp-base-nav-title content-hd">
+    <h2>{$menu_title}{block name="nav_title"}{/block}</h2>
+</div>
+{/if}
+{block name="body"}主内容{/block}
+<nav data-am-widget="menu" class="am-menu  am-menu-offcanvas1" data-am-menu-offcanvas>
+    <a id="rhaphp-menu-left-toggle" href="javascript: void(0)" class="am-menu-toggle">
+        <span class="am-menu-toggle-title"></span>
+        <i class="am-menu-toggle-icon am-icon-angle-right"></i>
+    </a>
+    <div class="am-offcanvas">
+        <div id="rhaphp-base-left-menu" class="am-offcanvas-bar">
+            <ul class="am-menu-nav am-avg-sm-1">
+                <li class="">
+                    <a href="{:url('mp/mp/autoreply')}" class="">自动回复</a>
+                </li>
+                <li class="">
+                    <a href="{:url('mp/mp/menu')}" class="">自定菜单</a>
+                </li>
+                <li class="">
+                    <a href="{:url('mp/mp/qrcode')}" class="">二维码/转化</a>
+                </li>
+                <li class="">
+                    <a href="{:url('mp/member/index')}" class="">会员设置</a>
+                </li>
+                <li class="">
+                    <a href="{:url('mp/index/mplist')}" class="">切换公众号</a>
+                </li>
+                <li class="">
+                    <a href="{:url('mp/message/messagelist')}" class="">消息管理</a>
+                </li>
+                <li class="">
+                    <a href="{:url('admin/Login/out')}" class="">退出</a>
+                </li>
+                {block name="leftMenu"}{/block}
+            </ul>
+        </div>
+    </div>
+</nav>
+<div data-am-widget="navbar" class="am-navbar am-cf am-navbar-default " id="">
+    <ul class="am-navbar-nav am-cf am-avg-sm-4">
+        <li>
+            <a id="rhaphp-click-left-nav" href="###" class="">
+                <span class="am-icon-dedent"></span>
+                <span class="am-navbar-label">菜单</span>
+            </a>
+        </li>
+        <li>
+            <a href="{:url('mp/mp/index')}" class="">
+                <span class="am-icon-line-chart"></span>
+                <span class="am-navbar-label">指标</span>
+            </a>
+        </li>
+        <li>
+            <a href="{:url('mp/friends/index')}" class="">
+                <span class="am-icon-wechat"></span>
+                <span class="am-navbar-label">粉丝管理</span>
+            </a>
+        </li>
+        <li>
+            <a href="{:url('admin/app/index')}" class="">
+                <span class="rha-icon icon-size-1">&#xe6f0;</span>
+                <span class="am-navbar-label">应用中心</span>
+            </a>
+        </li>
+    </ul>
+</div>
+</body>
+<script>
+    $(function () {
+        $('#rhaphp-click-left-nav').click(function () {
+            $('#rhaphp-menu-left-toggle').trigger('click');
+        })
+    })
+    layui.use('element', function(){
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+    });
+    function getMaterial(paramName,type){
+        layer.open({
+            type: 2,
+            title: '选择素材',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['350px', '280px'],
+            content: '{:url("mp/Material/getMeterial","","")}/type/'+type+'/param/'+paramName //iframe的url
+        });
+    }
+    function controllerByVal(value,paramName,type) {
+        $('.form_'+paramName).attr('src',value);
+        $("input[name="+paramName+"]").val(value);
+    }
+    $(function () {
+         setInterval(getMsgTotal,5000);
+        function getMsgTotal() {
+            $.get("{:url('mp/Message/getMsgStatusTotal')}",{},function (res) {
+                if(res.msgTotal==0){
+                    //TODO
+                }else{
+                    $('.rhaphp-msg-user').show();
+                    $('.rhaphp-msg-user').text(res.msgTotal);
+                }
+
+            })
+        }
+    })
+</script>
+</html>

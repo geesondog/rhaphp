@@ -1,0 +1,233 @@
+{extend name="../admin/common/base" /}
+{block name="jscss"}
+{js href='__STATIC__/zclip/jquery.zclip.min.js' /}
+{/block}
+{block name="body"}
+
+<div style="padding: 0px 10px 0px 10px;">
+    <blockquote class="layui-elem-quote layui-quote-nm">请在小程序平台的 设置->开发设置 配置录入以下参数</blockquote>
+    <table class="layui-table" lay-skin="line" >
+        <colgroup>
+            <col width="200">
+            <col width="">
+            <col width="80">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>服务器配置</th>
+            <th></th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>request合法域名</td>
+            <td>https://<span class="request">{$host}</span><span class="tip1 rha-bt-a"></span></td>
+            <td><a href="javascript:;" id="request" class="rha-bt-a">复制</a></td>
+        </tr>
+        <tr>
+            <td>socket合法域名</td>
+            <td>wss://<span class="socket">{$host}<span class="tip2 rha-bt-a"></span></td>
+            <td><a href="javascript:;" id="socket" class="rha-bt-a">复制</a></td>
+        </tr>
+        <tr>
+            <td>uploadFile合法域名</td>
+            <td>https://<span class="uploadFile">{$host}<span class="tip3 rha-bt-a"></span></td>
+            <td><a id="uploadFile" href="javascript:;" class="rha-bt-a">复制</a></td>
+        </tr>
+        <tr>
+            <td>downloadFile合法域名</td>
+            <td>https://<span class="downloadFile">{$host}<span class="tip4 rha-bt-a"></span></td>
+            <td><a id="downloadFile" href="javascript:;" class="rha-bt-a">复制</a></td>
+        </tr>
+
+        </tbody>
+    </table>
+    <br>
+    <table class="layui-table" lay-skin="line" >
+        <colgroup>
+            <col width="200">
+            <col width="">
+            <col width="80">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>请求小程序Api</th>
+            <th></th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Api地址</td>
+            <td class="miniappApi">{$miniappApi}<span class="tip9 rha-bt-a"></span></td>
+            <td><a href="javascript:;" id="miniappApi" class="rha-bt-a">复制</a></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td colspan="2">
+                <p class="tip_for_p">
+                    注意：正式使用应该支持HTTPS协议请求访问。<br>
+                    此API地址是不能直接访问的，需要带上应用参数:应用/控制器/操作方法。
+                </p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <table class="layui-table" lay-skin="line" >
+        <colgroup>
+            <col width="200">
+            <col width="">
+            <col width="80">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>业务域名</th>
+            <th></th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>业务域名地址</td>
+            <td class="getHostDomain">{$host}<span class="tip8 rha-bt-a"></span></td>
+            <td><a href="javascript:;" id="getHostDomain" class="rha-bt-a">复制</a></td>
+        </tr>
+        <tr>
+            <td>上传校验文件</td>
+            <td>{:hook('Upload',['type'=>'file_mp','name'=>'mp_verify','bt_title'=>'选择文件'])}
+                <p class="tip_for_p">上传成功后，小程序管理后台保存即可，注意请确保你目前是HTTPS协议，HTTP是不能验证成功的。</p></td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <table class="layui-table" lay-skin="line" >
+        <colgroup>
+            <col width="200">
+            <col width="">
+            <col width="80">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>消息推送</th>
+            <th></th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>URL(服务器地址)</td>
+            <td class="URL">{$entrUrl}<span class="tip5 rha-bt-a"></span></td>
+            <td><a href="javascript:;" id="URL" class="rha-bt-a">复制</a></td>
+        </tr>
+        <tr>
+            <td>Token(令牌)</td>
+            <td class="Token">{$miniapp.token}<span class="tip6 rha-bt-a"></span></td>
+            <td><a href="javascript:;" id="Token" class="rha-bt-a">复制</a></td>
+        </tr>
+        <tr>
+            <td>EncodingAESKey<br>(消息加密密钥)</td>
+            <td class="EncodingAESKey">{$miniapp.encodingaeskey}<span class="tip7 rha-bt-a"></span></td>
+            <td><a id="EncodingAESKey" href="javascript:;" class="rha-bt-a">复制</a></td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    $(function(){
+        $('#request').zclip({
+            path: '__STATIC__/zclip/ZeroClipboard.swf',
+            copy: function(){
+                $(".tip1").show();
+                return $('.request').text();
+            },
+            afterCopy: function(){
+                $(".tip1").insertAfter($('.tip1')).html('复制成功').fadeOut(2000);
+            }
+        });
+        $('#socket').zclip({
+            path: '__STATIC__/zclip/ZeroClipboard.swf',
+            copy: function(){
+                $(".tip2").show();
+                return $('.socket').text();
+            },
+            afterCopy: function(){
+                $(".tip2").insertAfter($('.tip2')).html('复制成功').fadeOut(2000);
+            }
+        });
+        $('#uploadFile').zclip({
+            path: '__STATIC__/zclip/ZeroClipboard.swf',
+            copy: function(){
+                $(".tip3").show();
+                return $('.uploadFile').text();
+            },
+            afterCopy: function(){
+                $(".tip3").insertAfter($('.tip3')).html('复制成功').fadeOut(2000);
+            }
+        });
+        $('#downloadFile').zclip({
+            path: '__STATIC__/zclip/ZeroClipboard.swf',
+            copy: function(){
+                $(".tip4").show();
+                return $('.downloadFile').text();
+            },
+            afterCopy: function(){
+                $(".tip4").insertAfter($('.tip4')).html('复制成功').fadeOut(2000);
+            }
+        });
+        $('#URL').zclip({
+            path: '__STATIC__/zclip/ZeroClipboard.swf',
+            copy: function(){
+                $(".tip5").show();
+                return $('.URL').text();
+            },
+            afterCopy: function(){
+                $(".tip5").insertAfter($('.tip5')).html('复制成功').fadeOut(2000);
+            }
+        });
+        $('#Token').zclip({
+            path: '__STATIC__/zclip/ZeroClipboard.swf',
+            copy: function(){
+                $(".tip6").show();
+                return $('.Token').text();
+            },
+            afterCopy: function(){
+                $(".tip6").insertAfter($('.tip6')).html('复制成功').fadeOut(2000);
+            }
+        });
+        $('#EncodingAESKey').zclip({
+            path: '__STATIC__/zclip/ZeroClipboard.swf',
+            copy: function(){
+                $(".tip7").show();
+                return $('.EncodingAESKey').text();
+            },
+            afterCopy: function(){
+                $(".tip7").insertAfter($('.tip7')).html('复制成功').fadeOut(2000);
+            }
+        });
+        $('#getHostDomain').zclip({
+            path: '__STATIC__/zclip/ZeroClipboard.swf',
+            copy: function(){
+                $(".tip8").show();
+                return $('.getHostDomain').text();
+            },
+            afterCopy: function(){
+                $(".tip8").insertAfter($('.tip8')).html('复制成功').fadeOut(2000);
+            }
+        });
+        $('#miniappApi').zclip({
+            path: '__STATIC__/zclip/ZeroClipboard.swf',
+            copy: function(){
+                $(".tip9").show();
+                return $('.miniappApi').text();
+            },
+            afterCopy: function(){
+                $(".tip9").insertAfter($('.tip9')).html('复制成功').fadeOut(2000);
+            }
+        });
+    });
+</script>
+{/block}

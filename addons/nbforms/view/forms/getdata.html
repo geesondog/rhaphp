@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {js href='/public/static/jquery/jquery-1.11.0.min.js' /}
+    {js href='/public/static/layui/layui.js' /}
+    {CSS href="/public/static/layui/css/layui.css" /}
+    {CSS href="__ADDONSTATIC__/css/style.css" /}
+</head>
+<body>
+<div style="padding: 0px 10px;">
+    <table class="layui-table" lay-size="sm">
+        <thead>
+        <tr>
+            {foreach name="dataTitle" item="v"}
+            <th>{$key}</th>
+            {/foreach}
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="data" id="vo" empty="暂时没有数据"}
+        <tr>
+            {volist name="vo" id="v"}
+            <td>{$v|raw}</td>
+            {/volist}
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    {$page}
+</div>
+
+<script>
+    var layer;
+    layui.use('layer',function () {
+        layer = layui.layer;
+    })
+    function delFormsData(id) {
+        layer.confirm('确定删除吗？', {
+            btn: ['是','不'], //按钮
+            offset: ['15%', '30%'],
+            shade: 0.1,
+        }, function(){
+            $.post("{:addonUrl('delFormsData')}",{fid:id},function (res) {
+                if(res.status==1){
+                    layer.alert(res.msg,function (index) {
+                        window.location.reload();
+                        layer.close(index);
+                    })
+
+                }else{
+                    layer.alert(res.msg)
+                }
+            })
+        }, function(){
+
+        });
+    }
+</script>
+</body>
+</html>

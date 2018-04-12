@@ -1,0 +1,142 @@
+{extend name="common/base" /}
+{block name="body"}
+{js href='__STATIC__/js/voice-2.0.js' /}
+<div style="margin: 10px 10px 0px 10px;">
+    <textarea class="layui-textarea msg_content"></textarea>
+    <div class="site-demo-button" style="margin-top: 15px;">
+        <button onclick="replyMsg()" class="layui-btn layui-btn-normal layui-btn-sm"><i class="layui-icon">&#xe63a;</i>回复消息
+        </button>
+        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" id="replyMsgImg"><i class="layui-icon">&#xe67c;</i>图片回复
+        </button>
+    </div>
+</div>
+<div class="layui-form" style="padding:0px 10px 0px 10px;">
+    <table class="layui-table" lay-even="" lay-skin="nob">
+        <colgroup>
+            <col width="50">
+            <col width="">
+            <col width="180">
+            <col width="150">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>
+            <th>会员</th>
+            <th>消息时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="msgList" id="vo"}
+        <tr>
+            <td><input name="" lay-skin="primary" type="checkbox"></td>
+            <td>
+                <div class="layui-row rha-mp-msg ">
+                    <div class="mp-msg-headimg layui-col-md1"><img src="{$vo.avatarurl}"></div>
+                    <div class="mp-msg-info layui-col-md10">
+                        <p>
+                            <span style="padding: 0px 0px 0px 5px;">{$vo.nickname}</span>
+                        <p class="mp-msg-content" style="overflow: visible;">{$vo.content|raw}</p>
+                    </div>
+                </div>
+            </td>
+            <td>{$vo.create_time}</td>
+            <td><a class="rha-bt-a" href="javascript:;" onclick="delMsg('{$vo.msg_id}','{$vo.openid}')">删除</a></td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    {$msgList->render()|raw}
+</div>
+<script>
+    function replyMsg() {
+        load = layer.load(1);
+        var msg_content = $('.msg_content').val();
+        $.post('', {'msg_content': msg_content}, function (res) {
+            if (res.status == 1) {
+                layer.close(load);
+                layer.msg(res.msg, {time: 2000}, function (index) {
+                    window.location.reload();
+                })
+            } else {
+                layer.close(load);
+                layer.alert(res.msg)
+            }
+        })
+    }
+
+    function delMsg(id, openid) {
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            load = layer.load(1);
+            layer.confirm('你确定需要删除吗？', {
+                btn: ['是', '不'] //按钮
+            }, function () {
+                $.post("{:url('delMsg')}", {'id': id, 'openid': openid}, function (res) {
+                    if (res.status == 1) {
+                        layer.msg(res.msg, {time: 2000}, function (index) {
+                            window.location.reload();
+                        })
+                    } else {
+                        layer.alert(res.msg)
+                    }
+                })
+            });
+            layer.close(load);
+        });
+    }
+
+    var layer;
+    layui.use('layer', function () {
+        layer = layui.layer;
+    })
+
+    function openMsgImsg(obj) {
+        var data = {
+            "title": "图片",
+            "id": 1,
+            "start": 0,
+            "data": [
+                {
+                    "alt": "图片",
+                    "pid": 666,
+                    "src": obj.src,
+                    "thumb": obj.src
+                }
+            ]
+        }
+        layer.photos({
+            photos: data,
+        });
+    }
+
+    layui.use('upload', function () {
+        var upload = layui.upload;
+        var uploadInst = upload.render({
+            elem: '#replyMsgImg'
+            , url: "{:url('replyImgByMsg',['openid'=>$openid])}"
+            , exts: 'jpg|png|gif|bmp|jpeg'
+            , size: 2048
+            , field: 'image'
+            , before: function (input) {
+                load = layer.load(1);
+            }
+            , done: function (res) {
+                if (res.status == 1) {
+                    layer.msg(res.msg)
+                } else {
+                    layer.alert(res.msg);
+                }
+                layer.close(load);
+                window.location.reload();
+            }
+            , error: function () {
+                layer.close(load);
+                layer.msg('请求出现异常');
+            }
+        });
+    });
+
+</script>
+{/block}

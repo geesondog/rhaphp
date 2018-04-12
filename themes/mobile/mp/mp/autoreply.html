@@ -1,0 +1,329 @@
+{extend name="../admin/common/base" /}
+{block name="nav_title"}
+<a href="{:url('addKeyword')}" id="addkw" class="layui-btn layui-btn-normal layui-btn-sm rha-nav-title">增加关键词</a>
+{/block}
+{block name="body"}
+{include file="/common/autoreplay_nav" /}
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+        <li {eq name="type" value="text"}class="layui-this"{/eq} ><a href="{:url('mp/Mp/autoReply',['type'=>'text'])}">回复文字</a></li>
+        <li {eq name="type" value="news"}class="layui-this"{/eq}><a href="{:url('mp/Mp/autoReply',['type'=>'news'])}">回复图文</a></li>
+        <li {eq name="type" value="addon"}class="layui-this"{/eq}><a href="{:url('mp/Mp/autoReply',['type'=>'addon'])}">回复应用</a></li>
+        <li {eq name="type" value="voice"}class="layui-this"{/eq}><a href="{:url('mp/Mp/autoReply',['type'=>'voice'])}">回复语音</a></li>
+        <li {eq name="type" value="image"}class="layui-this"{/eq}><a href="{:url('mp/Mp/autoReply',['type'=>'image'])}">回复图片</a></li>
+        <li {eq name="type" value="video"}class="layui-this"{/eq}><a href="{:url('mp/Mp/autoReply',['type'=>'video'])}">回复视频</a></li>
+        <li {eq name="type" value="music"}class="layui-this"{/eq}><a href="{:url('mp/Mp/autoReply',['type'=>'music'])}">回复音乐</a></li>
+    </ul>
+    <div class="layui-tab-content" style="padding: 0px 10px 0px 10px;">
+
+        {switch name="type"}
+            {case value="text"}
+        <table class="layui-table" lay-skin="line" lay-size="sm">
+                    <thead>
+                    <tr>
+                        <th>关键词</th>
+                        <th>回复内容</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {volist name="data" id="vo"}
+                    <tr>
+                        <td>{$vo.keyword}</td>
+                        <td>{$vo.content}</td>
+                        <td>{if condition="$vo.status=='1'"}使用中{else/}已停用{/if}</td>
+                        <td>
+                            <div class="">
+                                {if condition="$vo.status=='1'"}
+                                <a class="rha-bt-a" href="javascript:;" onclick="updateReply('{$vo.id}','0')">停用</a>
+                                {else/}
+                                <a class="rha-bt-a" href="javascript:;" onclick="updateReply('{$vo.id}','1')">开启</a>
+                                {/if}
+                                <a class="rha-bt-a" href="javascript:;" onclick="delReply('{$vo.id}')">删除</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+            {$data->render()|raw}
+            {/case}
+            {case value="news"}
+                <table class="layui-table" lay-skin="line" lay-size="sm">
+                    <thead>
+                    <tr>
+                        <th>关键词</th>
+                        <th>标题</th>
+                        <!--<th>封面图</th>-->
+                        <!--<th>图文描述</th>-->
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {volist name="data" id="vo"}
+                    <tr>
+                        <td>{$vo.keyword}</td>
+                        <td>{$vo.title}</td>
+                        <!--<td>-->
+                            <!--<div  style="padding: 5px; border: #e6e6e6 solid 1px; width:160px; float: left; ">-->
+                            <!--<img class="form_logo" src="{$vo.url}" style="max-width: none" width="160" height="100">-->
+                            <!--</div>-->
+                        <!--</td>-->
+                        <!--<td>{$vo.content}</td>-->
+                        <td>{if condition="$vo.status=='1'"}使用中{else/}已停用{/if}</td>
+                        <td>
+                            <div class="">
+                                {if condition="$vo.status=='1'"}
+                                <a class="rha-bt-a" href="javascript:;" onclick="updateReply('{$vo.id}','0')">停用</a>
+                                {else/}
+                                <a class="rha-bt-a" href="javascript:;" onclick="updateReply('{$vo.id}','1')">开启</a>
+                                {/if}
+                                <a class="rha-bt-a" href="javascript:;" onclick="delReply('{$vo.id}')">删除</a>
+
+                            </div>
+                        </td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+        {$data->render()|raw}
+            {/case}
+        {case value="addon"}
+        <table class="layui-table" lay-skin="line" lay-size="sm">
+            <thead>
+            <tr>
+                <th>关键词</th>
+                <th>应用名称</th>
+                <!--<th>应用简介</th>-->
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="data" id="vo"}
+            <tr>
+                <td>{$vo.keyword}</td>
+                <td>
+                    <div  style=" float: left; ">
+                        <img class="form_logo" src="{$vo.logo}" width="30" height="30">{$vo.name}
+                    </div>
+                    </td>
+                <!--<td>{$vo.desc}</td>-->
+                <td>{if condition="$vo.status=='1'"}使用中{else/}已停用{/if}</td>
+                <td>
+                    {if condition="$vo.status=='1'"}
+                    <a class="rha-bt-a" href="javascript:;" onclick="updateReply('{$vo.id}','0')">停用</a>
+                    {else/}
+                    <a class="rha-bt-a" href="javascript:;" onclick="updateReply('{$vo.id}','1')">开启</a>
+                    {/if}
+                    <a class="rha-bt-a" href="javascript:;" onclick="delReply('{$vo.id}')">删除</a>
+
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+
+        {/case}
+
+        {case value="voice"}
+        <table class="layui-table" lay-skin="line" lay-size="sm">
+
+            <thead>
+            <tr>
+                <th>关键词</th>
+                <th>语音名称</th>
+                <!--<th>语音资源|媒体ID</th>-->
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="data" id="vo"}
+            <tr>
+                <td>{$vo.keyword}</td>
+                <td>{$vo.title}</td>
+                <!--<td>{$vo.url}</td>-->
+                <td>{if condition="$vo.status=='1'"}使用中{else/}已停用{/if}</td>
+                <td>
+                    {if condition="$vo.status=='1'"}
+                    <a class="rha-bt-a" href="javascript:;" onclick="updateReply('{$vo.id}','0')">停用</a>
+                    {else/}
+                    <a class="rha-bt-a" href="javascript:;" onclick="updateReply('{$vo.id}','1')">开启</a>
+                    {/if}
+                    <a class="rha-bt-a" href="javascript:;" onclick="delReply('{$vo.id}')">删除</a>
+
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+        {$data->render()|raw}
+        {/case}
+        {case value="image"}
+        <table class="layui-table" lay-skin="line" lay-size="sm">
+            <thead>
+            <tr>
+                <th>关键词</th>
+                <th>类型</th>
+                <th>封面图</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="data" id="vo"}
+            <tr>
+                <td>{$vo.keyword}</td>
+                <td>{if condition="$vo.status_type eq '1'"} 永久
+                    {elseif condition="$vo.status_type eq '0'"/}临时
+                    {/if}</td>
+                <td>
+                    <div  style="padding: 5px; border: #e6e6e6 solid 1px; float: left; ">
+                        <img class="form_logo" src="{$vo.url}" style="max-width: none" width="80" height="40">
+                    </div>
+                </td>
+
+                <td>{if condition="$vo.status=='1'"}使用中{else/}已停用{/if}</td>
+                <td>
+                    {if condition="$vo.status=='1'"}
+                    <a class="rha-bt-a" href="javascript:;" onclick="updateReply('{$vo.id}','0')">停用</a>
+                    {else/}
+                    <a class="rha-bt-a" href="javascript:;" onclick="updateReply('{$vo.id}','1')">开启</a>
+                    {/if}
+                    <a class="rha-bt-a" href="javascript:;" onclick="delReply('{$vo.id}')">删除</a>
+
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+        {$data->render()|raw}
+        {/case}
+        {case value="video"}
+        <table class="layui-table" lay-skin="line" lay-size="sm">
+            <thead>
+            <tr>
+                <th>关键词</th>
+                <th>类型</th>
+                <th>视频标题|媒体ID</th>
+                <!--<th>视频地址</th>-->
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="data" id="vo"}
+            <tr>
+                <td>{$vo.keyword}</td>
+                <td>{if condition="$vo.status_type eq '1'"} 永久
+                    {elseif condition="$vo.status_type eq '0'"/}临时
+                    {/if}</td>
+                <td>
+                    {$vo.title}
+                </td>
+                <!--<td>-->
+                    <!--{$vo.url}-->
+                <!--</td>-->
+                <td>{if condition="$vo.status=='1'"}使用中{else/}已停用{/if}</td>
+                <td>
+                    {if condition="$vo.status=='1'"}
+                    <a class="rha-bt-a" href="javascript:;" onclick="updateReply('{$vo.id}','0')">停用</a>
+                    {else/}
+                    <a class="rha-bt-a" href="javascript:;" onclick="updateReply('{$vo.id}','1')">开启</a>
+                    {/if}
+                    <a class="rha-bt-a" href="javascript:;" onclick="delReply('{$vo.id}')">删除</a>
+
+                </td>
+
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+        {$data->render()|raw}
+        {/case}
+        {case value="music"}
+        <table class="layui-table" lay-skin="line" lay-size="sm">
+            <thead>
+            <tr>
+                <th>关键词</th>
+                <th>音乐标题</th>
+                <!--<th>链接地址</th>-->
+                <!--<th>音乐描述</th>-->
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="data" id="vo"}
+            <tr>
+                <td>{$vo.keyword}</td>
+                <td>{$vo.title}</td>
+                <!--<td>-->
+                    <!--{$vo.url}-->
+                <!--</td>-->
+                <!--<td>{$vo.content}</td>-->
+                <td>{if condition="$vo.status=='1'"}使用中{else/}已停用{/if}</td>
+                <td>
+                    {if condition="$vo.status=='1'"}
+                    <a class="rha-bt-a" href="javascript:;" onclick="updateReply('{$vo.id}','0')">停用</a>
+                    {else/}
+                    <a class="rha-bt-a" href="javascript:;" onclick="updateReply('{$vo.id}','1')">开启</a>
+                    {/if}
+                    <a class="rha-bt-a" href="javascript:;" onclick="delReply('{$vo.id}')">删除</a>
+
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+        {$data->render()|raw}
+        {/case}
+        {/switch}
+    </div>
+</div>
+<script>
+    function delReply(id) {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.confirm('你确定需要删除吗？', {
+                btn: ['是','不'] //按钮
+            }, function(){
+                $.post("{:url('mp/Mp/delRule')}",{'id':id},function (res) {
+                    if(res.status==1){
+                        layer.alert(res.msg,function (index) {
+                            window.location.reload();
+                            layer.close(index);
+                        })
+
+                    }else{
+                        layer.alert(res.msg)
+                    }
+                })
+            }, function(){
+
+            });
+        });
+
+    }
+    function updateReply(id,status) {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+                $.post("{:url('mp/Mp/updateRule')}",{'id':id,'status':status},function (res) {
+                    if(res.status==1){
+                        layer.msg(res.msg,{icon:1,time:2000},function (index) {
+                            window.location.reload();
+
+                        })
+
+                    }else{
+                        layer.alert(res.msg)
+                    }
+                })
+        });
+    }
+
+</script>
+{/block}

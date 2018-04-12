@@ -1,0 +1,20 @@
+<html>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta charset="UTF-8">
+    <title>rhaphp - 万能表单预览</title>
+    {js href='/public/static/jquery/jquery-1.11.0.min.js' /}
+    {js href='/public/static/layui/layui.js' /}
+    {CSS href="/public/static/layui/css/layui.css" /}
+    {CSS href="__ADDONSTATIC__/css/style.css" /}
+</head>
+<body style="background: rgb(255, 255, 255) none repeat scroll 0% 0%;">
+<div id="phone">
+    <iframe id="frame" src="{$url}" width="320" height="565" frameborder="0"></iframe>
+</div>
+<div id="qrcode">
+    <div id="canvas" style="height: 200px; width: 200px;"><img src="{$getQrUrl}" width="200" height="200" /> </div>
+    用微信扫一扫预览
+</div>
+</body>
+</html>

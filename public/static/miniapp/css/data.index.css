@@ -1,0 +1,212 @@
+.ui_trendgrid {
+    table-layout: fixed;
+    position: relative;
+    width: 100%;
+    margin: 20px 0px;
+}
+
+.ui_trendgrid td {
+
+    border-right: 1px solid rgb(231, 231, 235);
+}
+
+.ui_trendgrid td.last {
+    border-right: 0px none;
+}
+
+.ui_trendgrid dl {
+    display: inline-block;
+    margin-top: 0px;
+    padding: 0px;
+    text-align: left;
+    position: relative;
+    z-index: 2;
+}
+
+.ui_trendgrid dt {
+    padding-bottom: 12px;
+    font-size: 14px;
+    font-weight: normal;
+    text-align: center;
+}
+
+.ui_trendgrid dd {
+    margin-top: 2px;
+    font-size: 14px;
+    line-height: 18px;
+    white-space: nowrap;
+}
+
+.ui_trendgrid dd.ui_trendgrid_number {
+    text-align: center;
+    color: rgb(103, 103, 103);
+    font-size: 30px;
+    margin-right: 10px;
+    margin-bottom: 15px;
+}
+
+.ui_trendgrid dd.ui_trendgrid_number strong {
+    font-weight: 400;
+    font-style: normal;
+}
+
+.ui_trendgrid .icon_down, .ui_trendgrid .icon_up, .ui_trendgrid .icon_down_grey {
+    margin-left: 10px;
+    position: relative;
+    top: -2px;
+    margin-right: 3px;
+    display: inline-block;
+    width: 10px;
+    height: 9px;
+    vertical-align: middle;
+}
+
+.ui_trendgrid .icon_down {
+    background-position: -10px 0px;
+}
+
+.ui_trendgrid_item {
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.ui_trendgrid_item b {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 14px;
+}
+
+.ui_trendgrid_chart {
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+    left: 1px;
+}
+
+.ui_trendgrid_unit {
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.step_inner::after {
+    content: "​";
+    display: block;
+    height: 0px;
+    clear: both;
+}
+
+.tab_navs::after {
+    content: "​";
+    display: block;
+    height: 0px;
+    clear: both;
+}
+
+.info_box {
+    margin-bottom: 20px;
+}
+
+.info_box .inner {
+    border: 1px solid rgb(231, 231, 235);
+}
+
+.info_box .info_hd {
+    line-height: 38px;
+    height: 38px;
+    padding: 0px 20px;
+    background-color: rgb(244, 245, 249);
+    border-bottom: 1px solid rgb(231, 231, 235);
+}
+
+.info_box .info_hd::after {
+    content: "​";
+    display: block;
+    height: 0px;
+    clear: both;
+}
+
+.info_box .info_hd .ext_info {
+    float: right;
+}
+
+.info_box .info_hd h4 {
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.inner {
+    position: relative;
+}
+
+.page_msg.top {
+    margin-top: 6px;
+    margin-bottom: 20px;
+}
+
+.wrp_overview {
+    padding: 0px 30px 40px;
+    position: relative;
+    margin-top: 20px;
+}
+
+.info_hd.append_ask {
+    position: relative;
+    z-index: 10;
+}
+
+.info_hd.append_ask .help {
+    right: 10px;
+    top: 0px;
+}
+
+.info_bd {
+    position: relative;
+    z-index: 9;
+}
+
+.page_user .help .help_content {
+    top: -9px;
+}
+
+.page_user_stat.mini {
+    padding: 20px 15px 0px;
+}
+
+.page_user_stat.mini .inner {
+    padding-left: 15px;
+    background-color: transparent;
+}
+
+.page_user_stat.mini .inner.stat_info {
+    background-color: rgb(224, 234, 246);
+}
+
+.table .table_action.arrow::after {
+    content: "";
+    position: relative;
+    top: 13px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgb(198, 198, 198) transparent transparent;
+    -moz-border-top-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    border-image: none;
+}
+
+.tr_chosen .table_action.arrow::after {
+    top: -11px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent rgb(198, 198, 198);
+    -moz-border-top-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    border-image: none;
+}

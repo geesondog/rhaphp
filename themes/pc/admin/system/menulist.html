@@ -1,0 +1,101 @@
+{extend name="common/base" /}
+{block name="nav_title"}
+<a href="{:url('addMenu')}"  class="layui-btn layui-btn-normal layui-btn-sm rha-nav-title">增加菜单</a>
+{/block}
+{block name="body"}
+<form class="layui-form" action="" style="padding: 0px 10px 0px 10px;">
+<table class="layui-table">
+    <colgroup>
+        <col width="100">
+        <col width="500">
+        <col>
+    </colgroup>
+    <thead>
+    <tr>
+        <th>排序</th>
+        <th>菜单名称</th>
+        <th>地址</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {volist name="menuList" id="v"}
+        <tr>
+            <td><input style="width: 35px; text-align:center" name="{$v.id}_{$v.sort}" value="{$v.sort}"></td>
+            <td>{$v.name}</td>
+            <td>{$v.url}</td>
+            <td><a class="rha-bt-a" href="{:url('updateMenu',['id'=>$v['id']])}">修改</a> <a href="javascript:;" onclick="delMenu('{$v.id}')" class="rha-bt-a" >删除</a></td>
+        </tr>
+        {volist name="v.child" id="v"}
+        <tr>
+            <td><input style="width: 35px; text-align:center" name="{$v.id}_{$v.sort}" value="{$v.sort}"></td>
+            <td>&nbsp;&nbsp;&nbsp; ├{$v.name}</td>
+            <td>{$v.url}</td>
+            <td><a class="rha-bt-a" href="{:url('updateMenu',['id'=>$v['id']])}">修改</a> <a href="javascript:;" onclick="delMenu('{$v.id}')" class="rha-bt-a" >删除</a></td>
+        </tr>
+            {volist name="v.child" id="v"}
+            <tr>
+                <td><input style="width: 35px; text-align:center" name="{$v.id}_{$v.sort}" value="{$v.sort}"></td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ├{$v.name}</td>
+                <td>{$v.url}</td>
+                <td><a class="rha-bt-a" href="{:url('updateMenu',['id'=>$v['id']])}">修改</a> <a href="javascript:;" onclick="delMenu('{$v.id}')" class="rha-bt-a" >删除</a></td>
+            </tr>
+
+                {volist name="v.child" id="v"}
+                <tr>
+                    <td><input style="width: 35px; text-align:center" name="{$v.id}_{$v.sort}" value="{$v.sort}"></td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ├{$v.name}</td>
+                    <td>{$v.url}</td>
+                    <td><a class="rha-bt-a" href="{:url('updateMenu',['id'=>$v['id']])}">修改</a> <a href="javascript:;" onclick="delMenu('{$v.id}')" class="rha-bt-a" >删除</a></td>
+                </tr>
+                {/volist}
+            {/volist}
+        {/volist}
+    {/volist}
+    </tbody>
+</table>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn  layui-btn-sm" lay-submit lay-filter="updateSort">更新排序</button>
+        </div>
+    </div>
+</form>
+<script>
+    function delMenu(id) {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.confirm('删除操作可能引起系统不能正常使用，你确定需要删除吗？', {
+                btn: ['是','不'] //按钮
+            }, function(){
+                $.post("{:url('System/delMenu')}",{'id':id},function (res) {
+                    if(res.status==1){
+                        layer.alert(res.msg,function (index) {
+                            window.location.reload();
+                            layer.close(index);
+                        })
+                    }else{
+                        layer.alert(res.msg)
+                    }
+                })
+            }, function(){
+            });
+        });
+    }
+layui.use('form', function(){
+    var form = layui.form;
+    form.on('submit(updateSort)', function(data){
+        $.post("{:url('System/updateSort')}",data.field,function (res) {
+            if(res.status=='0'){
+                layer.msg(res.msg);
+            }
+            if(res.status=='1'){
+                layer.msg(res.msg,{time:1000},function () {
+
+                });
+            }
+        })
+        return false;
+    });
+});
+</script>
+{/block}

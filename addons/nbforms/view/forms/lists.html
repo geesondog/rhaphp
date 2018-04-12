@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {js href='/public/static/jquery/jquery-1.11.0.min.js' /}
+    {js href='/public/static/layui/layui.js' /}
+    {CSS href="/public/static/layui/css/layui.css" /}
+    {CSS href="__ADDONSTATIC__/css/style.css" /}
+    {js href='__STATIC__/zclip/jquery.zclip.min.js' /}
+</head>
+<body>
+<div style="padding: 0px 10px;">
+    <table class="layui-table">
+        <colgroup>
+            <col width="120">
+            <col>
+            <col width="170">
+            <col width="280">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>关键词</th>
+            <th>标题</th>
+            <th>创建时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="data" id="v" }
+        <tr>
+            <td>{$v.keyword}</td>
+            <td>{$v.title}</td>
+            <td>{:date('Y-m-d H:i:s',$v.create_time)}</td>
+            <td>
+                <a class="rha-bt-a" target="_blank" href="{:addonUrl('preview/show',['id'=>$v.id])}">预览</a>
+                <a class="rha-bt-a" href="{:addonUrl('edit',['id'=>$v.id])}">编辑</a>
+                <a class="rha-bt-a" href="{:addonUrl('getdata',['id'=>$v.id])}">数据管理</a>
+                <a class="rha-bt-a" id="copyUrl" href="javascript:;">复制连接<span class="tip1"></span></a>
+                <a class="rha-bt-a" onclick="delForms('{$v.id}')" href="javascript:;">删除</a>
+                <div style="display: none" class="copyUrl">{:getHostDomain()}{:addonUrl('subfms/index', ['id' => $v.id])}</div>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    {$page}
+</div>
+<script>
+    var layer;
+    layui.use('layer',function () {
+        layer = layui.layer;
+    })
+    function delForms(id) {
+        layer.confirm('确定删除吗？', {
+            btn: ['是','不'], //按钮
+            offset: ['20%', '30%'],
+            shade: 0.1,
+        }, function(){
+            $.post("{:addonUrl('delForms')}",{fid:id},function (res) {
+                if(res.status==1){
+                    layer.alert(res.msg,function (index) {
+                        window.location.reload();
+                        layer.close(index);
+                    })
+
+                }else{
+                    layer.alert(res.msg)
+                }
+            })
+        }, function(){
+
+        });
+    }
+    $(function () {
+        $('#copyUrl').zclip({
+            path: '__STATIC__/zclip/ZeroClipboard.swf',
+            copy: function(){
+                $(".tip1").show();
+                return $('.copyUrl').text();
+            },
+            afterCopy: function(){
+                $(".tip1").insertAfter($('.tip1')).html('复制成功').fadeOut(1000);
+            }
+        });
+    })
+</script>
+</body>
+</html>

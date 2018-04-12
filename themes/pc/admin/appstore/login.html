@@ -1,0 +1,49 @@
+{extend name="common/base" /}
+{block name="body"}
+<div class="rhaphp-srivice-register">
+    <form class="layui-form layui-form-pane" action="" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机号码</label>
+            <div class="layui-input-block">
+                <input type="text" name="phone" required lay-verify="required" placeholder="请输入正确手机号码"  autocomplete="off" id="phone" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input id="rhaphp-token" type="hidden" name="token" value="">
+                <button class="layui-btn" lay-submit="" lay-filter="sub">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.on('submit(sub)', function (data) {
+            var index = layer.load(1);
+            $.post("{:url('login')}",data.field,function (res) {
+                if(res.errcode=='0'){
+                    layer.msg(res.errmsg,{time:1000},function () {
+                         location.href="{:url('index')}";
+                    });
+                }else{
+                    layer.close(index)
+                    layer.alert(res.errmsg);
+                }
+            }).error(function (error) {
+                layer.alert('500 Internal Server Error');
+                layer.close(index)
+            })
+            return false;
+        });
+    });
+</script>
+
+{/block}

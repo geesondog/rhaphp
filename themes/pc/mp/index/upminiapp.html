@@ -1,0 +1,96 @@
+{extend name="../admin/common/base" /}
+{block name="body"}
+<form class="layui-form" method="post" style="padding-right: 10px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">小程序名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" value="{$miniapp.name}" required lay-verify="required" placeholder="请输入小程序名称" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block">
+            <input type="radio" {eq name="$miniapp.type" value="1"} checked {/eq}  name="type" value="1" title="认证小程序">
+            <input type="radio" {eq name="$miniapp.type" value="2"} checked {/eq} name="type" value="2" title="普通小程序">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">APPID</label>
+        <div class="layui-input-block">
+            <input type="text" name="appid" value="{$miniapp.appid}" required lay-verify="required" placeholder="请输入APPID" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">APPSECRET</label>
+        <div class="layui-input-block">
+            <input type="text" name="appsecret" value="{$miniapp.appsecret}" required lay-verify="required" placeholder="请输入APPSECRET"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">原始ID</label>
+        <div class="layui-input-block">
+            <input type="text" name="origin_id" value="{$miniapp.origin_id}"  placeholder="请输入原始ID" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">LOGO</label>
+        <div class="layui-input-block">
+            {:hook('Upload',['type'=>'image','name'=>'logo','value'=>$miniapp.logo])}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">二维码</label>
+        <div class="layui-input-block">
+            {:hook('Upload',['type'=>'image','name'=>'qrcode','value'=>$miniapp.qrcode])}
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">描述</label>
+        <div class="layui-input-block">
+            <textarea name="desc"  placeholder="请输入小程序描述" class="layui-textarea">{$miniapp.desc}</textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">开关状态</label>
+        <div class="layui-input-block">
+            <input name="status" value="1" {eq name="$miniapp.status" value="1"} checked {/eq}  title="开启"  type="radio">
+            <input name="status" value="0" {eq name="$miniapp.status" value="0"} checked {/eq} title="关闭" type="radio">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">关闭回复</label>
+        <div class="layui-input-block">
+            <textarea name="close_msg" placeholder="请输入关闭回复" class="layui-textarea">{$miniapp.close_msg}</textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input name="id" type="hidden" value="{$miniapp.id}">
+            <button class="layui-btn" lay-submit lay-filter="sbm">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.on('submit(sbm)', function (data) {
+            $.post('',data.field,function (res) {
+                if(res.status=='1'){
+                    layer.msg(res.msg,{time:1000},function () {
+                        // window.location.href=res.url;
+                    });
+                }else{
+                    layer.alert(res.msg);
+                }
+            })
+            return false;
+        });
+    });
+</script>
+{/block}

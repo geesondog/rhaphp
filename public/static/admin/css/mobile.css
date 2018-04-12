@@ -1,0 +1,31 @@
+#rhaphp-menu-left-toggle{display: none}
+#rhaphp-base-left-menu{width: 110px;}
+.rhaphp-base-top-nav{background: #474747;width: 100%; font-size: 12px; color: #ffffff;text-align: center;}
+.rhaphp-base-top-nav a{color: #ffffff;}
+.rhaphp-base-top-nav ul{padding:0px 2px 0px 2px;}
+.rhaphp-base-nav-title{font-size: 16px; border-bottom:1px solid #e2e2e2;}
+.rhaphp-base-nav-title h2{line-height: normal;}
+.rha-nav-title{margin-top: -5px; }
+.layui-tab-title{white-space: normal; height: auto; padding: 0px 10px 0px 10px;}
+.layui-form-item .layui-form-label{overflow: inherit;}
+.layui-form-onswitch i{left: 23px; top:2px;}
+.layui-laypage{padding-left: 10px;}
+.am-comment-meta .rha-bt-a{color: #4898d5; border: 1px solid #D9D9D9; border-radius: 3px; font-size: 11px;padding: 3px;}
+.msg_image{width: inherit; border: none;border-radius: 3px;}
+#rhaphp-mp-msg{margin-top: -25px;margin-bottom: -25px;}
+.am-figure-zoomable:after{display: none}
+.content-hd h2{padding: 0px 20px;font-size: 14px;}
+#up_picurl{margin-top: 5px;}
+.layui-input-block div img{width: 139px;}
+.rha-bt-a{display: inline-block;}
+.rhaphp-upload >input{width: 100%}
+.rhaphp-upload input{margin-bottom: 10px;}
+.rhaphp-upload-thumb{margin-bottom: 7px;}
+#layui-laydate17 .layui-laydate-main{ display: block; text-align: center;}
+.am-navbar-default .am-navbar-nav{background-color: #474747}
+#rhaphp-addon-menu li{width: auto;}
+#rhaphp-app-title{margin-top: -20px;}
+.rhaphp-addon-admin-logo{margin-left: auto}
+#rhaphp-app-title .content-hd h2{ line-height: 50px;}
+.icon-size-1{font-size: 25px;}
+.upload-imgs {margin-bottom: 3px;}
