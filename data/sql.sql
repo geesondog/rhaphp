@@ -471,17 +471,13 @@ ALTER TABLE `rh_miniapp_addon_info`
 ALTER TABLE `rh_miniapp_msg`
   ADD PRIMARY KEY (`msg_id`),
   ADD KEY `openid` (`openid`),
-  ADD KEY `openid_2` (`openid`),
-  ADD KEY `openid_3` (`openid`),
-  ADD KEY `openid_4` (`openid`),
   ADD KEY `mpid` (`mpid`);
 
 ALTER TABLE `rh_miniapp_user`
   ADD PRIMARY KEY (`id`),
   ADD KEY `mpid` (`mpid`),
   ADD KEY `openid` (`openid`),
-  ADD KEY `unionid` (`unionid`),
-  ADD KEY `openid_2` (`openid`);
+  ADD KEY `unionid` (`unionid`);
 
 ALTER TABLE `rh_mp`
   ADD PRIMARY KEY (`id`);
@@ -489,8 +485,7 @@ ALTER TABLE `rh_mp`
 ALTER TABLE `rh_mp_friends`
   ADD PRIMARY KEY (`id`),
   ADD KEY `openid` (`openid`),
-  ADD KEY `mpid` (`mpid`),
-  ADD KEY `openid_2` (`openid`);
+  ADD KEY `mpid` (`mpid`);
 
 ALTER TABLE `rh_mp_menu`
   ADD PRIMARY KEY (`id`),
@@ -518,14 +513,12 @@ ALTER TABLE `rh_qrcode`
   ADD PRIMARY KEY (`id`),
   ADD KEY `mpid` (`mpid`),
   ADD KEY `ticket` (`ticket`),
-  ADD KEY `mpid_2` (`mpid`),
   ADD KEY `keyword` (`keyword`);
 
 ALTER TABLE `rh_qrcode_data`
   ADD PRIMARY KEY (`id`),
   ADD KEY `openid` (`openid`),
-  ADD KEY `mpid` (`mpid`),
-  ADD KEY `openid_2` (`openid`);
+  ADD KEY `mpid` (`mpid`);
 
 ALTER TABLE `rh_redpack`
   ADD PRIMARY KEY (`id`);
