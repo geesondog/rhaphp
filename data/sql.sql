@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `rh_material` (
   `link` varchar(255) DEFAULT NULL COMMENT '图文链接',
   `create_time` int(10) DEFAULT NULL COMMENT '创建时间',
   `update_time` int(10) DEFAULT NULL COMMENT '更新时间',
-  `media_id` varchar(500) DEFAULT NULL COMMENT '媒体 ID',
+  `media_id` varchar(120) DEFAULT NULL COMMENT '媒体 ID',
   `from_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:本地1：公众号',
   `path` varchar(500) DEFAULT NULL COMMENT '资源路径'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='公众号素材表';
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `rh_material` (
 CREATE TABLE IF NOT EXISTS `rh_media_news` (
   `news_id` int(11) NOT NULL COMMENT '自增 ID',
   `mid` int(11) NOT NULL COMMENT '公众号标识',
-  `media_id` varchar(500) DEFAULT NULL COMMENT '媒体 ID',
+  `media_id` varchar(120) DEFAULT NULL COMMENT '媒体 ID',
   `title` text COMMENT '标题',
   `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1:文本2:单图文3:多图文',
   `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
@@ -184,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `rh_miniapp` (
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态（0：禁用，1：正常，2：审核中）',
   `token` varchar(50) DEFAULT NULL COMMENT '公众号标识',
   `encodingaeskey` varchar(50) DEFAULT NULL COMMENT '消息加解密秘钥',
-  `addon` varchar(160) DEFAULT NULL COMMENT '应用扩展标识',
+  `addon` varchar(50) DEFAULT NULL COMMENT '应用扩展标识',
   `desc` text COMMENT '描述',
   `logo` varchar(255) DEFAULT NULL COMMENT 'logo',
   `qrcode` varchar(255) DEFAULT NULL COMMENT '二维码',
@@ -226,7 +226,7 @@ CREATE TABLE IF NOT EXISTS `rh_miniapp_msg` (
 CREATE TABLE IF NOT EXISTS `rh_miniapp_user` (
   `id` int(10) NOT NULL COMMENT '自增ID',
   `mpid` int(10) NOT NULL COMMENT '公众号标识',
-  `openid` varchar(255) NOT NULL COMMENT 'openid',
+  `openid` varchar(64) NOT NULL COMMENT 'openid',
   `nickname` varchar(50) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '昵称',
   `avatarurl` varchar(255) DEFAULT NULL COMMENT '头像',
   `gender` tinyint(1) DEFAULT NULL COMMENT '性别',
@@ -240,7 +240,7 @@ CREATE TABLE IF NOT EXISTS `rh_miniapp_user` (
   `remark` varchar(50) DEFAULT NULL COMMENT '备注',
   `score` int(10) DEFAULT '0' COMMENT '积分',
   `money` decimal(10,2) DEFAULT '0.00' COMMENT '金钱',
-  `unionid` varchar(160) DEFAULT NULL COMMENT 'unionid字段',
+  `unionid` varchar(64) DEFAULT NULL COMMENT 'unionid字段',
   `password` varchar(64) DEFAULT NULL COMMENT '密码',
   `create_time` int(10) DEFAULT '0' COMMENT '注册时间',
   `last_time` int(10) DEFAULT '586969200' COMMENT '最后交互时间'
@@ -274,7 +274,7 @@ INSERT INTO `rh_mp` (`id`, `user_id`, `name`, `appid`, `appsecret`, `origin_id`,
 CREATE TABLE IF NOT EXISTS `rh_mp_friends` (
   `id` int(10) NOT NULL COMMENT '自增ID',
   `mpid` int(10) NOT NULL COMMENT '公众号标识',
-  `openid` varchar(255) NOT NULL COMMENT 'openid',
+  `openid` varchar(64) NOT NULL COMMENT 'openid',
   `nickname` varchar(50) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '昵称',
   `headimgurl` varchar(255) DEFAULT NULL COMMENT '头像',
   `sex` tinyint(1) DEFAULT NULL COMMENT '性别',
@@ -299,7 +299,7 @@ CREATE TABLE IF NOT EXISTS `rh_mp_friends` (
   `longitude` varchar(50) DEFAULT NULL COMMENT '经度',
   `location_precision` varchar(50) DEFAULT NULL COMMENT '精度',
   `type` int(11) NOT NULL DEFAULT '0' COMMENT '0:公众号粉丝1：注册会员',
-  `unionid` varchar(160) DEFAULT NULL COMMENT 'unionid字段',
+  `unionid` varchar(64) DEFAULT NULL COMMENT 'unionid字段',
   `password` varchar(64) DEFAULT NULL COMMENT '密码',
   `last_time` int(10) DEFAULT '586969200' COMMENT '最后交互时间',
   `subscribe_scene` varchar(255) DEFAULT NULL,
@@ -339,7 +339,7 @@ CREATE TABLE IF NOT EXISTS `rh_mp_reply` (
   `url` varchar(500) DEFAULT NULL COMMENT '资源地址',
   `link` varchar(500) DEFAULT NULL COMMENT '连接(图片连接，图文连接等)',
   `status_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1:永久0：临时',
-  `media_id` varchar(500) DEFAULT NULL COMMENT '媒体ID'
+  `media_id` varchar(120) DEFAULT NULL COMMENT '媒体ID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `rh_mp_rule` (
@@ -357,7 +357,7 @@ CREATE TABLE IF NOT EXISTS `rh_mp_rule` (
 CREATE TABLE IF NOT EXISTS `rh_payment` (
   `payment_id` int(11) NOT NULL COMMENT '自增 ID',
   `member_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户 ID',
-  `openid` varchar(255) CHARACTER SET utf8 DEFAULT NULL COMMENT 'OPENID',
+  `openid` varchar(64) CHARACTER SET utf8 DEFAULT NULL COMMENT 'OPENID',
   `title` varchar(255) CHARACTER SET utf8 DEFAULT NULL COMMENT '标题|商品名称',
   `order_number` varchar(32) NOT NULL DEFAULT '0' COMMENT '订单号',
   `money` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '金额',
@@ -379,7 +379,7 @@ CREATE TABLE IF NOT EXISTS `rh_qrcode` (
   `qr_type` char(32) DEFAULT '0' COMMENT '二维码类型',
   `scene_str` varchar(255) DEFAULT NULL COMMENT '场景值字符串',
   `expire` int(10) DEFAULT NULL COMMENT '过期时间',
-  `ticket` varchar(255) DEFAULT NULL COMMENT '二维码Ticket',
+  `ticket` varchar(150) DEFAULT NULL COMMENT '二维码Ticket',
   `short_url` varchar(255) DEFAULT NULL COMMENT '二维码短地址',
   `qrcode_url` text NOT NULL COMMENT '二维码原始地址',
   `url` varchar(255) DEFAULT NULL COMMENT '二维码图片解析后的地址',
@@ -391,7 +391,7 @@ CREATE TABLE IF NOT EXISTS `rh_qrcode` (
 CREATE TABLE IF NOT EXISTS `rh_qrcode_data` (
   `id` int(11) NOT NULL COMMENT '自增ID',
   `scene_id` int(11) NOT NULL COMMENT '场景 ID',
-  `openid` varchar(160) NOT NULL COMMENT 'openid',
+  `openid` varchar(64) NOT NULL COMMENT 'openid',
   `create_time` varchar(60) NOT NULL COMMENT '扫码时间',
   `mpid` int(11) NOT NULL COMMENT '公众号标识',
   `qrcode_id` int(11) NOT NULL COMMENT '二维码ID',
@@ -401,7 +401,7 @@ CREATE TABLE IF NOT EXISTS `rh_qrcode_data` (
 
 CREATE TABLE IF NOT EXISTS `rh_redpack` (
   `id` int(11) NOT NULL COMMENT '自增 ID',
-  `openid` varchar(255) CHARACTER SET utf8 DEFAULT NULL COMMENT 'openid',
+  `openid` varchar(64) CHARACTER SET utf8 DEFAULT NULL COMMENT 'openid',
   `order_number` varchar(64) CHARACTER SET utf8 DEFAULT NULL COMMENT '单号',
   `mpid` int(11) NOT NULL DEFAULT '0' COMMENT '公众号标识',
   `money` decimal(10,2) NOT NULL COMMENT '红包金额',
@@ -423,7 +423,7 @@ CREATE TABLE IF NOT EXISTS `rh_setting` (
 CREATE TABLE IF NOT EXISTS `rh_syn_openid` (
   `id` int(11) NOT NULL,
   `mpid` int(11) NOT NULL,
-  `openid` varchar(255) NOT NULL
+  `openid` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
