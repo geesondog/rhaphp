@@ -193,7 +193,7 @@ class System extends Base
             }
         } else {
 
-            return view();
+            return view('updatepwd');
         }
     }
 
