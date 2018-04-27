@@ -346,7 +346,7 @@ CREATE TABLE IF NOT EXISTS `rh_mp_rule` (
   `id` int(10) NOT NULL COMMENT '自增ID',
   `mpid` int(10) NOT NULL COMMENT '公众号ID',
   `addon` varchar(50) DEFAULT NULL COMMENT '插件标识',
-  `keyword` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '关键词内容',
+  `keyword` varchar(80) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '关键词内容',
   `type` varchar(50) DEFAULT NULL COMMENT '触发类型：text,addon,images,news,voice,music,video',
   `event` varchar(50) DEFAULT NULL COMMENT '特殊事件如:关注、取关等',
   `entry_id` int(10) DEFAULT NULL COMMENT '功能入口ID',
