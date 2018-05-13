@@ -11,12 +11,14 @@ namespace app\admin\controller;
 
 
 use think\facade\Cookie;
+use think\facade\Env;
 use think\facade\Request;
 
 class Appstore extends Base
 {
     public $user = [];
     public $token = '';
+    static public $baseUrl = 'https://service.rhaphp.com/';
 
     public function initialize()
     {
@@ -25,7 +27,100 @@ class Appstore extends Base
             $this->user = $user;
             $this->token = $user['token'];
         }
+    }
+
+    public function index($type = 1, $cate = 0, $page = 1, $title = '')
+    {
+        $url = self::$baseUrl . "Business/getUserInfo";
+        $result = json_decode(httpPost($url, ['token'=>$this->token]), true);
+        if($result && isset($result['errcode']) && $result['errcode']!=-1)
+            $this->user['balance']=isset($result['user']['balance'])?$result['user']['balance']:'';
+        if ($type2 = input('type2')) {
+            $type = $type2;
+        }
+        if ($page <= 0) $page = 1;
+        $this->getApps();
+        $this->assign('title', $title);
+        $this->assign('page', $page);
+        $this->assign('type', $type);
+        $this->assign('cate_id', $cate);
         $this->assign('user', $this->user);
+        $this->assign('token',$this->token);
+        return view();
+    }
+
+
+    public function getApps()
+    {
+        $url = self::$baseUrl . "publics/getApps";
+        $result = json_decode(httpPost($url, input()), true);
+        $type = [];
+        $cate = [];
+        $apps = [];
+        if (!empty($result) && is_array($result)) {
+            if (isset($result['type_cate']['type'])) {
+                $type = $result['type_cate']['type'];
+            }
+            if (isset($result['type_cate']['cate'])) {
+                $cate = $result['type_cate']['cate'];
+            }
+            if (isset($result['apps'])) {
+                $apps = $result['apps'];
+            }
+        }
+        $this->assign('type', $type);
+        $this->assign('cate', $cate);
+        $this->assign('apps', $apps);
+    }
+
+    public function appInfo()
+    {
+        $url = self::$baseUrl . "publics/getAppInfo";
+        $result = json_decode(httpPost($url, input()), true);
+        $this->assign('info', $result);
+        return view();
+    }
+
+    public function download()
+    {
+        $data = input();
+        $url = self::$baseUrl . "publics/getAppInfo";
+        $result = json_decode(httpPost($url, ['id' => $data['app_id']]), true);
+        if (empty($result)) return json(['errcode' => -1, 'errmsg' => '没有找到些应用']);
+        if (!isset($result['type_id']) && empty($result['type_id'])) return json(['errcode' => -1, 'errmsg' => '类型不符，无法继续完成']);
+        if ($result['type_id'] == 1) {
+            $installPath = 'addons/';
+        } elseif ($result['type_id'] == 2) {
+            $installPath = 'miniapp/';
+        }
+        $appInstallPath = Env::get('root_path') . $installPath . $result['name'] . DS;
+        if (file_exists($appInstallPath)) return json(['errcode' => -1, 'errmsg' => $result['name'] . '目录已经存在或者您已经安装过《'.$result['title'].'》，如果您要重新安装，请先卸载此应用']);
+        $url = self::$baseUrl . 'Business/download';
+        $data['token'] = $this->token;
+        $result2 = httpPost($url, $data);
+        if ($result2 == false) return json(['errcode' => -1, 'errmsg' => '服务出错，请稍后再试']);
+        $temFile = Env::get('runtime_path') . getRandChar(16) . '.tmp';
+        file_put_contents($temFile, $result2);
+        $zip = new \ZipArchive;
+        $res = $zip->open($temFile);
+        if ($res === TRUE) {
+            $zip->extractTo(Env::get('root_path') . $installPath);
+            $zip->close();
+            return json(['errcode' => 0, 'errmsg' => '下载成功，正在跳转安装界面。。。','type'=>$result['type_id']]);
+        }else{
+            if($result=json_decode($result2,true)){
+                return json($result);
+            }
+            return json(['errcode' => -1, 'errmsg' => '解压失败，请检查是否有写入权限']);
+        }
+
+    }
+
+    public function showPreviewQrcode($url)
+    {
+        $url = urldecode($url);
+        createQrcode($url);
+        exit;
     }
 
     public function register()
@@ -38,7 +133,7 @@ class Appstore extends Base
     {
         if (Request::isPost()) {
             $data = input('post.');
-            $url = "https://service.rhaphp.com/account/login";
+            $url = self::$baseUrl . "account/login";
             $result = httpPost($url, $data);
             if ($result == false) return json(['errcode' => -1, 'errmsg' => '系统繁忙，请稍后再试']);
             $result = json_decode($result, true);
@@ -57,9 +152,10 @@ class Appstore extends Base
         }
     }
 
-    public function index()
+    public function logout()
     {
-        return view();
+        Cookie::delete('official_user');
+        $this->redirect('index');
     }
 
 }

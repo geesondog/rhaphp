@@ -16,7 +16,7 @@ class Entr
 {
     public $_mid;
     public function index($_mid){
-        if (empty($_GET['echostr']) && empty($_GET["signature"]) && empty ($_GET["nonce"]) && empty($_mid)) {
+        if (empty($_GET['echostr']) || empty($_GET["signature"]) || empty ($_GET["nonce"]) || empty($_mid)) {
             exit('Access denied');
         }
         $this->_mid=$_mid;

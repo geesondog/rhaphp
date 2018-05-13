@@ -1,5 +1,146 @@
 {extend name="common/base" /}
 {block name="body"}
-<h1 style="text-align: center">客官请骚等！我们正在努力开通中……</h1>
+<style>
+    .app_nav > * {
+        font-size: 15px;
+    }
 
+</style>
+<div style="padding:0px 10px;">
+    <div class="layui-row">
+        <div class="hreader">
+            <form class="layui-form" action="">
+                <div class="layui-col-md2">
+                    <div class="layui-form-item">
+                        <select name="type2" lay-filter="types" lay-verify="required">
+                            <option {if $type==1} selected {/if} value="1">公众号</option>
+                            <option {if $type==2} selected {/if} value="2">小程序</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-col-md4" style="margin-left: 5px;">
+                    <div class="layui-form-item">
+                        <input type="text" name="title" placeholder="请输入应用名称"
+                               value="{$title}" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-md1" style="margin-left: 5px;">
+                    <button class="layui-btn layui-btn-primary" lay-submit lay-filter="formDemo">搜索应用</button>
+                </div>
+            </form>
+            <div class="layui-row" style="background: #ffffff;">
+                <div class="layui-col-md8">
+                    <span id="apps-cate-lists" class="layui-breadcrumb app_nav" lay-separator="|">
+                        <a href="{:url('index',['type'=>$type,'cate'=>0])}">{if $cate_id == 0} <span class="cite">全部</span>{else /}全部{/if}</a>
+                        {volist name="cate" id="v"}
+                      <a href="{:url('index',['type'=>$type,'cate'=>$v.cid])}">
+                          {if $cate_id == $v.cid} <span class="cite">{$v.cate_name}</span>{else /}{$v.cate_name}{/if}
+                          </a>
+                        {/volist}
+                    </span>
+                </div>
+                <div class="layui-col-md4" id="account">
+                    {if !empty($user)}
+                    <span class="layui-breadcrumb" lay-separator="|">
+                      <a>{$user.nickname}</a>
+                      <a>{$user.balance}元</a>
+                      <a href="javascript:deposit();">充值</a>
+                      <a href="{:url('logout')}">退出</a>
+                    </span>
+                    {else/}
+                    <span class="layui-breadcrumb" lay-separator="|">
+                      <a href="{:url('register')}">注册</a>
+                      <a href="{:url('login')}">登录</a>
+                    </span>
+                    {/if}
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div id="app-body">
+            <div id="apps">
+                <div class="layui-row">
+                    {volist name="apps" id="v"}
+                        <div class="layui-col-md4 apps-volist" onclick="openAppWin('{$v.id}','{$v.title}')">
+                            <div class="apps-volists">
+                                <div class="apps-icon">
+                                    <img src="{$v.logo}">
+                                </div>
+                                <div class="app-desc">
+                                    <h2>{$v.title}
+                                    <span class="apps-money layui-badge layui-bg-blue">
+                                        {if($v.money>0)}
+                                        {$v.money}
+                                        {else /}
+                                        免费
+                                        {/if}
+                                    </span>
+                                    </h2>
+                                    <div class="app-desc-body">
+                                        <span>分类：{if $v.type ==1}公众号{else /}小程序{/if}</span>
+                                        <div class="description">{:mb_substr($v.description,0,16)}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {/volist}
+                </div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-col-md3 layui-col-md-offset9">
+                    <div class="apps-page">
+                        <a href="{:url('index',['type'=>$type,'cate'=>$cate_id,'page'=>$page-1])}" class="layui-btn layui-btn-sm">
+                            <i class="layui-icon">&#xe603;</i>
+                            上一页
+                        </a>
+                        <a href="{:url('index',['type'=>$type,'cate'=>$cate_id,'page'=>$page+1])}" class="layui-btn layui-btn-sm">
+                            <i class="layui-icon">&#xe602;</i>
+                            下一页
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    var layer;
+    var form;
+    layui.use(['layer','form'], function() {
+         layer = layui.layer;
+         form = layui.form;
+        form.on('select(types)', function(data){
+            window.location.href="{:url('index','','')}/type/"+data.value
+        });
+    })
+
+    function openAppWin(id,title) {
+        layer.open({
+            type: 2,
+            title:title,
+            area: ['800px', '650px'],
+            fixed: false,
+            maxmin: true,
+            content: "{:url('appInfo','','')}/id/"+id
+        });
+    }
+    
+    function redirect(type) {
+        if(type==1){
+            window.location.href="{:url('admin/app/index',['type'=>'notinstall'])}";
+        }else if(type==2){
+            window.location.href="{:url('admin/miniapp/index',['type'=>'notinstall'])}";
+        }
+    }
+    
+    function deposit() {
+        layer.prompt({title: '请输入充值金额：', formType: 0}, function(money, index){
+            layer.close(index);
+            window.open("https://user.rhaphp.com/alipay/pay/token/{$token}/money/"+money);
+        });
+    }
+</script>
 {/block}

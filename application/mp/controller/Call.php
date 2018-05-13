@@ -9,10 +9,12 @@
 
 
 namespace app\mp\controller;
+use app\common\model\Addons;
+use think\Controller;
 use think\facade\Config;
 use think\facade\Request;
 
-class Call
+class Call extends Controller
 {
     private $addon;
     private $col;
@@ -35,6 +37,14 @@ class Call
     public function run(Request $request)
     {
         if ($this->addon && $this->col && $this->act) {
+            $model = new Addons();
+            $_addon=$model->where('addon','=',$this->addon)->cache('callAddonCache'.$this->addon)->field('id,status')->find();
+            if(empty($_addon)){
+                $this->error('此应用不存在，可能已经撤消或者没有被安装');
+            };
+            if($_addon['status']!=1){
+                $this->error('此应用停用状态或者没有被安装');
+            }
             session('addonName', $this->addon);
             $filename = ADDON_PATH . $this->addon . '/controller/' . ucfirst($this->col) . '.php';
             if(file_exists($commonFile=ADDON_PATH.$this->addon .'/Common.php')){

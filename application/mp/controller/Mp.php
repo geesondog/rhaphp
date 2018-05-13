@@ -648,7 +648,7 @@ class Mp extends Base
                     if ($result === false) {
                         ajaxMsg(0, $validate->getError());
                     }
-                    if ($rePly['url'] != $input['reply_image']||$rePly['status_type'] != $post['image_staus_type']) {
+                    if ($rePly['url'] != $input['reply_image'] || $rePly['status_type'] != $post['image_staus_type']) {
                         $sting = getSetting($this->mid, 'cloud');
                         if (isset($sting['qiniu']['status']) && $sting['qiniu']['status'] == 1) {
                             $ext = strrchr($input['reply_image'], '.');
@@ -711,7 +711,7 @@ class Mp extends Base
                     if ($result === false) {
                         ajaxMsg(0, $validate->getError());
                     }
-                    if ($rePly['url'] != $input['reply_video']||$rePly['status_type'] != $post['video_staus_type']) {
+                    if ($rePly['url'] != $input['reply_video'] || $rePly['status_type'] != $post['video_staus_type']) {
                         $filePath = explode(getHostDomain(), $input['reply_video']);
                         if (isset($filePath[1]) && !empty($filePath[1])) {
                             if ($input['video_staus_type'] == '0') {
@@ -1073,9 +1073,9 @@ class Mp extends Base
                 }
                 $result = createMpMenu(['button' => $menus]);
                 if (isset($result->errCode)) {
-                    if($msg=wxApiResultErrorCode($result->errCode)){
-                        ajaxMsg(0,$msg);
-                    }else{
+                    if ($msg = wxApiResultErrorCode($result->errCode)) {
+                        ajaxMsg(0, $msg);
+                    } else {
                         ajaxMsg(0, 'errCode: ' . $result->errCode . ' errMsg: ' . $result->errMsg);
                     }
 
@@ -1097,10 +1097,10 @@ class Mp extends Base
     {
         if (Request::isPost()) {
             $input = input('post.');
-            Db::name('setting')->where(['name' => $input['setting_name'], 'mpid' => $this->mid,'cate'=>'mp'])->delete();
+            Db::name('setting')->where(['name' => $input['setting_name'], 'mpid' => $this->mid, 'cate' => 'mp'])->delete();
             $data['name'] = $input['setting_name'];
             $data['mpid'] = $this->mid;
-            $data['cate'] ='mp';
+            $data['cate'] = 'mp';
             $data['value'] = json_encode($input);
             if (Db::name('setting')->insert($data)) {
                 ajaxMsg('1', '配置成功');
@@ -1108,7 +1108,7 @@ class Mp extends Base
                 ajaxMsg('0', '配置失败了');
             }
         } else {
-            $result = Db::name('setting')->where(['name' => $type, 'mpid' => $this->mid,'cate'=>'mp'])->find();
+            $result = Db::name('setting')->where(['name' => $type, 'mpid' => $this->mid, 'cate' => 'mp'])->find();
             switch ($type) {
                 case 'wxpay':
                     $arr1 = [
@@ -1283,11 +1283,12 @@ class Mp extends Base
         }
     }
 
-    public function delQrcode($id){
-        if(Request::isAjax()){
+    public function delQrcode($id)
+    {
+        if (Request::isAjax()) {
             Qrcode::destroy($id);
-            Db::name('qrcode_data')->where('qrcode_id','=',$id)->delete();
-            ajaxMsg('1','删除成功');
+            Db::name('qrcode_data')->where('qrcode_id', '=', $id)->delete();
+            ajaxMsg('1', '删除成功');
         }
     }
 
@@ -1297,12 +1298,10 @@ class Mp extends Base
         $app = [];
         $result = getAppAndWindvaneByApi();
         if ($result != false) {
-            if (isset($result['status']) && isset($result['data'])) {
-                if ($result['status'] == 1) {
-                    $data = isset($result['data']) ? $result['data'] : [];
-                    $app = isset($result['app']) ? $result['app'] : [];
-                }
-            }
+            $result = json_decode($result, true);
+            $data = isset($result['data']) ? $result['data'] : [];
+            $app = isset($result['app']) ? $result['app'] : [];
+
         }
         $this->assign('app_by_api', $app);
         $this->assign('data_by_api', $data);

@@ -165,6 +165,7 @@
             ,type: 'datetime'
         });
         form.on('submit(ADDC)', function(data){
+            var index = layer.load(1);
             $.post('',data.field,function (res) {
                 if(res.status=='0'){
                     layer.msg(res.msg);
@@ -175,6 +176,7 @@
                     });
 
                 }
+                layer.close(index)
             })
             return false;
         });

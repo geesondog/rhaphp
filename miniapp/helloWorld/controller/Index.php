@@ -10,38 +10,9 @@ class Index extends MiniappAddon
 
     public function index()
     {
+        echo '<h1 style="text-align: center">你好中国</h1>';
+        $this->fetch();
 
-        $this->fetch('index');
-    }
-
-    public function index1()
-    {
-        $this->fetch('index');
-    }
-
-    public function index2()
-    {
-        $this->fetch('index');
-    }
-
-    public function index3()
-    {
-        $this->fetch('index');
-    }
-
-    public function index4()
-    {
-        $this->fetch('index');
-    }
-
-    public function index5()
-    {
-        $this->fetch('index');
-    }
-
-    public function index6()
-    {
-        $this->fetch('index');
     }
 
 

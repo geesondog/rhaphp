@@ -155,13 +155,6 @@
     </div>
 </form>
 {else/}
-<div style="padding: 0px 10px 0px 10px;">
-    <blockquote class="layui-elem-quote layui-quote-nm">
-        小程序请求API地址：{$miniapi}<br>
-        注意：此API地址是不能直接访问的，需要带上应用参数:应用/控制器/操作方法<br>
-        例如：{$miniapi}shop/user/getUser （不是技术人员可以忽略）
-    </blockquote>
-</div>
 {/if}
 <script>
     layui.use(['form', 'layedit', 'laydate'], function(){

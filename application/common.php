@@ -230,6 +230,10 @@ function replyNews($new = [])
 
 function loadAdApi($name = null, $msg = [], $param = [])
 {
+    $model = new \app\common\model\Addons();
+    $_addon=$model->where('addon','=',$name)->cache('callAddonCache'.$name)->field('id,status')->find();
+    if(empty($_addon)) replyText(' No such application exists');
+    if($_addon['status']!=1) replyText('Application has been withdrawn or not installed');
     session('apiParam', $param);
     $filename = ADDON_PATH . $name . '/controller/Api.php';
     session('addonName', $name);
@@ -458,8 +462,8 @@ function getAddonInfo($addonName = '', $mid = '')
     $addon = \think\Db::name('addons')->where(['addon' => $addonName])->find();
     $addonInfo = \think\Db::name('addon_info')->where(['addon' => $addonName, 'mpid' => $mid])->find();
     $addon['path'] = ADDON_PATH . $addonName . '/';
-    $addon['mp_config'] = json_decode($addonInfo['infos'], true);
-    $addon['common_config'] = json_decode($addon['config'], true);
+    $addon['mp_config'] = isset($addonInfo['infos'])?json_decode($addonInfo['infos'], true):[];
+    $addon['common_config'] = isset($addon['config'])?json_decode($addon['config'], true):[];
     unset($addon['config']);
     return $addon;
 
@@ -1633,8 +1637,6 @@ function wxpayNotify()
         }
     }
 }
-
-wxpayNotify();
 function unClient($mid = '')
 {
     $sslcert = ROOT_PATH . 'data/' . $mid . '_' . '_apiclient_cert.pem';
@@ -1846,22 +1848,24 @@ function dowloadImage($url, $save_dir = './', $filename = '', $type = 0)
  */
 function getAppAndWindvaneByApi()
 {
-    $apiAddress = 'https://www.rhaphp.com/service/api/windvane';
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_TIMEOUT, 2);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_TIMEOUT, 500);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
-    curl_setopt($curl, CURLOPT_URL, $apiAddress);
-    $res = curl_exec($curl);
-    curl_close($curl);
-    $data = @json_decode($res, true);
-    if ($data) {
-        return $data;
-    } else {
-        return false;
-    }
+    $pars = array();
+    $pars['host'] = $_SERVER['HTTP_HOST'];
+    $pars['method'] = 'windVane';
+    $url = 'https://service.rhaphp.com/gateway';
+    $urlset = parse_url($url);
+    $headers[] = "Host: {$urlset['host']}";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_TIMEOUT, 500);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($pars, '', '&'));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    $content = curl_exec($ch);
+    curl_close($ch);
+    return $content;
 }
 
 /**
@@ -1901,37 +1905,6 @@ function getMedia($media_id, $is_video = false)
 
 }
 
-function httpQueryByRhaService($method = 'index', $token = '', $data = [])
-{
-    $config = \think\Config::load(APP_PATH . 'copyright.php');
-    if (isset($config['copyright']['version'])) {
-        $version = $config['copyright']['version'];
-    } else {
-        $version = '';
-    }
-    $pars = array();
-    $pars['host'] = $_SERVER['HTTP_HOST'];
-    $pars['version'] = $version;
-    $pars['method'] = $method;
-    $pars['token'] = $token;
-    $ins = array_merge($pars, $data);
-    $url = 'https://www.rhaphp.com/service/gateway/';
-    $urlset = parse_url($url);
-    $headers[] = "Host: {$urlset['host']}";
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_TIMEOUT, 3);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($ins, '', '&'));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    $content = curl_exec($ch);
-    curl_close($ch);
-    return $content;
-}
-
 /**
  * 获取微信支付页面跳转（授权目录）
  * @param array $mid 公众号 ID 不能为空
@@ -1948,7 +1921,7 @@ function getWxPayUrl($mid = '', $param = [])
 
 }
 
-/**【增加或者修复图文关键词内容】
+/**【增加或者修改图文关键词内容】
  * @author geeson rhaphp.com
  * @param string $keyword 关键词
  * @param string $title 标题

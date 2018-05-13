@@ -16,17 +16,31 @@
                 <form class="layui-form" id="loginform">
                     <ul>
                         <li>
-                            <input name="user_name" lay-verify="required" placeholder="请输入登录用户名"  type="text" autocomplete="off" class="layui-input">
+                            <input name="user_name" lay-verify="required" placeholder="请输入登录用户名" type="text"
+                                   autocomplete="off" class="layui-input">
                         </li>
                         <li>
-                            <input name="password" lay-verify="required" placeholder="请输入登录密码"  type="password" autocomplete="off" class="layui-input">
+                            <input name="password" lay-verify="required" placeholder="请输入登录密码" type="password"
+                                   autocomplete="off" class="layui-input">
+                        </li>
+
+                        <li>
+                            <div class="layui-row">
+                                <div class="layui-col-md5">
+                                    <input name="verify" lay-verify="required" placeholder="请输入验证码" type="text"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                                <div class="layui-col-md6" style="padding-left: 10px;">
+                                    <img src="{:url('verify')}" onclick="this.src='{:url('verify')}?'+Math.random();">
+                                </div>
+                            </div>
                         </li>
                         <li class="alert alert-danger collapse error_message">
                             <i class="icon icon-delete"></i> <em></em>
                         </li>
                         <li class="last">
                             <div class="layui-input-inline login-btn">
-                            <button type="submit" lay-submit="" lay-filter="login" class="layui-btn">登录</button>
+                                <button type="submit" lay-submit="" lay-filter="login" class="layui-btn">登录</button>
                             </div>
                         </li>
                     </ul>
@@ -40,22 +54,35 @@
         <!--请遵守安装使用协议，未经允许不得删除或者屏蔽有关RhaPHP字样-->
         <a href="http://www.rhaphp.com" target="_blank">官方社区</a>
         <i class="vs">|</i>
-        Powered By RhaPHP 二哈系统 Copyright © 2017 All Rights Reserved.
+        Powered By RhaPHP 二哈系统 Copyright © {:date('Y')} All Rights Reserved.
     </div>
 </div>
+
 <script>
-    layui.use('form', function(){
+
+    layui.use('form', function () {
+        (function () {
+            var isIE = function () {
+                var U = navigator.userAgent,
+                    IsIE = U.indexOf('MSIE') > -1,
+                    a = IsIE ? /\d+/.exec(U.split(';')[1]) : 'no ie';
+                return a <= 8;
+            }();
+            if (isIE) {
+                layer.alert('你的浏览器内核版本过低,若有极速模式请选择使用极速模式或者使用谷歌、火狐浏览器。');
+            }
+        })();
         var form = layui.form;
-        form.on('submit(login)', function(data){
+        form.on('submit(login)', function (data) {
             $.post(
                 "{:url('Login/index')}",
                 data.field,
-                function(obj) {
-                    if(obj.code == 200){
-                        layer.msg(obj.msg,{icon:1,time:2000},function () {
-                            location.href="{:url('mp/Mp/index')}";
+                function (obj) {
+                    if (obj.code == 200) {
+                        layer.msg(obj.msg, {icon: 1, time: 2000}, function () {
+                            location.href = "{:url('mp/Mp/index')}";
                         });
-                    }else {
+                    } else {
                         layer.alert(obj.msg);
                     }
                 },

@@ -117,7 +117,7 @@ class Upgrade extends Base
         $pars['method'] = $method;
         $pars['token'] = $token;
         $ins = array_merge($pars, $data);
-        $url = 'https://www.rhaphp.com/service/gateway/';
+        $url = 'https://service.rhaphp.com/gateway';
         $urlset = parse_url($url);
         $headers[] = "Host: {$urlset['host']}";
         $ch = curl_init();

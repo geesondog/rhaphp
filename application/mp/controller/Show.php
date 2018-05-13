@@ -31,15 +31,12 @@ class Show
                 'gif' => 'image/gif',
                 'jpeg' => 'image/jpeg',
                 'jpg' => 'image/jpeg',
-                'jpe' => 'image/jpeg',
                 'png' => 'image/png',
             );
-            foreach ($Arr as $value) {
-                if (in_array($value, $types)) {
-                    $type = $types[$value];
-                } else {
-                    $type = 'image/jpeg';
-                }
+            if(key_exists($Arr[1],$types)){
+                $type = $types[$Arr[1]];
+            }else{
+                $type = 'image/jpeg';
             }
             header("Content-type: " . $type);
             echo $file;

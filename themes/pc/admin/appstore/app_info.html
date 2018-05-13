@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="__STATIC__/admin/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    {CSS href="__STATIC__/admin/css/admin_base.css" /}
+    {js href='__STATIC__/jquery/jquery-1.11.0.min.js' /}
+    {js href='__STATIC__/layui/layui.js' /}
+    {CSS href="__STATIC__/layui/css/layui.css" /}
+    {CSS href="__STATIC__/icon/icon.css" /}
+</head>
+<body style="background: #ffffff;">
+<div class="layui-row" id="apps-info">
+   <div class="layui-col-xs2 pd">
+       <div class="apps-info-logo">
+           <img src="{$info.logo}" style="width: 100%;" />
+       </div>
+   </div>
+    <div class="layui-col-xs8 pd">
+        <div class="layui-row">
+            <div class="layui-col-xs10">
+                <span class="apps-info-title">{$info.title}
+                    <span class="layui-badge layui-bg-gray">{$info.type}</span>
+                    <span class="layui-badge layui-bg-blue">{if($info.money>0)}
+                                        {$info.money} 元
+                                        {else /}
+                                        免费
+                                        {/if}</span>
+                </span>
+                <div class="apps-info-desc">
+                    <p>作者：{$info.author}</p>
+                    <p>版本：{$info.version}</p>
+                    <p>分类：{$info.cate}</p>
+                    <p>创建时间：{$info.create_time}</p>
+                    <p>更新时间：{$info.update_time}</p>
+                </div>
+            </div>
+            <div class="layui-col-xs2">
+                <div class="apps-into-install">
+                    <button onclick="downloadApp('{$info.id}')" class="layui-btn layui-btn-sm layui-btn-normal">
+                        <i class="layui-icon">&#xe601;</i>
+                        立即下载
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-xs2 pd preview-qrcode">
+        {if $info.preview_url != ''}
+            <img style="width: 100%;" src="{:url('showPreviewQrcode','','')}?url={:urlencode($info.preview_url)}">
+            <span class="apps-info-preview_text">扫码预览</span>
+        {else/}
+
+        {/if}
+    </div>
+</div>
+<hr>
+<div style="padding: 0px 10px;">
+    小提示
+    <hr>
+    <blockquote style="border-left:5px solid  #ea6e0c;" class="layui-elem-quote">{$info.warning|raw}</blockquote>
+    应用简介
+    <hr>
+    <blockquote class="layui-elem-quote">{$info.description}</blockquote>
+    应用详情
+    <hr>
+    <div class="apps-info-content">
+        {$info.content|raw}
+    </div>
+    <br>
+    <br>
+</div>
+<script>
+    var layer;
+    var form;
+    layui.use(['layer','form'], function() {
+        layer = layui.layer;
+        form = layui.form;
+    })
+    var window_index = parent.layer.getFrameIndex(window.name);
+    function downloadApp(id) {
+        layer.confirm('{if($info.money>0)}你确定付费{$info.money}元下载使用此应用吗？{else /}此应用是免费的，你确定要下载使用吗？{/if}', {
+            btn: ['是的','不的']
+        }, function(){
+            var index = layer.load(1);
+            $.post("{:url('download')}",{app_id:id},function (res) {
+                if(res.errcode=='0'){
+                    layer.msg(res.errmsg,{time:3000},function () {
+                        parent.parent.redirect(res.type);
+                        parent.layer.close(index);
+                    });
+                }else{
+                    layer.close(index)
+                    layer.alert(res.errmsg);
+                }
+            }).error(function (error) {
+                layer.alert('500 Internal Server Error');
+                layer.close(index)
+            })
+        }, function(){
+
+        });
+        return false;
+    }
+</script>
+</body>
+</html>

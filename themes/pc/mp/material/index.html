@@ -185,7 +185,9 @@
             }, function(){
                 $.post("{:url('mp/Material/delMaterial')}",{'media_id':media_id,'type':type},function (res) {
                     if(res.status==1){
-                        layer.alert(res.msg)
+                        layer.msg(res.msg,{time:1000},function () {
+                            window.location.reload();
+                        });
                     }else{
                         layer.alert(res.msg)
                     }

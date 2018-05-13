@@ -13,6 +13,7 @@ namespace app\admin\controller;
 
 use app\common\model\Addons;
 use think\Db;
+use think\facade\Cache;
 use think\facade\Request;
 use think\Validate;
 
@@ -29,7 +30,7 @@ class App extends Base
      * @param string $type
      * @return \think\response\View
      */
-    public function index($type = 'index')
+    public function index($type = 'uninstall')
     {
         if (!session('mpInfo')) {
             $this->error('请先进入公众号，再操作', url('mp/index/mplist'));
@@ -46,7 +47,6 @@ class App extends Base
                 }
             }
             $this->assign('addons', $result);
-
         }
         if ($type == 'uninstall') {
             $result = Db::name('addons')->where('status', 1)->select();
@@ -65,7 +65,6 @@ class App extends Base
                             if (empty($addonByDb) || $addonByDb['status'] == 0) {
                                 $addons[] = $addonByFile;
                             }
-
                         }
                     }
                 }
@@ -118,6 +117,7 @@ class App extends Base
     public function install($name = null)
     {
         if (Request::isPost()) {
+            Cache::rm('callAddonCache'.$name);
             if ($name == null) {
                 ajaxMsg('0', '没有要安装的应用');
             }
@@ -134,6 +134,7 @@ class App extends Base
                 'entry_url' => isset($cf['entry_url']) ? $cf['entry_url'] : '',
                 'admin_url' => isset($cf['admin_url']) ? $cf['admin_url'] : '',
                 'config' => isset($cf['config']) ? json_encode($cf['config']) : '',
+                'status' => 1
 
             ];
             $validate = new Validate(
@@ -160,11 +161,8 @@ class App extends Base
                 if ($addon['status'] == 1) {
                     ajaxMsg('0', '应用已安装，请先卸载应用再重新安装');
                 } else {
-
-                    $data['status'] = 1;
                     $model->isUpdate(true)->save($data, ['id' => $addon['id']]);
                     ajaxMsg('1', '安装应用成功');
-
                 }
             } else {
                 if (isset($cf['install_sql']) && $cf['install_sql'] != '') {
@@ -177,19 +175,14 @@ class App extends Base
                         }
                         executeSql($instalFile);
                     }
-
                 }
                 if ($model->save($data)) {
                     ajaxMsg('1', '安装应用成功');
                 }
             }
-
-
         } else {
             return view('index');
         }
-
-
     }
 
     /**
@@ -199,6 +192,7 @@ class App extends Base
     public function close($name = '')
     {
         if (Request::isPost()) {
+            Cache::rm('callAddonCache'.$name);
             if ($name == null) {
                 ajaxMsg('0', '没有要停用的应用');
             }
@@ -311,11 +305,13 @@ class App extends Base
                     }
                     $model = new Addons();
                     $model->where('addon', '=', $name)->delete();
-                    $this->delDirAndFile($path);
-                    ajaxMsg('1', '删除应用成功');
                 }
-
             }
+            if(!$this->delDirAndFile($path)){
+                ajaxMsg(0, '删除应用目录失败');
+            }
+            Cache::rm('callAddonCache'.$name);
+            ajaxMsg(1, '删除应用成功');
         }
 
     }
@@ -366,9 +362,9 @@ class App extends Base
             }
             $model = new Addons();
             $model->where('addon', '=', $name)->delete();
+            Cache::rm('callAddonCache'.$name);
             ajaxMsg('1', '还原应用成功');
         }
-
     }
 
     private function delDirAndFile($path, $delDir = true)

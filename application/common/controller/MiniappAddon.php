@@ -198,6 +198,7 @@ class MiniappAddon extends Controller
                 $model->isUpdate(true)->allowField(true)->save($result['userinfo'], ['openid' => $result['userinfo']['openid']]);
             } else {
                 $result['userinfo']['create_time'] = time();
+                $result['userinfo']['last_time']=time();
                 $result['userinfo']['id'] = $model->allowField(true)->insertGetId($result['userinfo']);
             }
             return $result;

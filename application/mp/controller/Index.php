@@ -110,6 +110,7 @@ class Index extends Base
         if (Request::isAjax()) {
             $data = input('post.');
             $mode->allowField(true)->save($data, ['id' => $data['id'], 'user_id' => $this->admin_id]);
+            Cache::clear();
             ajaxMsg(1, '更改成功');
         } else {
             if (!$mp = $mode->where(['id' => $id, 'user_id' => $this->admin_id])->find()) {
@@ -198,6 +199,7 @@ class Index extends Base
             }
             $res=$mode->save($data,['id'=>$id,'user_id'=>$this->admin_id]);
             if ($res) {
+                Cache::clear();
                 ajaxMsg(1, '操作成功');
             } else {
                 ajaxMsg(0, '数据没有发生改变');
