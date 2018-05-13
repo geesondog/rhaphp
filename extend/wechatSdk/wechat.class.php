@@ -105,6 +105,7 @@ class Wechat
     const MEDIA_UPLOADNEWS_URL = '/media/uploadnews?';
     const MASS_SEND_URL = '/message/mass/send?';
     const TEMPLATE_SET_INDUSTRY_URL = '/template/api_set_industry?';
+    const GET_ALL_PRIVATE_TEMPLATE = '/template/get_all_private_template?';
     const TEMPLATE_ADD_TPL_URL = '/template/api_add_template?';
     const TEMPLATE_SEND_URL = '/message/template/send?';
     const MASS_SEND_GROUP_URL = '/message/mass/sendall?';
@@ -2702,6 +2703,25 @@ class Wechat
                 return false;
             } else
                 if ($json['errcode'] == 0) return true;
+        }
+        return false;
+    }
+
+    /**
+     *  获取模板消息列表
+     * @return array|bool|mixed
+     */
+    public function getTemplateMessageList(){
+        if (!$this->access_token && !$this->checkAuth()) return false;
+        $result = $this->http_get(self::API_URL_PREFIX . self::GET_ALL_PRIVATE_TEMPLATE . 'access_token=' . $this->access_token);
+        if ($result) {
+            $json = json_decode($result, true);
+            if (!$json || !empty($json['errcode'])) {
+                $this->errCode = $json['errcode'];
+                $this->errMsg = $json['errmsg'];
+                return false;
+            }
+            return $json;
         }
         return false;
     }
