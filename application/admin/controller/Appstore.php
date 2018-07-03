@@ -238,11 +238,13 @@ class Appstore extends Base
         if (!empty($ads)) {
             foreach ($ads as $v) {
                 $addon = $model->where('addon', $v['name'])->field('name,addon,version,author,logo')->find();
-                if ($v['version'] > $addon['version']) {
-                    $addon['new_version'] = $v['version'];
-                    $addon['update_time'] = $v['update_time'];
-                    $addon['app_id'] = $v['app_id'];
-                    $lists[] = $addon;
+                if(!empty($addon)){
+                    if ($v['version'] > $addon['version']) {
+                        $addon['new_version'] = $v['version'];
+                        $addon['update_time'] = $v['update_time'];
+                        $addon['app_id'] = $v['app_id'];
+                        $lists[] = $addon;
+                    }
                 }
             }
         }
