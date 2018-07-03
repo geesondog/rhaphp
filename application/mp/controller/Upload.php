@@ -10,16 +10,73 @@
 namespace app\mp\controller;
 
 
+use app\common\model\Picture;
+use think\Db;
+use think\Env;
+use think\facade\Session;
+use think\Image;
+
 class Upload
 {
+    protected $type = 0;
+    protected $mid;
+    protected $thumbPath;
+    protected $reducePath;
+
+    public function __construct()
+    {
+        $sMid = Session::get('mid');
+        $sMid = $sMid ? $sMid : 0;
+        $s_Mid = Session::get('_mid');
+        $s_Mid = $s_Mid ? $s_Mid : 0;
+        $OP2 = Session::get('miniapp_options');
+        if (!empty($OP2) && empty(input('_mid'))) {
+            $this->type = 2;
+            $this->mid = input('_mid') ? input('_mid') : $s_Mid;
+        } else {
+            $this->type = 1;
+            $this->mid = input('mid') ? input('mid') : $sMid;
+        }
+        $this->thumbPath = \think\facade\Env::get('root_path') . 'uploads' . DS . 'thumb' . DS;
+        $this->reducePath = \think\facade\Env::get('root_path') . 'uploads' . DS . 'reduce' . DS;
+    }
 
     public function uploadImg()
     {
-
         $file = \request()->file('image');
         $info = $file->rule('md5')->validate(['ext' => 'jpg,png,gif,jpeg'])->move(ROOT_PATH . DS . ENTR_PATH . DS . 'uploads');
-
         if ($info) {
+            $_array = explode('/', $info->getSaveName());
+            $Name = end($_array);
+            if (!Picture::get(['name' => $Name])) {
+                $picture = 'uploads' . DS . $info->getSaveName();
+                $image_path = \think\facade\Env::get('root_path') . $picture;
+                if (is_file($image_path)) {
+                    if ($array = explode(DS, $info->getSaveName())) {
+                        if (createDir($this->thumbPath . $array[0])) {
+                            $thumb = $this->thumbPath . $info->getSaveName();
+                            $image = Image::open($image_path);
+                            $image->thumb(260, 146, \think\Image::THUMB_CENTER)->save($thumb);
+                            if (createDir($this->reducePath . $array[0])) {
+                                $reduce = $this->reducePath . $info->getSaveName();
+                                $image->thumb(260, 260, \think\Image::THUMB_CENTER)->save($reduce);
+                            }
+                            $_data = [
+                                'name' => $Name,
+                                'mpid' => $this->mid,
+                                'type' => $this->type,
+                                'thumb' => 'uploads' . DS . 'thumb' . DS . $info->getSaveName(),
+                                'picture' => 'uploads' . DS . $info->getSaveName(),
+                                'reduce' => 'uploads' . DS . 'reduce' . DS . $info->getSaveName(),
+                                'create_time' => time()
+                            ];
+                            $model = new Picture();
+                            $model->save($_data);
+                        }
+                    }
+                }
+            }
+
             header('Content-Type:application/json; charset=utf-8');
             $res = [
                 'code' => 0,
@@ -121,22 +178,48 @@ class Upload
 
     public function qiniuUpload()
     {
-
         $file = \request()->file('image');
         $info = $file->rule('md5')->validate(['ext' => 'jpg,png,gif,jpeg'])->move(ROOT_PATH . DS . ENTR_PATH . DS . 'uploads');
-
         if ($info) {
             $file = './uploads' . DS . $info->getSaveName();
-
             if (!empty($mid = session('mid')) || !empty($mid = input('mid'))) {
-
             }
-            if($_mid=input('_mid')){
-                $mid=$_mid;
+            if ($_mid = input('_mid')) {
+                $mid = $_mid;
             }
             $result = qiniuUpload($mid, $file, $info->getFilename());
             header('Content-Type:application/json; charset=utf-8');
             if ($result['code'] == '0') {
+                $_array = explode('/', $info->getSaveName());
+                $Name = end($_array);
+                if (!Picture::get(['name' => $Name])) {
+                    $picture = 'uploads' . DS . $info->getSaveName();
+                    $image_path = \think\facade\Env::get('root_path') . $picture;
+                    if (is_file($image_path)) {
+                        if ($array = explode(DS, $info->getSaveName())) {
+                            if (createDir($this->thumbPath . $array[0])) {
+                                $thumb = $this->thumbPath . $info->getSaveName();
+                                $image = Image::open($image_path);
+                                $image->thumb(260, 146, \think\Image::THUMB_CENTER)->save($thumb);
+                                if (createDir($this->reducePath . $array[0])) {
+                                    $reduce = $this->reducePath . $info->getSaveName();
+                                    $image->thumb(260, 260, \think\Image::THUMB_CENTER)->save($reduce);
+                                }
+                                $_data = [
+                                    'name' => $Name,
+                                    'mpid' => $this->mid,
+                                    'type' => $this->type,
+                                    'thumb' => 'uploads' . DS . 'thumb' . DS . $info->getSaveName(),
+                                    'picture' => $result['data']['src'],
+                                    'reduce' => 'uploads' . DS . 'reduce' . DS . $info->getSaveName(),
+                                    'create_time' => time()
+                                ];
+                                $model = new Picture();
+                                $model->save($_data);
+                            }
+                        }
+                    }
+                }
                 return json_encode($result);
             } else {
                 return json_encode($result);

@@ -30,7 +30,7 @@ class Login extends Controller
             $user_name = Request::post('user_name');
             $password = Request::post('password');
             $result = Db::name('admin')
-                ->where(['admin_name' => $user_name])
+                ->where(['admin_name' => $user_name,'status'=>1])
                 ->find();
             $inPWD = md5($password . $result['rand_str']);
             if (empty($result)) {

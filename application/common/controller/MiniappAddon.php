@@ -69,6 +69,9 @@ class MiniappAddon extends Controller
                  *
                  */
                 $data = input();
+                if(!isset($data['code']) || !isset($data['encryptedData']) ||!isset($data['iv']) ||!isset($data['rawData']) ||!isset($data['signature'])){
+                    exit(json_encode(['errcode' => -1, 'errmsg' => 'rd_session不存在或者失效，系统进入检查验证登录,因缺少验证登录参数导致任务停止'], JSON_UNESCAPED_UNICODE));
+                }
                 $result = $this->checkLogin($data['code'], $data['encryptedData'], $data['iv'], $data['rawData'], $data['signature']);
                 $this->rd_session = $result['3rd_session'];
                 $this->userId=$result['userinfo']['id'];

@@ -26,7 +26,10 @@ class Entr
         $options['token'] = $miniappInfo['token'];
         $options['encodingaeskey'] = $miniappInfo['encodingaeskey'];
         $mpObject=getMiniProgramObj($options);
-        $mpObject->init();
+        if($mpObject->init() == 'success'){
+            echo $_GET["echostr"];
+            exit;
+        }
         $msgData=$mpObject->getRev();
         $msg['mpid'] = $this->_mid;
         $msg['openid'] = $msgData['FromUserName'];

@@ -1,0 +1,85 @@
+{extend name="common/base" /}
+{block name="body"}
+<div style="padding:0px 10px;">
+    <table class="layui-table" lay-even="" >
+        <colgroup>
+            <col width="150">
+            <col width="150">
+            <col width="200">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th>Logo</th>
+            <th>应用名称</th>
+            <th>标识</th>
+            <th>作者</th>
+            <th>版本</th>
+            <th>最新版本</th>
+            <th>更新时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="lists" id="v"}
+        <tr>
+            <td><img src="{$v.logo}" width="30"></td>
+            <td>{$v.name}</td>
+            <td>{$v.addon}</td>
+            <td>{$v.author}</td>
+            <td>{$v.version}</td>
+            <td>{$v.new_version}</td>
+            <td>{$v.update_time|date="Y-m-d H:i"}</td>
+            <td> <button onclick="upgrade('{$v.app_id}','{$v.addon}','{$v.version}')" class="layui-btn layui-btn-xs">升级</button></td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+
+</div>
+<script>
+    var layer;
+    var form;
+    layui.use(['layer', 'form'], function () {
+        layer = layui.layer;
+        form = layui.form;
+    })
+    function upgrade(id,addon,version) {
+        layer.confirm('升级应用文件将会被更新，你确定升级应用吗？', {
+            btn: ['是的','不的']
+        }, function(){
+            var index = layer.load(1);
+            $.post(" ",{app_id:id,addon:addon,version:version},function (res) {
+                if(res.errcode=='0'){
+                    layer.msg(res.errmsg,{time:3000},function () {
+                        $.post("{:url('admin/app/install')}",{'name':addon},function (res) {
+                            if(res.status=='0'){
+                                layer.alert(res.msg);
+                            }
+                            if(res.status=='1'){
+                                layer.msg(res.msg,{time:3000},function () {
+                                    location.reload();
+                                })
+                            }
+                        }).error(function (error) {
+                            layer.alert('500 Internal Server Error');
+                        })
+                    });
+                    layer.close(index)
+                    return false;
+                }else{
+                    layer.close(index)
+                    layer.alert(res.errmsg);
+                }
+            }).error(function (error) {
+                layer.alert('500 Internal Server Error');
+                layer.close(index)
+            })
+        }, function(){
+
+        });
+        return false;
+    }
+
+</script>
+{/block}

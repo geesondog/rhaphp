@@ -10,9 +10,13 @@
 namespace app\admin\controller;
 
 
+use app\common\model\Addons;
+use think\Db;
+use think\facade\Config;
 use think\facade\Cookie;
 use think\facade\Env;
 use think\facade\Request;
+use think\facade\Url;
 
 class Appstore extends Base
 {
@@ -32,9 +36,9 @@ class Appstore extends Base
     public function index($type = 1, $cate = 0, $page = 1, $title = '')
     {
         $url = self::$baseUrl . "Business/getUserInfo";
-        $result = json_decode(httpPost($url, ['token'=>$this->token]), true);
-        if($result && isset($result['errcode']) && $result['errcode']!=-1)
-            $this->user['balance']=isset($result['user']['balance'])?$result['user']['balance']:'';
+        $result = json_decode(httpPost($url, ['token' => $this->token]), true);
+        if ($result && isset($result['errcode']) && $result['errcode'] != -1)
+            $this->user['balance'] = isset($result['user']['balance']) ? $result['user']['balance'] : '';
         if ($type2 = input('type2')) {
             $type = $type2;
         }
@@ -45,7 +49,7 @@ class Appstore extends Base
         $this->assign('type', $type);
         $this->assign('cate_id', $cate);
         $this->assign('user', $this->user);
-        $this->assign('token',$this->token);
+        $this->assign('token', $this->token);
         return view();
     }
 
@@ -94,7 +98,7 @@ class Appstore extends Base
             $installPath = 'miniapp/';
         }
         $appInstallPath = Env::get('root_path') . $installPath . $result['name'] . DS;
-        if (file_exists($appInstallPath)) return json(['errcode' => -1, 'errmsg' => $result['name'] . '目录已经存在或者您已经安装过《'.$result['title'].'》，如果您要重新安装，请先卸载此应用']);
+        if (file_exists($appInstallPath)) return json(['errcode' => -1, 'errmsg' => $result['name'] . '目录已经存在或者您已经安装过《' . $result['title'] . '》，如果您要重新安装，请先卸载此应用']);
         $url = self::$baseUrl . 'Business/download';
         $data['token'] = $this->token;
         $result2 = httpPost($url, $data);
@@ -106,9 +110,9 @@ class Appstore extends Base
         if ($res === TRUE) {
             $zip->extractTo(Env::get('root_path') . $installPath);
             $zip->close();
-            return json(['errcode' => 0, 'errmsg' => '下载成功，正在跳转安装界面。。。','type'=>$result['type_id']]);
-        }else{
-            if($result=json_decode($result2,true)){
+            return json(['errcode' => 0, 'errmsg' => '下载成功，正在跳转安装界面。。。', 'type' => $result['type_id']]);
+        } else {
+            if ($result = json_decode($result2, true)) {
                 return json($result);
             }
             return json(['errcode' => -1, 'errmsg' => '解压失败，请检查是否有写入权限']);
@@ -156,6 +160,109 @@ class Appstore extends Base
     {
         Cookie::delete('official_user');
         $this->redirect('index');
+    }
+
+    public function upgrade()
+    {
+        if (!$this->token) $this->error('你还没有登录应用商店', Url::build('login'));
+        if (Request::isAjax() && Request::isPost()) {
+            $url = self::$baseUrl . "Upgrade/getAppUpgradePack";
+            $param = array_merge(['token' => $this->token], Request::param());
+            $result = json_decode($res = httpPost($url, $param), true);
+            if ($res == false) return json(['errcode' => -1, 'errmsg' => '服务出错，请稍后再试']);
+            if (isset($result['errcode']) && $result['errcode'] == -1) {
+                return json($result);
+                exit;
+            }
+            $temFile = Env::get('runtime_path') . getRandChar(16) . '.tmp';
+            file_put_contents($temFile, $res);
+            $zip = new \ZipArchive;
+            $addonPath = 'addons' . DIRECTORY_SEPARATOR . Request::param('addon') . DIRECTORY_SEPARATOR;
+            if (!file_exists($addonPath)) return json(['errcode' => -1, 'errmsg' => Request::param('addon') . '目录不存在']);
+            $backZipName = 'runtime' . DIRECTORY_SEPARATOR . Request::param('addon') . Request::param('version') . '.zip';
+            if (!$zip->open($backZipName, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
+                return json(['errcode' => -1, 'errmsg' => '无法创建备份压缩包']);
+            }
+            $this->addFileToZip($addonPath, $zip);
+            $res = $zip->open($temFile);
+            if ($res === TRUE) {
+                $zip->extractTo(Env::get('root_path') . DS . 'addons');
+                $zip->close();
+            } else {
+                return json(['errcode' => -1, 'errmsg' => '解压失败，请检查是否有写入权限']);
+            }
+            if (is_file($addonPath . 'upgrade.sql')) {
+                $sql = file_get_contents($addonPath . 'upgrade.sql');
+                $sql = str_replace("\r", "\n", $sql);
+                $sql = explode(";\n", $sql);
+                $prefix = Config::get('database.prefix');
+                $orginal = 'rh_';
+                $sql = str_replace(" `{$orginal}", " `{$prefix}", $sql);
+                foreach ($sql as $value) {
+                    $value = trim($value);
+                    if (empty($value)) continue;
+                    if (substr($value, 0, 12) == 'CREATE TABLE') {
+                        try {
+                            Db::execute($value);
+                        } catch (\Exception $e) {
+                            $res = $zip->open($backZipName);
+                            if ($res === TRUE) {
+                                $zip->extractTo(Env::get('root_path'));
+                                $zip->close();
+                            }
+                            return json(['errcode' => -1, 'errmsg' => $e->getMessage()]);
+                        }
+                    } else {
+                        try {
+                            Db::query($value);
+                        } catch (\Exception $e) {
+                            $res = $zip->open($backZipName);
+                            if ($res === TRUE) {
+                                $zip->extractTo(Env::get('root_path'));
+                                $zip->close();
+                            }
+                            return json(['errcode' => -1, 'errmsg' => $e->getMessage()]);
+                        }
+                    }
+                }
+                unlink($addonPath . 'upgrade.sql');
+            }
+            $model = new Addons();
+            $model->save(['status' => 0], ['addon' => Request::param('addon')]);
+            return json(['errcode' => 0, 'errmsg' => '升级成功，应用正在重新启用...']);
+        }
+        $url = self::$baseUrl . "Upgrade/getUpgradeApp";
+        $ads = json_decode(httpPost($url, ['token' => $this->token]), true);
+        $model = new Addons();
+        $lists = [];
+        if (!empty($ads)) {
+            foreach ($ads as $v) {
+                $addon = $model->where('addon', $v['name'])->field('name,addon,version,author,logo')->find();
+                if ($v['version'] > $addon['version']) {
+                    $addon['new_version'] = $v['version'];
+                    $addon['update_time'] = $v['update_time'];
+                    $addon['app_id'] = $v['app_id'];
+                    $lists[] = $addon;
+                }
+            }
+        }
+        $this->assign('lists', $lists);
+        return view();
+    }
+
+    public function addFileToZip($path, $zip)
+    {
+        $handler = opendir($path);
+        while (($filename = readdir($handler)) !== false) {
+            if ($filename != "." && $filename != "..") {
+                if (is_dir($path . DIRECTORY_SEPARATOR . $filename)) {
+                    $this->addFileToZip($path . DIRECTORY_SEPARATOR . $filename, $zip);
+                } else {
+                    $zip->addFile($path . DIRECTORY_SEPARATOR . $filename);
+                }
+            }
+        }
+        @closedir($path);
     }
 
 }

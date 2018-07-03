@@ -318,6 +318,9 @@ class App extends Base
     //还原|清空
     public function wipeData($name = '')
     {
+        if (!$mpInfo=session('mpInfo')) {
+            ajaxMsg(0, '请先选择或者进入公众号后，再操作');
+        }
         if ($name == null) {
             ajaxMsg('0', '没有此应用');
         }
@@ -362,6 +365,8 @@ class App extends Base
             }
             $model = new Addons();
             $model->where('addon', '=', $name)->delete();
+           Db::name('addon_info')->where('mpid',$mpInfo['id'])
+               ->where('addon',$name)->delete();
             Cache::rm('callAddonCache'.$name);
             ajaxMsg('1', '还原应用成功');
         }

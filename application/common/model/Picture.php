@@ -7,15 +7,12 @@
 // | Author: Geeson <qimengkeji@vip.qq.com>
 // +----------------------------------------------------------------------
 
-return
-    ['copyright' =>
-        [
-            'name' => 'RhaPHP微信公众号管理系统',
-            'nickname1' => 'RhaPHP',
-            'nickname2' => '二哈系统',
-            'company_website' => 'http://www.rhaphp.com/',
-            'version' => '1.5.3'//请不要随意更改版本号
-        ]
-    ];
+namespace app\common\model;
 
 
+use think\Model;
+
+class Picture extends Model
+{
+
+}

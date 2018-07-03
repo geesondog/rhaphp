@@ -231,9 +231,9 @@ function replyNews($new = [])
 function loadAdApi($name = null, $msg = [], $param = [])
 {
     $model = new \app\common\model\Addons();
-    $_addon=$model->where('addon','=',$name)->cache('callAddonCache'.$name)->field('id,status')->find();
-    if(empty($_addon)) replyText(' No such application exists');
-    if($_addon['status']!=1) replyText('Application has been withdrawn or not installed');
+    $_addon = $model->where('addon', '=', $name)->cache('callAddonCache' . $name)->field('id,status')->find();
+    if (empty($_addon)) replyText(' No such application exists');
+    if ($_addon['status'] != 1) replyText('Application has been withdrawn or not installed');
     session('apiParam', $param);
     $filename = ADDON_PATH . $name . '/controller/Api.php';
     session('addonName', $name);
@@ -462,8 +462,8 @@ function getAddonInfo($addonName = '', $mid = '')
     $addon = \think\Db::name('addons')->where(['addon' => $addonName])->find();
     $addonInfo = \think\Db::name('addon_info')->where(['addon' => $addonName, 'mpid' => $mid])->find();
     $addon['path'] = ADDON_PATH . $addonName . '/';
-    $addon['mp_config'] = isset($addonInfo['infos'])?json_decode($addonInfo['infos'], true):[];
-    $addon['common_config'] = isset($addon['config'])?json_decode($addon['config'], true):[];
+    $addon['mp_config'] = isset($addonInfo['infos']) ? json_decode($addonInfo['infos'], true) : [];
+    $addon['common_config'] = isset($addon['config']) ? json_decode($addon['config'], true) : [];
     unset($addon['config']);
     return $addon;
 
@@ -540,7 +540,13 @@ function getAdmin()
 
         $arr1 = session('admin') ? session('admin') : [];
         $arr2 = cookie('admin') ? cookie('admin') : [];
-        return array_merge($arr1, $arr2);
+        $_admin = array_merge($arr1, $arr2);
+        $where = [
+            ['id', '=', $_admin['id']],
+            ['status', '=', 1]
+        ];
+        return \think\Db::name('admin')->where($where)
+            ->cache('ststemAdmin')->find();
     }
 
 
@@ -671,8 +677,7 @@ function getFriendInfoForApi($openid = '')
 
 function getHostDomain()
 {
-    // return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'];
-    return getHttpType() . $_SERVER['SERVER_NAME'];
+    return \think\facade\Request::domain();
 }
 
 /**
@@ -718,7 +723,8 @@ function getRandChar($length)
  * @param  [type] $case   小写 CASE_LOWER 大写 CASE_UPPER
  * @return [type]         没有返回值
  */
-function array_key_case(&$array, $case = CASE_LOWER) {
+function array_key_case(&$array, $case = CASE_LOWER)
+{
     $array = array_change_key_case($array, $case);
     foreach ($array as $key => $value) {
         if (is_array($value)) {
@@ -726,8 +732,6 @@ function array_key_case(&$array, $case = CASE_LOWER) {
         }
     }
 }
-
-
 
 
 /*
@@ -1278,6 +1282,13 @@ function my_nohtml_mbsubstr($str, $start = 0, $end = 50, $coded = 'utf-8')
     return $str = mb_substr($str, $start, $end, $coded);
 }
 
+function _trim($str)
+{
+    $arr1 = array(" ", "　",);
+    $arr2 = array("", "",);
+    return str_replace($arr1, $arr2, $str);
+}
+
 /**
  * sql执行
  * @param $sqlPath SQL文件
@@ -1367,7 +1378,7 @@ function createQrcode($data = '', $file = false, $level = 'L', $size = 4)
  * @param string $addChars 额外字符
  * +----------------------------------------------------------
  * @return string
-+----------------------------------------------------------
+ * +----------------------------------------------------------
  */
 function rand_string($len = 6, $type = '', $addChars = '')
 {
@@ -1430,7 +1441,8 @@ function getHttpType()
 }
 
 /**
- * @param int $mid 公众号标识
+ * //
+ * @param int $mid 公众号标识|小程序
  * @param string $name 配置项名称
  * @return array|false
  */
@@ -1486,12 +1498,12 @@ function getMember($member_id = '')
 
             foreach ($group as $key => $val) {
                 if ($val['up_type'] == '0') {
-                    if ($score > $val['up_score'] || $money > $val['up_money']) {
+                    if ($score >= $val['up_score'] || $money >= $val['up_money']) {
                         $group_id = $val['gid'];
                         $group_name = $val['group_name'];
                     }
                 } elseif ($val['up_type'] == '1') {
-                    if ($score > $val['up_score'] && $money > $val['up_money']) {
+                    if ($score >= $val['up_score'] && $money >= $val['up_money']) {
                         $group_id = $val['gid'];
                         $group_name = $val['group_name'];
                     }
@@ -1509,7 +1521,7 @@ function getMember($member_id = '')
             } else {
                 $member['gid'] = '';
                 $member['group_name'] = '';
-                $member['discount'] = '';
+                $member['discount'] = 0;
             }
             return json_decode(json_encode($member), true);
         } else {
@@ -1539,7 +1551,7 @@ function wxPayByJsApi($parment_id = '', $goods_tag = '', $trade_type = 'JSAPI')
 {
     $model = new \app\common\model\Payment();
     if (!$payment = $model->getPaymentByFind(['payment_id' => $parment_id])) {
-        return ['errCode' => -1, 'errMsg' => '订单不存在'];
+        return ['errCode' => -1, 'errMsg' => '交易单号不存在'];
     }
     if (setWxpayConfig($payment['mpid'])) {
         $tools = new \JsApiPay();
@@ -1574,6 +1586,57 @@ function wxPayByJsApi($parment_id = '', $goods_tag = '', $trade_type = 'JSAPI')
 }
 
 /**
+ * 微信支付-退款
+ * @param $parment_id
+ * @param null $total_fee 不能有小数点
+ * @param null $refund_fee 不能有小数点
+ * @return array|成功时返回，其他抛异常
+ * @throws WxPayException
+ */
+function wxPayRefund($parment_id, $total_fee = null, $refund_fee = null)
+{
+    $model = new \app\common\model\Payment();
+    if (!$payment = $model->getPaymentByFind(['payment_id' => $parment_id])) {
+        return ['errCode' => -1, 'errMsg' => '交易单号不存在'];
+    }
+    if (setWxpayConfig($payment['mpid'])) {
+        $total_fee = $total_fee ? $total_fee : $payment['money'] * 100;
+        $refund_fee = $refund_fee ? $refund_fee : $payment['money'] * 100;
+        $input = new \WxPayRefund();
+        $input->SetOut_trade_no($payment['order_number']);
+        $input->SetTotal_fee($total_fee);
+        $input->SetRefund_fee($refund_fee);
+        $input->SetOut_refund_no($payment['order_number']);
+        $input->SetOp_user_id(WxPayConfig::$MCHID);
+        $result = \WxPayApi::refund($input);
+        return $result;
+
+    }
+    return ['errCode' => -1, 'errMsg' => '没有公众号配置信息'];
+
+}
+
+/**
+ * 微信支付-退款查询
+ * @param $parment_id
+ * @return array|成功时返回，其他抛异常
+ * @throws WxPayException
+ */
+function WxPayRefundQuery($parment_id)
+{
+    $model = new \app\common\model\Payment();
+    if (!$payment = $model->getPaymentByFind(['payment_id' => $parment_id])) {
+        return ['errCode' => -1, 'errMsg' => '交易单号不存在'];
+    }
+    if (setWxpayConfig($payment['mpid'])) {
+        $input = new \WxPayRefundQuery();
+        $input->SetOut_trade_no($payment['order_number']);
+        return \WxPayApi::refundQuery($input);
+    }
+    return ['errCode' => -1, 'errMsg' => '没有公众号配置信息'];
+}
+
+/**
  * @author Geeson <314835050#qq.com>
  * @param string $order_number 订单号
  * @return array errCode ok: 成功 -1：失败
@@ -1582,7 +1645,7 @@ function queryOrder($order_number = '')
 {
     $paymentModel = new \app\common\model\Payment();
     if (!$payment = $paymentModel->getPaymentByFind(['order_number' => $order_number])) {
-        return ['errCode' => -1, 'errMsg' => '订单不存在'];
+        return ['errCode' => -1, 'errMsg' => '交易单号不存在'];
     }
     if (setWxpayConfig($payment['mpid'])) {
         $input = new \WxPayOrderQuery();
@@ -1608,7 +1671,7 @@ function queryOrder($order_number = '')
                 return ['errCode' => -1, 'errMsg' => '未完成交易'];
             }
         } else {
-            return ['errCode' => -1, 'errMsg' => '订单不存在'];
+            return ['errCode' => -1, 'errMsg' => '交易单号不存在'];
         }
     }
     return ['errCode' => -1, 'errMsg' => '没有公众号配置信息'];
@@ -1637,6 +1700,7 @@ function wxpayNotify()
         }
     }
 }
+
 function unClient($mid = '')
 {
     $sslcert = ROOT_PATH . 'data/' . $mid . '_' . '_apiclient_cert.pem';
@@ -1778,8 +1842,59 @@ function singleSmsByTx($mid = '', $phoneNumber = '', $msg = '', $type = '0', $na
     $appkey = isset($conf['txsms']['appsecret']) ? $conf['txsms']['appsecret'] : '';
     $singleSender = new \Qcloud\Sms\SmsSingleSender($appid, $appkey);
     $result = $singleSender->send($type, $nationCode, $phoneNumber, $msg, "", "");
-    $rsp = json_decode($result);
+    $rsp = json_decode($result, true);
     return $rsp;
+
+}
+
+/**
+ * @param $mid
+ * @param $PhoneNumbers 必填: 短信接收号码
+ * @param $SignName 必填: 短信签名，应严格按"签名名称"填写，请参考: https://dysms.console.aliyun.com/dysms.htm#/develop/sign
+ * @param $TemplateCode 必填: 短信模板Code，应严格按"模板CODE"填写, 请参考: https://dysms.console.aliyun.com/dysms.htm#/develop/template
+ * @param array $TemplateParam 必填: 设置模板参数, 假如模板中存在变量需要替换则为必填项
+ * @param string $OutId 可选: 设置发送短信流水号
+ * @param string $SmsUpExtendCode 可选: 上行短信扩展码, 扩展码字段控制在7位或以下，无特殊需求用户请忽略此字段
+ * @return bool|mixed|stdClass|string
+ */
+function singleSmsByAli($mid, $PhoneNumbers, $SignName, $TemplateCode, $TemplateParam = [], $OutId = '', $SmsUpExtendCode = '')
+{
+    include_once EXTEND_PATH . 'aliyunSms/SignatureHelper.php';
+    if (!$conf = getSetting($mid, 'sms')) {
+        return false;//没有配置信息参数
+    }
+    $accessKeyId = isset($conf['alisms']['appid']) ? $conf['alisms']['appid'] : '';
+    $accessKeySecret = isset($conf['alisms']['appsecret']) ? $conf['alisms']['appsecret'] : '';
+    $helper = new \Aliyun\DySDKLite\SignatureHelper();
+    $params = array();
+    $params["PhoneNumbers"] = $PhoneNumbers;
+    $params["SignName"] = $SignName;
+    $params["TemplateCode"] = $TemplateCode;
+    $params['TemplateParam'] = $TemplateParam;
+    $params['OutId'] = $OutId;
+    $params['SmsUpExtendCode'] = $SmsUpExtendCode;
+    if (!empty($params["TemplateParam"]) && is_array($params["TemplateParam"])) {
+        $params["TemplateParam"] = json_encode($params["TemplateParam"], JSON_UNESCAPED_UNICODE);
+    }
+    $content = $helper->request(
+        $accessKeyId,
+        $accessKeySecret,
+        "dysmsapi.aliyuncs.com",
+        array_merge($params, array(
+            "RegionId" => "cn-hangzhou",
+            "Action" => "SendSms",
+            "Version" => "2017-05-25",
+        ))
+    // fixme 选填: 启用https
+    // ,true
+    );
+    $result = $helper->getErrCode($content->Code);
+    if ($result == false) {
+        return false;
+    } else {
+        return $result;
+    }
+
 
 }
 
@@ -2010,7 +2125,7 @@ function delKeywordReply($reply_id = '')
 function wxApiResultErrorCode($code)
 {
     $codes = [
-        '-1'=>'系统繁忙，此时请开发者稍候再试', '0'=>'请求成功', '40001'=>'获取 access_token 时 AppSecret 错误，或者 access_token 无效。请开发者认真比对 AppSecret 的正确性，或查看是否正在为恰当的公众号调用接口', '40002'=>'不合法的凭证类型', '40003'=>'不合法的 OpenID ，请开发者确认 OpenID （该用户）是否已关注公众号，或是否是其他公众号的 OpenID', '40004'=>'不合法的媒体文件类型', '40005'=>'不合法的文件类型', '40006'=>'不合法的文件大小', '40007'=>'不合法的媒体文件 id', '40008'=>'不合法的消息类型', '40009'=>'不合法的图片文件大小', '40010'=>'不合法的语音文件大小', '40011'=>'不合法的视频文件大小', '40012'=>'不合法的缩略图文件大小', '40013'=>'不合法的 AppID ，请开发者检查 AppID 的正确性，避免异常字符，注意大小写', '40014'=>'不合法的 access_token ，请开发者认真比对 access_token 的有效性（如是否过期），或查看是否正在为恰当的公众号调用接口', '40015'=>'不合法的菜单类型', '40016'=>'不合法的按钮个数', '40017'=>'不合法的按钮个数', '40018'=>'不合法的按钮名字长度', '40019'=>'不合法的按钮 KEY 长度', '40020'=>'不合法的按钮 URL 长度', '40021'=>'不合法的菜单版本号', '40022'=>'不合法的子菜单级数', '40023'=>'不合法的子菜单按钮个数', '40024'=>'不合法的子菜单按钮类型', '40025'=>'不合法的子菜单按钮名字长度', '40026'=>'不合法的子菜单按钮 KEY 长度', '40027'=>'不合法的子菜单按钮 URL 长度', '40028'=>'不合法的自定义菜单使用用户', '40029'=>'不合法的 oauth_code', '40030'=>'不合法的 refresh_token', '40031'=>'不合法的 openid 列表', '40032'=>'不合法的 openid 列表长度', '40033'=>'不合法的请求字符，不能包含 \uxxxx 格式的字符', '40035'=>'不合法的参数', '40038'=>'不合法的请求格式', '40039'=>'不合法的 URL 长度', '40050'=>'不合法的分组 id', '40051'=>'分组名字不合法', '40060'=>'删除单篇图文时，指定的 article_idx 不合法', '40117'=>'分组名字不合法', '40118'=>'media_id 大小不合法', '40119'=>'button 类型错误', '40120'=>'button 类型错误', '40121'=>'不合法的 media_id 类型', '40132'=>'微信号不合法', '40137'=>'不支持的图片格式', '40155'=>'请勿添加其他公众号的主页链接', '41001'=>'缺少 access_token 参数', '41002'=>'缺少 appid 参数', '41003'=>'缺少 refresh_token 参数', '41004'=>'缺少 secret 参数', '41005'=>'缺少多媒体文件数据', '41006'=>'缺少 media_id 参数', '41007'=>'缺少子菜单数据', '41008'=>'缺少 oauth code', '41009'=>'缺少 openid', '42001'=>'access_token 超时，请检查 access_token 的有效期，请参考基础支持 - 获取 access_token 中，对 access_token 的详细机制说明', '42002'=>'refresh_token 超时', '42003'=>'oauth_code 超时', '42007'=>'用户修改微信密码， accesstoken 和 refreshtoken 失效，需要重新授权', '43001'=>'需要 GET 请求', '43002'=>'需要 POST 请求', '43003'=>'需要 HTTPS 请求', '43004'=>'需要接收者关注', '43005'=>'需要好友关系', '43019'=>'需要将接收者从黑名单中移除', '44001'=>'多媒体文件为空', '44002'=>'POST 的数据包为空', '44003'=>'图文消息内容为空', '44004'=>'文本消息内容为空', '45001'=>'多媒体文件大小超过限制', '45002'=>'消息内容超过限制', '45003'=>'标题字段超过限制', '45004'=>'描述字段超过限制', '45005'=>'链接字段超过限制', '45006'=>'图片链接字段超过限制', '45007'=>'语音播放时间超过限制', '45008'=>'图文消息超过限制', '45009'=>'接口调用超过限制', '45010'=>'创建菜单个数超过限制', '45011'=>'API 调用太频繁，请稍候再试', '45015'=>'回复时间超过限制', '45016'=>'系统分组，不允许修改', '45017'=>'分组名字过长', '45018'=>'分组数量超过上限', '45047'=>'客服接口下行条数超过上限', '46001'=>'不存在媒体数据', '46002'=>'不存在的菜单版本', '46003'=>'不存在的菜单数据', '46004'=>'不存在的用户', '47001'=>'解析 JSON/XML 内容错误', '48001'=>'api 功能未授权，请确认公众号已获得该接口，可以在公众平台官网 - 开发者中心页中查看接口权限', '48002'=>'粉丝拒收消息（粉丝在公众号选项中，关闭了 “ 接收消息 ” ）', '48004'=>'api 接口被封禁，请登录 mp.weixin.qq.com 查看详情', '48005'=>'api 禁止删除被自动回复和自定义菜单引用的素材', '48006'=>'api 禁止清零调用次数，因为清零次数达到上限', '48008'=>'没有该类型消息的发送权限',  '50001'=>'用户未授权该 api', '50002'=>'用户受限，可能是违规后接口被封禁', '61451'=>'参数错误 (invalid parameter)', '61452'=>'无效客服账号 (invalid kf_account)', '61453'=>'客服帐号已存在 (kf_account exsited)', '61454'=>'客服帐号名长度超过限制 ( 仅允许 10 个英文字符，不包括 @ 及 @ 后的公众号的微信号 )(invalid kf_acount length)', '61455'=>'客服帐号名包含非法字符 ( 仅允许英文 + 数字 )(illegal character in kf_account)', '61456'=>'客服帐号个数超过限制 (10 个客服账号 )(kf_account count exceeded)', '61457'=>'无效头像文件类型 (invalid file type)', '61450'=>'系统错误 (system error)', '61500'=>'日期格式错误', '65301'=>'不存在此 menuid 对应的个性化菜单', '65302'=>'没有相应的用户', '65303'=>'没有默认菜单，不能创建个性化菜单', '65304'=>'MatchRule 信息为空', '65305'=>'个性化菜单数量受限', '65306'=>'不支持个性化菜单的帐号', '65307'=>'个性化菜单信息为空', '65308'=>'包含没有响应类型的 button', '65309'=>'个性化菜单开关处于关闭状态', '65310'=>'填写了省份或城市信息，国家信息不能为空', '65311'=>'填写了城市信息，省份信息不能为空', '65312'=>'不合法的国家信息', '65313'=>'不合法的省份信息', '65314'=>'不合法的城市信息', '65316'=>'该公众号的菜单设置了过多的域名外跳（最多跳转到 3 个域名的链接）', '65317'=>'不合法的 URL', '9001001'=>'POST 数据参数不合法', '9001002'=>'远端服务不可用', '9001003'=>'Ticket 不合法', '9001004'=>'获取摇周边用户信息失败', '9001005'=>'获取商户信息失败', '9001006'=>'获取 OpenID 失败', '9001007'=>'上传文件缺失', '9001008'=>'上传素材的文件类型不合法', '9001009'=>'上传素材的文件尺寸不合法', '9001010'=>'上传失败', '9001020'=>'帐号不合法', '9001021'=>'已有设备激活率低于 50% ，不能新增设备', '9001022'=>'设备申请数不合法，必须为大于 0 的数字', '9001023'=>'已存在审核中的设备 ID 申请', '9001024'=>'一次查询设备 ID 数量不能超过 50', '9001025'=>'设备 ID 不合法', '9001026'=>'页面 ID 不合法', '9001027'=>'页面参数不合法', '9001028'=>'一次删除页面 ID 数量不能超过 10', '9001029'=>'页面已应用在设备中，请先解除应用关系再删除', '9001030'=>'一次查询页面 ID 数量不能超过 50', '9001031'=>'时间区间不合法', '9001032'=>'保存设备与页面的绑定关系参数错误', '9001033'=>'门店 ID 不合法', '9001034'=>'设备备注信息过长', '9001035'=>'设备申请参数不合法', '9001036'=>'查询起始值 begin 不合法',
+        '-1' => '系统繁忙，此时请开发者稍候再试', '0' => '请求成功', '40001' => '获取 access_token 时 AppSecret 错误，或者 access_token 无效。请开发者认真比对 AppSecret 的正确性，或查看是否正在为恰当的公众号调用接口', '40002' => '不合法的凭证类型', '40003' => '不合法的 OpenID ，请开发者确认 OpenID （该用户）是否已关注公众号，或是否是其他公众号的 OpenID', '40004' => '不合法的媒体文件类型', '40005' => '不合法的文件类型', '40006' => '不合法的文件大小', '40007' => '不合法的媒体文件 id', '40008' => '不合法的消息类型', '40009' => '不合法的图片文件大小', '40010' => '不合法的语音文件大小', '40011' => '不合法的视频文件大小', '40012' => '不合法的缩略图文件大小', '40013' => '不合法的 AppID ，请开发者检查 AppID 的正确性，避免异常字符，注意大小写', '40014' => '不合法的 access_token ，请开发者认真比对 access_token 的有效性（如是否过期），或查看是否正在为恰当的公众号调用接口', '40015' => '不合法的菜单类型', '40016' => '不合法的按钮个数', '40017' => '不合法的按钮个数', '40018' => '不合法的按钮名字长度', '40019' => '不合法的按钮 KEY 长度', '40020' => '不合法的按钮 URL 长度', '40021' => '不合法的菜单版本号', '40022' => '不合法的子菜单级数', '40023' => '不合法的子菜单按钮个数', '40024' => '不合法的子菜单按钮类型', '40025' => '不合法的子菜单按钮名字长度', '40026' => '不合法的子菜单按钮 KEY 长度', '40027' => '不合法的子菜单按钮 URL 长度', '40028' => '不合法的自定义菜单使用用户', '40029' => '不合法的 oauth_code', '40030' => '不合法的 refresh_token', '40031' => '不合法的 openid 列表', '40032' => '不合法的 openid 列表长度', '40033' => '不合法的请求字符，不能包含 \uxxxx 格式的字符', '40035' => '不合法的参数', '40038' => '不合法的请求格式', '40039' => '不合法的 URL 长度', '40050' => '不合法的分组 id', '40051' => '分组名字不合法', '40060' => '删除单篇图文时，指定的 article_idx 不合法', '40117' => '分组名字不合法', '40118' => 'media_id 大小不合法', '40119' => 'button 类型错误', '40120' => 'button 类型错误', '40121' => '不合法的 media_id 类型', '40132' => '微信号不合法', '40137' => '不支持的图片格式', '40155' => '请勿添加其他公众号的主页链接', '41001' => '缺少 access_token 参数', '41002' => '缺少 appid 参数', '41003' => '缺少 refresh_token 参数', '41004' => '缺少 secret 参数', '41005' => '缺少多媒体文件数据', '41006' => '缺少 media_id 参数', '41007' => '缺少子菜单数据', '41008' => '缺少 oauth code', '41009' => '缺少 openid', '42001' => 'access_token 超时，请检查 access_token 的有效期，请参考基础支持 - 获取 access_token 中，对 access_token 的详细机制说明', '42002' => 'refresh_token 超时', '42003' => 'oauth_code 超时', '42007' => '用户修改微信密码， accesstoken 和 refreshtoken 失效，需要重新授权', '43001' => '需要 GET 请求', '43002' => '需要 POST 请求', '43003' => '需要 HTTPS 请求', '43004' => '需要接收者关注', '43005' => '需要好友关系', '43019' => '需要将接收者从黑名单中移除', '44001' => '多媒体文件为空', '44002' => 'POST 的数据包为空', '44003' => '图文消息内容为空', '44004' => '文本消息内容为空', '45001' => '多媒体文件大小超过限制', '45002' => '消息内容超过限制', '45003' => '标题字段超过限制', '45004' => '描述字段超过限制', '45005' => '链接字段超过限制', '45006' => '图片链接字段超过限制', '45007' => '语音播放时间超过限制', '45008' => '图文消息超过限制', '45009' => '接口调用超过限制', '45010' => '创建菜单个数超过限制', '45011' => 'API 调用太频繁，请稍候再试', '45015' => '回复时间超过限制', '45016' => '系统分组，不允许修改', '45017' => '分组名字过长', '45018' => '分组数量超过上限', '45047' => '客服接口下行条数超过上限', '46001' => '不存在媒体数据', '46002' => '不存在的菜单版本', '46003' => '不存在的菜单数据', '46004' => '不存在的用户', '47001' => '解析 JSON/XML 内容错误', '48001' => 'api 功能未授权，请确认公众号已获得该接口，可以在公众平台官网 - 开发者中心页中查看接口权限', '48002' => '粉丝拒收消息（粉丝在公众号选项中，关闭了 “ 接收消息 ” ）', '48004' => 'api 接口被封禁，请登录 mp.weixin.qq.com 查看详情', '48005' => 'api 禁止删除被自动回复和自定义菜单引用的素材', '48006' => 'api 禁止清零调用次数，因为清零次数达到上限', '48008' => '没有该类型消息的发送权限', '50001' => '用户未授权该 api', '50002' => '用户受限，可能是违规后接口被封禁', '61451' => '参数错误 (invalid parameter)', '61452' => '无效客服账号 (invalid kf_account)', '61453' => '客服帐号已存在 (kf_account exsited)', '61454' => '客服帐号名长度超过限制 ( 仅允许 10 个英文字符，不包括 @ 及 @ 后的公众号的微信号 )(invalid kf_acount length)', '61455' => '客服帐号名包含非法字符 ( 仅允许英文 + 数字 )(illegal character in kf_account)', '61456' => '客服帐号个数超过限制 (10 个客服账号 )(kf_account count exceeded)', '61457' => '无效头像文件类型 (invalid file type)', '61450' => '系统错误 (system error)', '61500' => '日期格式错误', '65301' => '不存在此 menuid 对应的个性化菜单', '65302' => '没有相应的用户', '65303' => '没有默认菜单，不能创建个性化菜单', '65304' => 'MatchRule 信息为空', '65305' => '个性化菜单数量受限', '65306' => '不支持个性化菜单的帐号', '65307' => '个性化菜单信息为空', '65308' => '包含没有响应类型的 button', '65309' => '个性化菜单开关处于关闭状态', '65310' => '填写了省份或城市信息，国家信息不能为空', '65311' => '填写了城市信息，省份信息不能为空', '65312' => '不合法的国家信息', '65313' => '不合法的省份信息', '65314' => '不合法的城市信息', '65316' => '该公众号的菜单设置了过多的域名外跳（最多跳转到 3 个域名的链接）', '65317' => '不合法的 URL', '9001001' => 'POST 数据参数不合法', '9001002' => '远端服务不可用', '9001003' => 'Ticket 不合法', '9001004' => '获取摇周边用户信息失败', '9001005' => '获取商户信息失败', '9001006' => '获取 OpenID 失败', '9001007' => '上传文件缺失', '9001008' => '上传素材的文件类型不合法', '9001009' => '上传素材的文件尺寸不合法', '9001010' => '上传失败', '9001020' => '帐号不合法', '9001021' => '已有设备激活率低于 50% ，不能新增设备', '9001022' => '设备申请数不合法，必须为大于 0 的数字', '9001023' => '已存在审核中的设备 ID 申请', '9001024' => '一次查询设备 ID 数量不能超过 50', '9001025' => '设备 ID 不合法', '9001026' => '页面 ID 不合法', '9001027' => '页面参数不合法', '9001028' => '一次删除页面 ID 数量不能超过 10', '9001029' => '页面已应用在设备中，请先解除应用关系再删除', '9001030' => '一次查询页面 ID 数量不能超过 50', '9001031' => '时间区间不合法', '9001032' => '保存设备与页面的绑定关系参数错误', '9001033' => '门店 ID 不合法', '9001034' => '设备备注信息过长', '9001035' => '设备申请参数不合法', '9001036' => '查询起始值 begin 不合法',
     ];
     if (isset($codes[$code])) {
         return $codes[$code];
@@ -2058,9 +2173,9 @@ function getMimiappInfo($mid = '', $expier = 1800)
  * @throws \think\db\exception\ModelNotFoundException
  * @throws \think\exception\DbException
  */
-function getMiniProgramObj($options=[])
+function getMiniProgramObj($options = [])
 {
-    if(empty($options)){
+    if (empty($options)) {
         $options = \think\facade\Session::get('miniapp_options');
         if (empty($options)) {
             $infos = getMimiappInfo();
@@ -2072,4 +2187,54 @@ function getMiniProgramObj($options=[])
     }
     include_once EXTEND_PATH . "miniprogram/MiniProgram.php";
     return new \miniprogram\MiniProgram($options);
+}
+
+/**
+ * @param $path
+ * @return bool
+ */
+function createDir($path)
+{
+    if (is_dir($path)) {
+        return true;
+    }
+    if (is_dir(dirname($path))) {
+        return mkdir($path);
+    }
+    createDir(dirname($path));
+    return @mkdir($path);
+}
+
+/**
+ * @param $file_path
+ * @param int $type 1：返回缩略图，2：缩小正方图，3：原图
+ * @return mixed|null|string
+ * @throws \think\db\exception\DataNotFoundException
+ * @throws \think\db\exception\ModelNotFoundException
+ * @throws \think\exception\DbException
+ */
+function getThumb($file_path, $type = 1)
+{
+    $array = explode('/', $file_path);
+    $Name = end($array);
+    $model = new \app\common\model\Picture();
+    $info = $model->where('name', $Name)->cache(true)->find();
+    if (!$info) {
+        return null;
+    }
+    $file = '';
+    switch ($type) {
+        case 1:
+            $file = $info['thumb'];
+            break;
+        case 2:
+            $file = $info['reduce'];
+            break;
+        case 3:
+            $file = $info['picture'];
+            break;
+    }
+
+    return getHostDomain() . DS . $file;
+
 }

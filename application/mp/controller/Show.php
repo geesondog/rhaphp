@@ -18,7 +18,6 @@ class Show
      */
     public function image($url = '')
     {
-
         $url = urldecode($url);
         if (!empty($Arr = explode('wx_fmt=', $url))) {
             $ch = curl_init();
@@ -33,7 +32,7 @@ class Show
                 'jpg' => 'image/jpeg',
                 'png' => 'image/png',
             );
-            if(key_exists($Arr[1],$types)){
+            if(isset($Arr[1]) && key_exists($Arr[1],$types)){
                 $type = $types[$Arr[1]];
             }else{
                 $type = 'image/jpeg';

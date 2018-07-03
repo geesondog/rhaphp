@@ -308,6 +308,18 @@ class   Material extends Base
         return view('getmeterial');
     }
 
+    public function getMeterialByImages($type = '', $from_type = 1)
+    {
+        $model = new \app\common\model\Material();
+        $result = $model->getMaterialList($type, $this->mid, $from_type);
+        $this->assign('page', $result->render());
+        $this->assign('type', $type);
+        $this->assign('from_type', $from_type);
+        $this->assign('param', input('param'));
+        $this->assign('material', $result);
+        return view();
+    }
+
     public function sendMaterial($media_id = '', $type = '')
     {
         if (!$media_id || !$type) {

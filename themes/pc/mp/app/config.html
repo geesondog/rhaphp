@@ -100,7 +100,7 @@
                             <div class="layui-form-item layui-form-text">
                                 <label class="layui-form-label">{$v.title}</label>
                                 <div class="layui-input-block">
-                                    <textarea name="{$v.name}" placeholder="{$v.placeholder}" class="layui-textarea">{$v.value}</textarea>
+                                    <textarea name="{$v.name}" placeholder="{$v.placeholder}" class="layui-textarea">{:_trim($v.value)}</textarea>
                                     <p class="tip_for_p">{$v.tip}</p>
                                 </div>
 

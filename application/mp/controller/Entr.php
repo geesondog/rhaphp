@@ -144,7 +144,7 @@ class Entr
                 break;
         }
         //终止执行
-        exit;
+       // exit;
 
     }
 
@@ -166,7 +166,7 @@ class Entr
                 $model->save($msg);
                 break;
             case 'image'://图片消息
-                $msg['content'] = getHostDomain() . url('mp/Show/image', ['url' => urlencode($msgData['PicUrl'])]);
+                $msg['content'] = getHostDomain() . '/mp/Show/image?url='. urlencode($msgData['PicUrl']);
                 $model->save($msg);
                 break;
             case 'voice'://语音消息
@@ -189,7 +189,11 @@ class Entr
                 break;
 
         }
-        exit;
+        $options=session('mp_options');
+        $weObj = new \Wechat($options);
+        $weObj->valid();
+        $weObj->getRev();
+        $weObj->transfer_customer_service()->reply();
     }
 
     /**
@@ -357,10 +361,6 @@ class Entr
                 }
             }else{
                 $this->mpMsg($msg);
-                $options=session('mp_options');
-                $weObj = new \Wechat($options);
-                $weObj->getRev();
-                $weObj->transfer_customer_service()->reply();
             }
 
         }

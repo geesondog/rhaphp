@@ -171,7 +171,8 @@ INSERT INTO `rh_menu` (`id`, `pid`, `name`, `url`, `sort`, `icon`, `child`, `sho
 (73, 74, '应用商店', 'admin/appstore/index', 2, '', NULL, NULL),
 (74, 43, 'official Service', 'NULL', 1, '&#xe619;', NULL, NULL),
 (75, 73, '应用中心-注册', 'admin/appstore/register', 0, '', NULL, NULL),
-(76, 73, '用户登录', 'admin/appstore/login', 0, '', NULL, NULL);
+(76, 73, '用户登录', 'admin/appstore/login', 0, '', NULL, NULL),
+(77, 74, '应用升级', 'admin/appstore/upgrade', 3, '', NULL, NULL);
 
 CREATE TABLE IF NOT EXISTS `rh_miniapp` (
   `id` int(10) unsigned NOT NULL COMMENT '自增ID',
@@ -426,6 +427,21 @@ CREATE TABLE IF NOT EXISTS `rh_syn_openid` (
   `openid` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `rh_picture` (
+  `id` int(11) NOT NULL,
+  `name` varchar(64) NOT NULL COMMENT '文件名称',
+  `mpid` int(11) NOT NULL,
+  `thumb` varchar(255) NOT NULL COMMENT '缩略图',
+  `picture` varchar(255) NOT NULL COMMENT '原图',
+  `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1:公众号，2:小程序',
+  `create_time` int(11) NOT NULL,
+  `reduce` varchar(255) NOT NULL COMMENT '质量缩小正方图'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `rh_picture`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `mpid` (`mpid`),
+  ADD KEY `name` (`name`);
 
 ALTER TABLE `rh_addons`
   ADD PRIMARY KEY (`id`),
@@ -531,6 +547,8 @@ ALTER TABLE `rh_syn_openid`
   ADD KEY `openid` (`openid`),
   ADD KEY `mpid` (`mpid`);
 
+ALTER TABLE `rh_picture`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `rh_addons`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '自增ID';

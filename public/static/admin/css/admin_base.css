@@ -116,7 +116,7 @@ a:hover { text-decoration: underline; }
 .rha_app_list img{width: 65px;height: 65px; border-radius: 3px;}
 .rha_app_list span {display: block; text-overflow: ellipsis;  white-space: nowrap;}
 .login_body { background: rgb(233, 240, 244) url('../images/login_bg.jpg') no-repeat scroll 0% 0%; }
-#login_wrapper { position: relative; margin-bottom: 20px; padding-top: 200px; }
+#login_wrapper { position: relative; margin-bottom: 20px; padding-top: 15%; }
 .rha_login { width: 714px; margin: 0px auto; background-color: rgb(255, 255, 255); border: 1px solid rgb(179, 179, 179); border-radius: 3px; }
 .rha_login .logo a { display: block; width: 151px; height: 94px; }
 .rha_login .mod-body { padding: 50px 60px; }
@@ -144,6 +144,7 @@ a:hover { text-decoration: underline; }
 
 }
 #addon_menu .item-icon{margin: -3px 7px 0 4px;}
+#addon_menu .selected .item-icon{color: #ffffff;}
 .addon_menu-left{position: relative;z-index: 0;padding: 5px 0px;}
 .addon_menu-left .addon_menu-left-nav {position: relative;padding: 0px;width: 100%;overflow-x: hidden;}
 .child-item-nav{margin: 0px 0px 0px 0px;padding: 0px;width: 100%;position: relative;overflow-x: hidden;}

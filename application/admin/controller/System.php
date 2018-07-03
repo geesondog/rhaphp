@@ -154,6 +154,7 @@ class System extends Base
 //            }
         }
         if (Db::name('admin')->where(['id' => $id, 'admin_id' => $this->admin_id])->update(['status' => $status])) {
+            Cache::rm('ststemAdmin');
             ajaxMsg(1, '操作成功');
         } else {
             ajaxMsg(0, '操作失败');
@@ -215,7 +216,7 @@ class System extends Base
         if ($handle) {
             while (false !== ($item = readdir($handle))) {
                 if ($item != '.' && $item != '..')
-                    is_dir("$path/$item") ? $this->delDirAndFile("$path/$item", $delDir) : unlink("$path/$item");
+                    is_dir($path.DS.$item) ? $this->delDirAndFile($path.DS.$item, $delDir) : unlink($path.DS.$item);
             }
             closedir($handle);
             if ($delDir)

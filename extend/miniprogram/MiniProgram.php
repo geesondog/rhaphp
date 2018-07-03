@@ -97,9 +97,7 @@ class MiniProgram
             return true;
         } elseif (isset($_GET["echostr"])) {
             if ($this->checkSignature()) {
-                //注意：使用 return 是不能验证成功的，要使用 echo
-                echo $_GET["echostr"];
-                return;
+                return 'success';
             } else {
                 $this->errcode = Error::$checkSignaturError;
                 $this->errmsg = Error::$checkSignaturErrorMsg;
