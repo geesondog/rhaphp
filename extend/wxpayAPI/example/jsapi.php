@@ -1,10 +1,9 @@
-<?php
-edit;
+<?php 
 ini_set('date.timezone','Asia/Shanghai');
 //error_reporting(E_ERROR);
-//require_once "../lib/WxPay.Api.php";
-//require_once "WxPay.JsApiPay.php";
-//require_once 'log.php';
+require_once "../lib/WxPay.Api.php";
+require_once "WxPay.JsApiPay.php";
+require_once 'log.php';
 
 //初始化日志
 $logHandler= new CLogFileHandler("../logs/".date('Y-m-d').'.log');
@@ -19,28 +18,28 @@ function printf_info($data)
 }
 
 //①、获取用户openid
-//$tools = new JsApiPay();
-//$openId = $tools->GetOpenid();
-//
-////②、统一下单
-//$input = new WxPayUnifiedOrder();
-//$input->SetBody("test");
-//$input->SetAttach("test");
-//$input->SetOut_trade_no(WxPayConfig::$MCHID.date("YmdHis"));
-//$input->SetTotal_fee("1");
-//$input->SetTime_start(date("YmdHis"));
-//$input->SetTime_expire(date("YmdHis", time() + 600));
-//$input->SetGoods_tag("test");
-//$input->SetNotify_url("http://paysdk.weixin.qq.com/example/notify.php");
-//$input->SetTrade_type("JSAPI");
-//$input->SetOpenid($openId);
-//$order = WxPayApi::unifiedOrder($input);
-//echo '<font color="#f00"><b>统一下单支付单信息</b></font><br/>';
-//printf_info($order);
-//$jsApiParameters = $tools->GetJsApiParameters($order);
-//
-////获取共享收货地址js函数参数
-//$editAddress = $tools->GetEditAddressParameters();
+$tools = new JsApiPay();
+$openId = $tools->GetOpenid();
+
+//②、统一下单
+$input = new WxPayUnifiedOrder();
+$input->SetBody("test");
+$input->SetAttach("test");
+$input->SetOut_trade_no(WxPayConfig::$MCHID.date("YmdHis"));
+$input->SetTotal_fee("1");
+$input->SetTime_start(date("YmdHis"));
+$input->SetTime_expire(date("YmdHis", time() + 600));
+$input->SetGoods_tag("test");
+$input->SetNotify_url("http://paysdk.weixin.qq.com/example/notify.php");
+$input->SetTrade_type("JSAPI");
+$input->SetOpenid($openId);
+$order = WxPayApi::unifiedOrder($input);
+echo '<font color="#f00"><b>统一下单支付单信息</b></font><br/>';
+printf_info($order);
+$jsApiParameters = $tools->GetJsApiParameters($order);
+
+//获取共享收货地址js函数参数
+$editAddress = $tools->GetEditAddressParameters();
 
 //③、在支持成功回调通知中处理成功之后的事宜，见 notify.php
 /**
@@ -54,7 +53,7 @@ function printf_info($data)
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/> 
     <title>微信支付样例-支付</title>
     <script type="text/javascript">
 	//调用微信JS api 支付
@@ -76,7 +75,7 @@ function printf_info($data)
 		    if( document.addEventListener ){
 		        document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
 		    }else if (document.attachEvent){
-		        document.attachEvent('WeixinJSBridgeReady', jsApiCall);
+		        document.attachEvent('WeixinJSBridgeReady', jsApiCall); 
 		        document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
 		    }
 		}else{
@@ -97,25 +96,25 @@ function printf_info($data)
 				var value3 = res.addressCountiesThirdStageName;
 				var value4 = res.addressDetailInfo;
 				var tel = res.telNumber;
-
+				
 				alert(value1 + value2 + value3 + value4 + ":" + tel);
 			}
 		);
 	}
-
+	
 	window.onload = function(){
 		if (typeof WeixinJSBridge == "undefined"){
 		    if( document.addEventListener ){
 		        document.addEventListener('WeixinJSBridgeReady', editAddress, false);
 		    }else if (document.attachEvent){
-		        document.attachEvent('WeixinJSBridgeReady', editAddress);
+		        document.attachEvent('WeixinJSBridgeReady', editAddress); 
 		        document.attachEvent('onWeixinJSBridgeReady', editAddress);
 		    }
 		}else{
 			editAddress();
 		}
 	};
-
+	
 	</script>
 </head>
 <body>

@@ -5,7 +5,6 @@
     <title>微信支付样例-退款</title>
 </head>
 <?php
-edit;
 ini_set('date.timezone','Asia/Shanghai');
 error_reporting(E_ERROR);
 require_once "../lib/WxPay.Api.php";

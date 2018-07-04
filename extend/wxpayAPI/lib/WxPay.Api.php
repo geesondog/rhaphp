@@ -2,6 +2,7 @@
 require_once "WxPay.Exception.php";
 require_once "WxPay.Config.php";
 require_once "WxPay.Data.php";
+
 /**
  * 
  * 接口访问类，包含所有微信支付API列表的封装，类中方法为static方法，
@@ -535,6 +536,7 @@ class WxPayApi
 		curl_setopt($ch,CURLOPT_URL, $url);
 		curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,TRUE);
 		curl_setopt($ch,CURLOPT_SSL_VERIFYHOST,2);//严格校验
+		curl_setopt($ch,CURLOPT_USERAGENT, "wxpay sdk php v3.0 " . WxPayConfig::$MCHID);
 		//设置header
 		curl_setopt($ch, CURLOPT_HEADER, FALSE);
 		//要求结果为字符串且输出到屏幕上
@@ -543,6 +545,7 @@ class WxPayApi
 		if($useCert == true){
 			//设置证书
 			//使用证书：cert 与 key 分别属于两个.pem文件
+			//证书文件请放入服务器的非web目录下
 			curl_setopt($ch,CURLOPT_SSLCERTTYPE,'PEM');
 			curl_setopt($ch,CURLOPT_SSLCERT, WxPayConfig::$SSLCERT_PATH);
 			curl_setopt($ch,CURLOPT_SSLKEYTYPE,'PEM');

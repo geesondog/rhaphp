@@ -69,8 +69,7 @@ class JsApiPay
 		|| !array_key_exists("prepay_id", $UnifiedOrderResult)
 		|| $UnifiedOrderResult['prepay_id'] == "")
 		{
-			//throw new WxPayException("参数错误");
-            return false;
+			throw new WxPayException("参数错误");
 		}
 		$jsapi = new WxPayJsApiPay();
 		$jsapi->SetAppid($UnifiedOrderResult["appid"]);
@@ -103,7 +102,7 @@ class JsApiPay
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,FALSE);
 		curl_setopt($ch, CURLOPT_HEADER, FALSE);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-		if(WxPayConfig::$CURL_PROXY_HOST != "0.0.0.0"
+		if(WxPayConfig::$CURL_PROXY_HOST != "0.0.0.0" 
 			&& WxPayConfig::$CURL_PROXY_PORT != 0){
 			curl_setopt($ch,CURLOPT_PROXY, WxPayConfig::$CURL_PROXY_HOST);
 			curl_setopt($ch,CURLOPT_PROXYPORT, WxPayConfig::$CURL_PROXY_PORT);
