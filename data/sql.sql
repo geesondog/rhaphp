@@ -355,7 +355,7 @@ CREATE TABLE IF NOT EXISTS `rh_mp_rule` (
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态(1开户:0关闭)'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='公众号响应规则';
 
-CREATE TABLE IF NOT EXISTS `rh_payment` (
+CREATE TABLE `rh_payment` (
   `payment_id` int(11) NOT NULL COMMENT '自增 ID',
   `member_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户 ID',
   `openid` varchar(64) CHARACTER SET utf8 DEFAULT NULL COMMENT 'OPENID',
@@ -368,7 +368,7 @@ CREATE TABLE IF NOT EXISTS `rh_payment` (
   `mpid` int(11) NOT NULL COMMENT '公众号标识',
   `remark` varchar(255) CHARACTER SET utf8 DEFAULT NULL COMMENT '备注',
   `attach` varchar(255) CHARACTER SET utf8 DEFAULT NULL COMMENT '附加数据',
-  `refund` tinyint(1) DEFAULT NULL COMMENT '1：申请退款中2：退款完成'
+  `refund` tinyint(1) DEFAULT '0' COMMENT '1：申请退款中2：退款完成'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `rh_qrcode` (
