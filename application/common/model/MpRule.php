@@ -24,14 +24,10 @@ class MpRule extends Model
                 $model = new MpReply();
                $r1= $this->where($where)->delete();
                $r2= $model->delReply(['reply_id' => $rule['reply_id']]);
-               if($r1 && $r2){
-                   return true;
-               }else{
-                   return false;
-               }
-            } else {
-               return $this->where($where)->delete();
+               return $r1 && $r2;
             }
+
+            return $this->where($where)->delete();
         }
     }
 

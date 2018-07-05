@@ -1909,32 +1909,32 @@ function qiniuUpload($mid = '', $file = '', $key = '')
 {
     if (!$mid) {
         return ['code' => 1, 'msg' => '公众号标识mid不能为空'];
-    } else {
-        $st = getSetting($mid, 'cloud');
-        if (!isset($st['qiniu']) && empty($st['qiniu'])) {
-            return ['code' => 1, 'msg' => '请先配置七牛云存储参数'];
-        } else {
-            include_once EXTEND_PATH . 'Qiniu/autoload.php';
-            $client = Qiniu\Qiniu::create(array(
-                'access_key' => $st['qiniu']['accessKey'],
-                'secret_key' => $st['qiniu']['secretKey'],
-                'bucket' => $st['qiniu']['bucke'],
-                'domain' => $st['qiniu']['domain']
-            ));
-            $result = $client->uploadFile($file, $key);
-            $result = json_decode(json_encode($result), true);
-            if (isset($result['response']['code']) && $result['response']['code'] != '200') {
-                return ['code' => 1, 'msg' => $result['error']];
-            } else {
-                return $res = [
-                    'code' => 0,
-                    'data' => [
-                        'src' => $result['data']['url']
-                    ]
-                ];
-            }
-        }
     }
+
+    $st = getSetting($mid, 'cloud');
+    if (!isset($st['qiniu']) && empty($st['qiniu'])) {
+        return ['code' => 1, 'msg' => '请先配置七牛云存储参数'];
+    }
+
+    include_once EXTEND_PATH . 'Qiniu/autoload.php';
+    $client = Qiniu\Qiniu::create(array(
+        'access_key' => $st['qiniu']['accessKey'],
+        'secret_key' => $st['qiniu']['secretKey'],
+        'bucket' => $st['qiniu']['bucke'],
+        'domain' => $st['qiniu']['domain']
+    ));
+    $result = $client->uploadFile($file, $key);
+    $result = json_decode(json_encode($result), true);
+    if (isset($result['response']['code']) && $result['response']['code'] != '200') {
+        return ['code' => 1, 'msg' => $result['error']];
+    }
+
+    return $res = [
+        'code' => 0,
+        'data' => [
+            'src' => $result['data']['url']
+        ]
+    ];
 
 }
 

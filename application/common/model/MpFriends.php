@@ -47,11 +47,9 @@ class MpFriends extends Model
         $userInfo['nickname'] = isset($userInfo['nickname'])?$userInfo['nickname']:'';
         if ($this->where(['openid' => $userInfo['openid'], 'mpid' => $mpid])->find()) {
             return $this->allowField(true)->save($userInfo, ['openid' => $userInfo['openid'], 'mpid' => $mpid]);
-        } else {
-
-            return $this->allowField(true)->save($userInfo);
         }
 
+        return $this->allowField(true)->save($userInfo);
     }
 
     /**
