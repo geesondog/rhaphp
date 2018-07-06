@@ -13,8 +13,8 @@
 <div style="padding: 10px;">
     <div class="layui-tab">
         <ul class="layui-tab-title">
-            <li class="{eq name="$from_type" value="1"}layui-this{/eq}"><a href="{:url('mp/Material/getMeterial',['type'=>$type,'param'=>$param,'from_type'=>'1'])}">微信服务器</a></li>
-            <li class="{eq name="$from_type" value="0"}layui-this{/eq}"><a href="{:url('mp/Material/getMeterial',['type'=>$type,'param'=>$param,'from_type'=>'0'])}">本地</a></li>
+            <li class="{eq name="$from_type" value="1"}layui-this{/eq}"><a href="{:url('mp/Material/getMeterialByImages',['type'=>$type,'param'=>$param,'from_type'=>'1'])}">微信服务器</a></li>
+            <li class="{eq name="$from_type" value="0"}layui-this{/eq}"><a href="{:url('mp/Material/getMeterialByImages',['type'=>$type,'param'=>$param,'from_type'=>'0'])}">本地</a></li>
         </ul>
         <div class="layui-tab-content">
             {switch name="$type"}
