@@ -37,22 +37,22 @@ class Upload
             $this->type = 1;
             $this->mid = input('mid') ? input('mid') : $sMid;
         }
-        $this->thumbPath = \think\facade\Env::get('root_path') . 'uploads' . DS . 'thumb' . DS;
-        $this->reducePath = \think\facade\Env::get('root_path') . 'uploads' . DS . 'reduce' . DS;
+        $this->thumbPath = \think\facade\Env::get('root_path') . 'uploads/thumb/';
+        $this->reducePath = \think\facade\Env::get('root_path') . 'uploads/reduce/';
     }
 
     public function uploadImg()
     {
         $file = \request()->file('image');
-        $info = $file->rule('md5')->validate(['ext' => 'jpg,png,gif,jpeg'])->move(ROOT_PATH . DS . ENTR_PATH . DS . 'uploads');
+        $info = $file->rule('md5')->validate(['ext' => 'jpg,png,gif,jpeg'])->move(ROOT_PATH .'/'. ENTR_PATH . '/' . 'uploads');
         if ($info) {
             $_array = explode('/', $info->getSaveName());
             $Name = end($_array);
             if (!Picture::get(['name' => $Name])) {
-                $picture = 'uploads' . DS . $info->getSaveName();
+                $picture = 'uploads' . '/' . $info->getSaveName();
                 $image_path = \think\facade\Env::get('root_path') . $picture;
                 if (is_file($image_path)) {
-                    if ($array = explode(DS, $info->getSaveName())) {
+                    if ($array = explode('/', $info->getSaveName())) {
                         if (createDir($this->thumbPath . $array[0])) {
                             $thumb = $this->thumbPath . $info->getSaveName();
                             $image = Image::open($image_path);
@@ -65,9 +65,9 @@ class Upload
                                 'name' => $Name,
                                 'mpid' => $this->mid,
                                 'type' => $this->type,
-                                'thumb' => 'uploads' . DS . 'thumb' . DS . $info->getSaveName(),
-                                'picture' => 'uploads' . DS . $info->getSaveName(),
-                                'reduce' => 'uploads' . DS . 'reduce' . DS . $info->getSaveName(),
+                                'thumb' => 'uploads/thumb/'. $info->getSaveName(),
+                                'picture' => 'uploads/' . $info->getSaveName(),
+                                'reduce' => 'uploads/reduce/'. $info->getSaveName(),
                                 'create_time' => time()
                             ];
                             $model = new Picture();
@@ -82,7 +82,7 @@ class Upload
                 'code' => 0,
 
                 'data' => [
-                    'src' => getHostDomain() . '/uploads' . DS . $info->getSaveName()
+                    'src' => getHostDomain() . '/uploads/' . $info->getSaveName()
                 ]
 
             ];
@@ -102,14 +102,14 @@ class Upload
     public function uploadFileBYmpVerify()
     {
         $file = \request()->file('file');
-        $info = $file->validate(['ext' => 'mp3,wma,wav,amr,rm,rmvb,wmv,avi,mpg,mpeg,mp4,txt,zip,rar'])->move(ROOT_PATH . DS . ENTR_PATH . DS, '');
+        $info = $file->validate(['ext' => 'mp3,wma,wav,amr,rm,rmvb,wmv,avi,mpg,mpeg,mp4,txt,zip,rar'])->move(ROOT_PATH . '/' . ENTR_PATH . '/', '');
 
         if ($info) {
             header('Content-Type:application/json; charset=utf-8');
             $res = [
                 'code' => 0,
                 'data' => [
-                    'src' => getHostDomain() . '/uploads' . DS . $info->getSaveName()
+                    'src' => getHostDomain() . '/uploads/' . $info->getSaveName()
                 ]
             ];
             return json_encode($res);
@@ -129,14 +129,14 @@ class Upload
     public function uploadMedia()
     {
         $file = \request()->file('media');
-        $info = $file->rule('md5')->validate(['ext' => 'mp3,wma,wav,amr,rm,rmvb,wmv,avi,mpg,mpeg,mp4'])->move(ROOT_PATH . DS . ENTR_PATH . DS . 'uploads');
+        $info = $file->rule('md5')->validate(['ext' => 'mp3,wma,wav,amr,rm,rmvb,wmv,avi,mpg,mpeg,mp4'])->move(ROOT_PATH . '/' . ENTR_PATH . '/uploads');
 
         if ($info) {
             header('Content-Type:application/json; charset=utf-8');
             $res = [
                 'code' => 0,
                 'data' => [
-                    'src' => getHostDomain() . '/uploads' . DS . $info->getSaveName()
+                    'src' => getHostDomain() . '/uploads/' . $info->getSaveName()
                 ]
             ];
             return json_encode($res);
@@ -154,14 +154,14 @@ class Upload
     public function uploadFile()
     {
         $file = \request()->file('media');
-        $info = $file->rule('md5')->validate(['ext' => 'mp3,wma,wav,amr,rm,rmvb,wmv,avi,mpg,mpeg,mp4,txt,zip,rar'])->move(ROOT_PATH . DS . ENTR_PATH . DS . 'uploads');
+        $info = $file->rule('md5')->validate(['ext' => 'mp3,wma,wav,amr,rm,rmvb,wmv,avi,mpg,mpeg,mp4,txt,zip,rar'])->move(ROOT_PATH . '/' . ENTR_PATH  .'/uploads');
 
         if ($info) {
             header('Content-Type:application/json; charset=utf-8');
             $res = [
                 'code' => 0,
                 'data' => [
-                    'src' => getHostDomain() . '/uploads' . DS . $info->getSaveName()
+                    'src' => getHostDomain() . '/uploads/'. $info->getSaveName()
                 ]
             ];
             return json_encode($res);
@@ -179,9 +179,9 @@ class Upload
     public function qiniuUpload()
     {
         $file = \request()->file('image');
-        $info = $file->rule('md5')->validate(['ext' => 'jpg,png,gif,jpeg'])->move(ROOT_PATH . DS . ENTR_PATH . DS . 'uploads');
+        $info = $file->rule('md5')->validate(['ext' => 'jpg,png,gif,jpeg'])->move(ROOT_PATH . '/'. ENTR_PATH . '/' . 'uploads');
         if ($info) {
-            $file = './uploads' . DS . $info->getSaveName();
+            $file = './uploads/' . $info->getSaveName();
             if (!empty($mid = session('mid')) || !empty($mid = input('mid'))) {
             }
             if ($_mid = input('_mid')) {
@@ -193,10 +193,10 @@ class Upload
                 $_array = explode('/', $info->getSaveName());
                 $Name = end($_array);
                 if (!Picture::get(['name' => $Name])) {
-                    $picture = 'uploads' . DS . $info->getSaveName();
+                    $picture = 'uploads/' . $info->getSaveName();
                     $image_path = \think\facade\Env::get('root_path') . $picture;
                     if (is_file($image_path)) {
-                        if ($array = explode(DS, $info->getSaveName())) {
+                        if ($array = explode('/', $info->getSaveName())) {
                             if (createDir($this->thumbPath . $array[0])) {
                                 $thumb = $this->thumbPath . $info->getSaveName();
                                 $image = Image::open($image_path);
@@ -209,9 +209,9 @@ class Upload
                                     'name' => $Name,
                                     'mpid' => $this->mid,
                                     'type' => $this->type,
-                                    'thumb' => 'uploads' . DS . 'thumb' . DS . $info->getSaveName(),
+                                    'thumb' => 'uploads/thumb/' . $info->getSaveName(),
                                     'picture' => $result['data']['src'],
-                                    'reduce' => 'uploads' . DS . 'reduce' . DS . $info->getSaveName(),
+                                    'reduce' => 'uploads/reduce/' . $info->getSaveName(),
                                     'create_time' => time()
                                 ];
                                 $model = new Picture();
@@ -237,13 +237,13 @@ class Upload
     public function uploaderMediaNewsImg()
     {
         $file = \request()->file('file_upload');
-        $info = $file->rule('md5')->validate(['ext' => 'jpg,png,gif,jpeg'])->move(ROOT_PATH . DS . ENTR_PATH . DS . 'uploads');
+        $info = $file->rule('md5')->validate(['ext' => 'jpg,png,gif,jpeg'])->move(ROOT_PATH . '/'. ENTR_PATH . '/uploads');
 
         if ($info) {
             header('Content-Type:application/json; charset=utf-8');
             $res = [
                 'code' => 1,
-                'data' => getHostDomain() . '/uploads' . DS . $info->getSaveName(),
+                'data' => getHostDomain() . '/uploads/' . $info->getSaveName(),
                 'message' => '上完成功'
             ];
             return json_encode($res);
