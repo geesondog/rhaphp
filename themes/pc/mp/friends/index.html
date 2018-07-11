@@ -130,7 +130,6 @@
                     }
                 });
             });
-            //这里有问题的js处理逻辑，后期记得更改
             function send (lastOpenid,page){
                 $.post("{:url('mp/Friends/SynFriends')}",{'lastOpenid':lastOpenid,'page':page},function (result) {
                     console.log(result);
