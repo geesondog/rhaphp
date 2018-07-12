@@ -44,7 +44,7 @@ class MpFriends extends Model
         $userInfo['type'] = 1;
         $userInfo['mpid'] = $mpid;
         $userInfo['subscribe_time'] = time();
-        $userInfo['nickname'] = isset($userInfo['nickname'])?$userInfo['nickname']:'';
+        $userInfo['nickname'] = isset($userInfo['nickname']) ? $userInfo['nickname'] : '';
         if ($this->where(['openid' => $userInfo['openid'], 'mpid' => $mpid])->find()) {
             return $this->allowField(true)->save($userInfo, ['openid' => $userInfo['openid'], 'mpid' => $mpid]);
         } else {
@@ -58,70 +58,73 @@ class MpFriends extends Model
      * @param array $where
      * @return array|false|\PDOStatement|string|Model
      */
-    public function getMemberInfo($where=[])
+    public function getMemberInfo($where = [])
     {
         return $this->where($where)->find();
     }
 
 
-    public function updateMember($where=[],$data=[])
+    public function updateMember($where = [], $data = [])
     {
-        return $this->save($data,$where);
+        return $this->save($data, $where);
     }
 
-    public function getFriendReport($mid=''){
-       
-        $today=$this->where('mpid','=',$mid)->whereTime('subscribe_time','today')->count('id');//今天
-        $yesterday=$this->where('mpid','=',$mid)->whereTime('subscribe_time','yesterday')->count('id');//昨天
-        $week=$this->where('mpid','=',$mid)->whereTime('subscribe_time','week')->count('id');//本周
-        $lastweek=$this->where('mpid','=',$mid)->whereTime('subscribe_time','last week')->count('id');//上周
-        $month=$this->where('mpid','=',$mid)->whereTime('subscribe_time','month')->count('id');//本月
-        $lastmonth=$this->where('mpid','=',$mid)->whereTime('subscribe_time','last month')->count('id');//上月
-        $year=$this->where('mpid','=',$mid)->whereTime('subscribe_time','year')->count('id');//今年
-        $lastyear=$this->where('mpid','=',$mid)->whereTime('subscribe_time','last year')->count('id');//去年
-        $data['subscribe'] =[
-                'today'=>$today,
-                'yesterday'=> $yesterday,
-                'week'=> $week,
-                'lastweek'=> $lastweek,
-                'month'=> $month,
-                'lastmonth'=> $lastmonth,
-                'year'=> $year,
-                'lastyear'=> $lastyear,
-            ];
-        $today=$this->where('mpid','=',$mid)->where('subscribe','=','0')->whereTime('unsubscribe_time','today')->count('id');//今天
-        $yesterday=$this->where('mpid','=',$mid)->whereTime('unsubscribe_time','yesterday')->count('id');//昨天
-        $week=$this->where('mpid','=',$mid)->whereTime('unsubscribe_time','week')->count('id');//本周
-        $lastweek=$this->where('mpid','=',$mid)->whereTime('unsubscribe_time','last week')->count('id');//上周
-        $month=$this->where('mpid','=',$mid)->whereTime('unsubscribe_time','month')->count('id');//本月
-        $lastmonth=$this->where('mpid','=',$mid)->whereTime('unsubscribe_time','last month')->count('id');//上月
-        $year=$this->where('mpid','=',$mid)->whereTime('unsubscribe_time','year')->count('id');//今年
-        $lastyear=$this->where('mpid','=',$mid)->whereTime('unsubscribe_time','last year')->count('id');//去年
-        $data['unsubscribe'] =[
-            'today'=>$today,
-            'yesterday'=> $yesterday,
-            'week'=> $week,
-            'lastweek'=> $lastweek,
-            'month'=> $month,
-            'lastmonth'=> $lastmonth,
-            'year'=> $year,
-            'lastyear'=> $lastyear,
+    public function getFriendReport($mid = '')
+    {
+        $subscribeWhere = [['mpid', '=', $mid], ['subscribe', '=', 1]];
+        $today = $this->where($subscribeWhere)->whereTime('subscribe_time', 'today')->count('id');//今天
+        $yesterday = $this->where($subscribeWhere)->whereTime('subscribe_time', 'yesterday')->count('id');//昨天
+        $week = $this->where($subscribeWhere)->whereTime('subscribe_time', 'week')->count('id');//本周
+        $lastweek = $this->where($subscribeWhere)->whereTime('subscribe_time', 'last week')->count('id');//上周
+        $month = $this->where($subscribeWhere)->whereTime('subscribe_time', 'month')->count('id');//本月
+        $lastmonth = $this->where($subscribeWhere)->whereTime('subscribe_time', 'last month')->count('id');//上月
+        $year = $this->where($subscribeWhere)->whereTime('subscribe_time', 'year')->count('id');//今年
+        $lastyear = $this->where($subscribeWhere)->whereTime('subscribe_time', 'last year')->count('id');//去年
+        $data['subscribe'] = [
+            'today' => $today,
+            'yesterday' => $yesterday,
+            'week' => $week,
+            'lastweek' => $lastweek,
+            'month' => $month,
+            'lastmonth' => $lastmonth,
+            'year' => $year,
+            'lastyear' => $lastyear,
         ];
-        $total=$this->where('mpid','=',$mid)->count('id');//累积、关注与取消关注总和
-        $subscribe_total=$this->where('mpid','=',$mid)->where('subscribe','=','1')->count('id');//关注总数
-        $unsubscribe_total=$this->where('mpid','=',$mid)->where('subscribe','=','0')->count('id');//取消关注总数
+        $unsubscribe = [['mpid', '=', $mid], ['subscribe', '=', 0]];
+        $today = $this->where($unsubscribe)->whereTime('unsubscribe_time', 'today')->count('id');//今天
+        $yesterday = $this->where($unsubscribe)->whereTime('unsubscribe_time', 'yesterday')->count('id');//昨天
+        $week = $this->where($unsubscribe)->whereTime('unsubscribe_time', 'week')->count('id');//本周
+        $lastweek = $this->where($unsubscribe)->whereTime('unsubscribe_time', 'last week')->count('id');//上周
+        $month = $this->where($unsubscribe)->whereTime('unsubscribe_time', 'month')->count('id');//本月
+        $lastmonth = $this->where($unsubscribe)->whereTime('unsubscribe_time', 'last month')->count('id');//上月
+        $year = $this->where($unsubscribe)->whereTime('unsubscribe_time', 'year')->count('id');//今年
+        $lastyear = $this->where($unsubscribe)->whereTime('unsubscribe_time', 'last year')->count('id');//去年
+        $data['unsubscribe'] = [
+            'today' => $today,
+            'yesterday' => $yesterday,
+            'week' => $week,
+            'lastweek' => $lastweek,
+            'month' => $month,
+            'lastmonth' => $lastmonth,
+            'year' => $year,
+            'lastyear' => $lastyear,
+        ];
+        $total = $this->where('mpid', '=', $mid)->count('id');//累积、关注与取消关注总和
+        $subscribe_total = $this->where('mpid', '=', $mid)->where('subscribe', '=', '1')->count('id');//关注总数
+        $unsubscribe_total = $this->where('mpid', '=', $mid)->where('subscribe', '=', '0')->count('id');//取消关注总数
 
-        $data['total']=[
-            'total'=>$total,
-            'subscribe_total'=>$subscribe_total,
-            'unsubscribe_total'=>$unsubscribe_total
+        $data['total'] = [
+            'total' => $total,
+            'subscribe_total' => $subscribe_total,
+            'unsubscribe_total' => $unsubscribe_total
         ];
         return $data;
 
     }
 
-    public function updateLastTime($msgData){
-        $this->save(['last_time'=>time()],['openid'=>$msgData['FromUserName']]);
+    public function updateLastTime($msgData)
+    {
+        $this->save(['last_time' => time()], ['openid' => $msgData['FromUserName']]);
     }
 
 
