@@ -2,10 +2,13 @@
 ![](https://raw.githubusercontent.com/geesondog/rhaphp/master/public/static/images/rhaphp_pc.png)
 
 官方网站：https://www.rhaphp.com/
+
 交流社区：https://ask.rhaphp.com/
+~~~~
+
 高级群：672313914(快速回应)
 免费群：204201861(允许扯谈) 
-
+~~~~
 进入公众号看演示
 
 ![](https://raw.githubusercontent.com/geesondog/rhaphp/master/public/static/images/rhaphp_qrcode.jpg)
