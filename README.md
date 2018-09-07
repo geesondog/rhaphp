@@ -1,9 +1,13 @@
 
 ![](https://raw.githubusercontent.com/geesondog/rhaphp/master/public/static/images/rhaphp_pc.png)
 
-#官方网站：https://www.rhaphp.com/
+官方网站：https://www.rhaphp.com/
+交流社区：https://ask.rhaphp.com/
+高级群：672313914(快速回应)
+免费群：204201861(允许扯谈) 
 
-#交流社区：https://ask.rhaphp.com/
+进入公众号看演示
+![](https://raw.githubusercontent.com/geesondog/rhaphp/master/public/static/images/rhaphp_qrcode.jpg)
 
  RhaPHP微信免费开源公众号管理系统，支持多公众号管理，平台独立且快速简洁易用。灵活的扩展应用机制，具有容易上手，几乎融合微信接口，简单的调用对二次开发与开发扩展应用模块大大提高开发效率，降低企业商家运营成本。扩展应用模块化，机制灵活，代码简单并快速上手。基于THINKPHP5强力内核驱动与LAYUI前端框架，支持 Linux/Windows/Mac。我们致力长期更新，永久免费开源！ 
  
