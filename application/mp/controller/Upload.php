@@ -13,6 +13,7 @@ namespace app\mp\controller;
 use app\common\model\Picture;
 use think\Db;
 use think\Env;
+use think\facade\Request;
 use think\facade\Session;
 use think\Image;
 
@@ -25,6 +26,7 @@ class Upload
 
     public function __construct()
     {
+        if (!Request::isAjax() && !Request::isPost()) return false;
         $sMid = Session::get('mid');
         $sMid = $sMid ? $sMid : 0;
         $s_Mid = Session::get('_mid');
