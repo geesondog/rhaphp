@@ -88,6 +88,34 @@ class Mp extends Base
                 break;
 
         }
+        $search_type = Session::get('search_type');
+        $search_type = $search_type ? $search_type : 1;
+        if (Request::isAjax() && Request::isPost()) {
+            $search_type = input('search_type');
+            Session::set('search_type', $search_type);
+        }
+        if (input('keyword')) {
+            if (input('search_type') == 1) {
+                $result = Db::name('mp_rule')->alias('r')
+                    ->where(['r.mpid' => $this->mid])
+                    ->where('r.type', 'neq', '')
+                    ->where('r.keyword', 'like', '%' . input('keyword') . '%')
+                    ->order('r.id DESC')
+                    ->paginate(10, false, ['query' => ['keyword' => input('keyword'), 'search_type' => input('search_type')]]);
+                $this->assign('data', $result);
+                $this->assign('type', 'search');
+            } else {
+                $result = Db::name('mp_rule')->alias('r')
+                    ->where(['r.mpid' => $this->mid, 'r.type' => $type])
+                    ->where('r.keyword', 'like', '%' . input('keyword') . '%')
+                    ->join('__MP_REPLY__ p', 'p.reply_id=r.reply_id')
+                    ->order('r.id DESC')
+                    ->paginate(10, false, ['query' => ['keyword' => input('keyword'), 'search_type' => input('search_type')]]);
+                $this->assign('data', $result);
+                $this->assign('type', $type);
+            }
+        }
+        $this->assign('search_type', $search_type);
         return view('autoreply');
     }
 

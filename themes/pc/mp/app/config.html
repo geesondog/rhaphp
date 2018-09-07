@@ -142,6 +142,19 @@
                 {/case}
                     {/switch}
                 {/volist}
+                {notempty name="$themes"}
+                <div class="layui-form-item">
+                    <label class="layui-form-label">模板主题</label>
+                    <div class="layui-input-block">
+                        <select name="theme">
+                            {volist name="$themes" key="k" id="m"}
+                            <option value="{$m}" {eq name="$selected" value="$m"}selected{/eq}>{$m}</option>
+                            {/volist}
+                        </select>
+                        <p class="tip_for_p">小提示：系统会自动获取view下的目录作为主题名称</p>
+                    </div>
+                </div>
+                {/notempty}
             </div>
         </div>
     </div>

@@ -16,12 +16,9 @@
 <script type="text/javascript">
     function reinitIframe(){
         var iframe = document.getElementById("iframe");
-        try{
-            var bHeight = iframe.contentWindow.document.body.scrollHeight;
-            var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
-            var height = Math.max(bHeight, dHeight);
-            iframe.height = height;
-        }catch (ex){}
+        var bodyHeight = $("#iframe").contents().find("body").height();
+        if(bodyHeight<500) bodyHeight=500;
+        iframe.height = bodyHeight+50;
     }
     window.setInterval("reinitIframe()", 1);
 </script>

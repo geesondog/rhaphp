@@ -1,28 +1,28 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bd9f4917886e03083bbe1e58cb275014",
+    "content-hash": "16ecb3b09382b30e0b6e05ef0bdaddcd",
     "packages": [
         {
             "name": "topthink/framework",
-            "version": "v5.1.7",
+            "version": "v5.1.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/framework.git",
-                "reference": "81a93819dbbd66774405daf9c27a9219232dba9a"
+                "reference": "03ee17d1ea9c432a698fa1d2411df53974420187"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/framework/81a93819dbbd66774405daf9c27a9219232dba9a.zip",
-                "reference": "81a93819dbbd66774405daf9c27a9219232dba9a",
+                "url": "https://api.github.com/repos/top-think/framework/zipball/03ee17d1ea9c432a698fa1d2411df53974420187",
+                "reference": "03ee17d1ea9c432a698fa1d2411df53974420187",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.6.0",
-                "topthink/think-installer": "~1.0"
+                "topthink/think-installer": "2.*"
             },
             "require-dev": {
                 "johnkary/phpunit-speedtrap": "^1.0",
@@ -55,7 +55,7 @@
                 "orm",
                 "thinkphp"
             ],
-            "time": "2018-03-29T04:16:43+00:00"
+            "time": "2018-09-05T03:37:46+00:00"
         },
         {
             "name": "topthink/think-captcha",
@@ -67,7 +67,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/think-captcha/54c8a51552f99ff9ea89ea9c272383a8f738ceee.zip",
+                "url": "https://api.github.com/repos/top-think/think-captcha/zipball/54c8a51552f99ff9ea89ea9c272383a8f738ceee",
                 "reference": "54c8a51552f99ff9ea89ea9c272383a8f738ceee",
                 "shasum": ""
             },
@@ -106,7 +106,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/think-helper/0c99dc625b0d2d4124e1b6ca15a3ad6f0125963f.zip",
+                "url": "https://api.github.com/repos/top-think/think-helper/zipball/0c99dc625b0d2d4124e1b6ca15a3ad6f0125963f",
                 "reference": "0c99dc625b0d2d4124e1b6ca15a3ad6f0125963f",
                 "shasum": ""
             },
@@ -142,7 +142,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/think-image/8586cf47f117481c6d415b20f7dedf62e79d5512.zip",
+                "url": "https://api.github.com/repos/top-think/think-image/zipball/8586cf47f117481c6d415b20f7dedf62e79d5512",
                 "reference": "8586cf47f117481c6d415b20f7dedf62e79d5512",
                 "shasum": ""
             },
@@ -174,16 +174,16 @@
         },
         {
             "name": "topthink/think-installer",
-            "version": "v1.0.12",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/think-installer.git",
-                "reference": "1be326e68f63de4e95977ed50f46ae75f017556d"
+                "reference": "f5400a12c60e513911aef41fe443fa6920952675"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/think-installer/1be326e68f63de4e95977ed50f46ae75f017556d.zip",
-                "reference": "1be326e68f63de4e95977ed50f46ae75f017556d",
+                "url": "https://api.github.com/repos/top-think/think-installer/zipball/f5400a12c60e513911aef41fe443fa6920952675",
+                "reference": "f5400a12c60e513911aef41fe443fa6920952675",
                 "shasum": ""
             },
             "require": {
@@ -211,29 +211,29 @@
                     "email": "448901948@qq.com"
                 }
             ],
-            "time": "2017-05-27T06:58:09+00:00"
+            "time": "2018-05-11T06:45:42+00:00"
         },
         {
-            "name": "topthink/think-worker",
-            "version": "v1.0.1",
+            "name": "topthink/think-mongo",
+            "version": "v2.0.11",
             "source": {
                 "type": "git",
-                "url": "https://github.com/top-think/think-worker.git",
-                "reference": "b609ff5e38dbb7194aab027d2b2c6b31a7ed1bd1"
+                "url": "https://github.com/top-think/think-mongo.git",
+                "reference": "70e19a098265f46b39c4ad4f208195d4348fd0c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/think-worker/b609ff5e38dbb7194aab027d2b2c6b31a7ed1bd1.zip",
-                "reference": "b609ff5e38dbb7194aab027d2b2c6b31a7ed1bd1",
+                "url": "https://api.github.com/repos/top-think/think-mongo/zipball/70e19a098265f46b39c4ad4f208195d4348fd0c6",
+                "reference": "70e19a098265f46b39c4ad4f208195d4348fd0c6",
                 "shasum": ""
             },
             "require": {
-                "workerman/workerman": "^3.3.0"
+                "topthink/framework": "~5.1.7"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "think\\worker\\": "src"
+                    "think\\mongo\\": "src"
                 },
                 "files": []
             },
@@ -247,21 +247,161 @@
                     "email": "liu21st@gmail.com"
                 }
             ],
-            "description": "workerman extend for thinkphp5",
-            "time": "2016-10-08T06:07:03+00:00"
+            "description": "mongodb driver for thinkphp5",
+            "time": "2018-06-03T01:53:48+00:00"
         },
         {
-            "name": "workerman/workerman",
-            "version": "v3.5.4",
+            "name": "topthink/think-queue",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/walkor/Workerman.git",
-                "reference": "f6e129079e5f5398bffc218024f2dd95678fc564"
+                "url": "https://github.com/top-think/think-queue.git",
+                "reference": "d9b8f38c7af8ad770257b0d7db711ce8b12a6969"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/walkor/Workerman/f6e129079e5f5398bffc218024f2dd95678fc564.zip",
-                "reference": "f6e129079e5f5398bffc218024f2dd95678fc564",
+                "url": "https://api.github.com/repos/top-think/think-queue/zipball/d9b8f38c7af8ad770257b0d7db711ce8b12a6969",
+                "reference": "d9b8f38c7af8ad770257b0d7db711ce8b12a6969",
+                "shasum": ""
+            },
+            "require": {
+                "topthink/framework": "5.1.*",
+                "topthink/think-helper": ">=1.0.4",
+                "topthink/think-installer": "^2.0"
+            },
+            "type": "think-extend",
+            "extra": {
+                "think-config": {
+                    "queue": "src/config.php"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "think\\": "src"
+                },
+                "files": [
+                    "src/common.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "yunwuxin",
+                    "email": "448901948@qq.com"
+                }
+            ],
+            "description": "The ThinkPHP5 Queue Package",
+            "time": "2018-05-11T06:55:55+00:00"
+        },
+        {
+            "name": "topthink/think-swoole",
+            "version": "v2.0.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/top-think/think-swoole.git",
+                "reference": "88287188bf5e8c64bd2ed942005c558be5a6b566"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/top-think/think-swoole/zipball/88287188bf5e8c64bd2ed942005c558be5a6b566",
+                "reference": "88287188bf5e8c64bd2ed942005c558be5a6b566",
+                "shasum": ""
+            },
+            "require": {
+                "ext-swoole": ">=1.9.5",
+                "topthink/framework": "~5.1.20",
+                "topthink/think-installer": "^2.0"
+            },
+            "type": "think-extend",
+            "extra": {
+                "think-config": {
+                    "swoole": "src/config.php",
+                    "swoole_server": "src/server_config.php"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "think\\swoole\\": "src"
+                },
+                "files": [
+                    "src/command.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "liu21st",
+                    "email": "liu21st@gmail.com"
+                }
+            ],
+            "description": "Swoole extend for thinkphp5.1",
+            "time": "2018-07-28T15:30:17+00:00"
+        },
+        {
+            "name": "topthink/think-worker",
+            "version": "v2.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/top-think/think-worker.git",
+                "reference": "eff93014ccf612a9995580929e1a852e2d93abe9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/top-think/think-worker/zipball/eff93014ccf612a9995580929e1a852e2d93abe9",
+                "reference": "eff93014ccf612a9995580929e1a852e2d93abe9",
+                "shasum": ""
+            },
+            "require": {
+                "topthink/framework": "5.1.*",
+                "topthink/think-installer": "^2.0",
+                "workerman/workerman": "^3.3.0"
+            },
+            "type": "think-extend",
+            "extra": {
+                "think-config": {
+                    "worker": "src/config.php",
+                    "worker_server": "src/worker_config.php"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "think\\worker\\": "src"
+                },
+                "files": [
+                    "src/command.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "liu21st",
+                    "email": "liu21st@gmail.com"
+                }
+            ],
+            "description": "workerman extend for thinkphp5.1",
+            "time": "2018-07-09T07:19:31+00:00"
+        },
+        {
+            "name": "workerman/workerman",
+            "version": "v3.5.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/walkor/Workerman.git",
+                "reference": "cf2538169af989fbba4d55be1bfc8c8d80fa71e9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/walkor/Workerman/zipball/cf2538169af989fbba4d55be1bfc8c8d80fa71e9",
+                "reference": "cf2538169af989fbba4d55be1bfc8c8d80fa71e9",
                 "shasum": ""
             },
             "require": {
@@ -294,7 +434,7 @@
                 "asynchronous",
                 "event-loop"
             ],
-            "time": "2017-12-06T04:17:52+00:00"
+            "time": "2018-07-16T02:11:10+00:00"
         }
     ],
     "packages-dev": [],

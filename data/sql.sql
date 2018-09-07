@@ -438,6 +438,30 @@ CREATE TABLE `rh_picture` (
   `reduce` varchar(255) NOT NULL COMMENT '质量缩小正方图'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `rh_address` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL COMMENT '会员 ID',
+  `mpid` int(11) NOT NULL COMMENT '公众标识',
+  `name` varchar(60) NOT NULL COMMENT '收货人',
+  `phone` varchar(18) NOT NULL COMMENT '手机号码',
+  `address` text NOT NULL COMMENT '详细地址',
+  `take_type` varchar(60) NOT NULL COMMENT '收货时间类型',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1默认地址',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员收货地址';
+
+CREATE TABLE `rh_prefix_jobs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `queue` varchar(255) NOT NULL,
+  `payload` longtext NOT NULL,
+  `attempts` tinyint(3) unsigned NOT NULL,
+  `reserved` tinyint(3) unsigned NOT NULL,
+  `reserved_at` int(10) unsigned DEFAULT NULL,
+  `available_at` int(10) unsigned NOT NULL,
+  `created_at` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='队列任务表';
+
 ALTER TABLE `rh_picture`
   ADD PRIMARY KEY (`id`),
   ADD KEY `mpid` (`mpid`),

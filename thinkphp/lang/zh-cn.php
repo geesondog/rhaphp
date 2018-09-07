@@ -25,6 +25,7 @@ return [
     'method param miss'                                         => '方法参数错误',
     'method not exists'                                         => '方法不存在',
     'function not exists'                                       => '函数不存在',
+    'file not exists'                                           => '文件不存在',
     'module not exists'                                         => '模块不存在',
     'controller not exists'                                     => '控制器不存在',
     'class not exists'                                          => '类不存在',
@@ -51,6 +52,7 @@ return [
     'where express error'                                       => '查询表达式错误',
     'no data to update'                                         => '没有任何数据需要更新',
     'miss data to insert'                                       => '缺少需要写入的数据',
+    'not support data'                                          => '不支持的数据表达式',
     'miss complex primary data'                                 => '缺少复合主键数据',
     'miss update condition'                                     => '缺少更新条件',
     'model data Not Found'                                      => '模型数据不存在',
@@ -69,6 +71,7 @@ return [
     'chunk not support order'                                   => 'Chunk不支持调用order方法',
     'route pattern error'                                       => '路由变量规则定义错误',
     'route behavior will not support'                           => '路由行为废弃（使用中间件替代）',
+    'closure not support cache(true)'                           => '使用闭包查询不支持cache(true)，请指定缓存Key',
 
     // 上传错误信息
     'unknown upload error'                                      => '未知上传错误！',

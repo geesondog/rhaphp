@@ -63,10 +63,36 @@
     应用简介
     <hr>
     <blockquote class="layui-elem-quote">{$info.description}</blockquote>
-    应用详情
-    <hr>
-    <div class="apps-info-content">
-        {$info.content|raw}
+    <div class="layui-tab layui-tab-card">
+        <ul class="layui-tab-title">
+            <li class="layui-this">应用详情</li>
+            <li>升级日志</li>
+        </ul>
+        <div class="layui-tab-content" style="height: auto;">
+            <div class="layui-tab-item layui-show">
+                <div class="apps-info-content">
+                    {$info.content|raw}
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <ul class="layui-timeline">
+                    {if isset($info['upgrade'])}
+                    {volist name="$info.upgrade" id="v"}
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text">
+                            <h3 class="layui-timeline-title">{$v.create_time|date="Y-m-d H:i"}</h3>
+                            <p>
+                                {$v.description|raw}
+                            </p>
+                        </div>
+                    </li>
+                    {/volist}
+                    {/if}
+                </ul>
+            </div>
+
+        </div>
     </div>
     <br>
     <br>
@@ -74,7 +100,9 @@
 <script>
     var layer;
     var form;
-    layui.use(['layer','form'], function() {
+    var element
+    layui.use(['layer','form','element'], function() {
+        element = layui.element;
         layer = layui.layer;
         form = layui.form;
     })

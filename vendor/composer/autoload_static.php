@@ -4,17 +4,22 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitbe5300cfca6ed7e55a1046d9359ecc25
+class ComposerStaticInit0d7b6b2bb5080df24d5801ed35e852f6
 {
     public static $files = array (
-        '1cfd2761b63b0a29ed23657ea394cb2d' => __DIR__ . '/..' . '/topthink/think-captcha/src/helper.php',
         '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
+        '1cfd2761b63b0a29ed23657ea394cb2d' => __DIR__ . '/..' . '/topthink/think-captcha/src/helper.php',
+        'cc56288302d9df745d97c934d6a6e5f0' => __DIR__ . '/..' . '/topthink/think-queue/src/common.php',
+        'ea51e7f80936725691663347d5b38bd9' => __DIR__ . '/..' . '/topthink/think-swoole/src/command.php',
+        'ffc1d7141d4fcbaeb47a6929f0811ed1' => __DIR__ . '/..' . '/topthink/think-worker/src/command.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         't' => 
         array (
             'think\\worker\\' => 13,
+            'think\\swoole\\' => 13,
+            'think\\mongo\\' => 12,
             'think\\helper\\' => 13,
             'think\\composer\\' => 15,
             'think\\captcha\\' => 14,
@@ -35,6 +40,14 @@ class ComposerStaticInitbe5300cfca6ed7e55a1046d9359ecc25
         array (
             0 => __DIR__ . '/..' . '/topthink/think-worker/src',
         ),
+        'think\\swoole\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/topthink/think-swoole/src',
+        ),
+        'think\\mongo\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/topthink/think-mongo/src',
+        ),
         'think\\helper\\' => 
         array (
             0 => __DIR__ . '/..' . '/topthink/think-helper/src',
@@ -50,6 +63,7 @@ class ComposerStaticInitbe5300cfca6ed7e55a1046d9359ecc25
         'think\\' => 
         array (
             0 => __DIR__ . '/..' . '/topthink/think-image/src',
+            1 => __DIR__ . '/..' . '/topthink/think-queue/src',
         ),
         'app\\' => 
         array (
@@ -64,8 +78,8 @@ class ComposerStaticInitbe5300cfca6ed7e55a1046d9359ecc25
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitbe5300cfca6ed7e55a1046d9359ecc25::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitbe5300cfca6ed7e55a1046d9359ecc25::$prefixDirsPsr4;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit0d7b6b2bb5080df24d5801ed35e852f6::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit0d7b6b2bb5080df24d5801ed35e852f6::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }

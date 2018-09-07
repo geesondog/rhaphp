@@ -2,6 +2,8 @@
 namespace app\install\controller;
 
 use think\facade\Env;
+use think\facade\Request;
+use think\facade\View;
 
 class Index extends \think\Controller {
 
@@ -18,6 +20,8 @@ class Index extends \think\Controller {
 		if (request()->action() != 'complete' && is_file(APP_PATH . '/install.lock')) {
 			return $this->redirect('admin/index/index');
 		}
+		View::config('view_path',APP_PATH.Request::module().'/view/');
+		$this->assign('stlUrl',Request::domain().'/index.php');
 	}
 
 	public function index() {

@@ -38,7 +38,9 @@
             {if condition="$addonInfo.entry_url neq ''"}
             <li {eq name="type" value="news" }class="layui-this" {/eq} > <a href="{:url('mp/App/index',['name'=>$addonInfo.addon,'type'=>'news'])}">响应图文</a></li>
             {/if}
+            {if $isShowApi==true}
             <li {eq name="type" value="addon" }class="layui-this" {/eq}><a href="{:url('mp/App/index',['name'=>$addonInfo.addon,'type'=>'addon'])}">响应应用</a></li>
+            {/if}
         </ul>
         <div class="layui-tab-content">
             {if condition="$addonInfo.entry_url neq ''"}

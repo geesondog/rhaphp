@@ -19,7 +19,7 @@ use think\Facade;
  * @method void init(array $config = []) static session初始化
  * @method bool has(string $name,string $prefix = null) static 判断session数据
  * @method mixed prefix(string $prefix = '') static 设置或者获取session作用域（前缀）
- * @method mixed get(string $name,string $prefix = null) static session获取
+ * @method mixed get(string $name = '',string $prefix = null) static session获取
  * @method mixed pull(string $name,string $prefix = null) static session获取并删除
  * @method void push(string $key, mixed $value) static 添加数据到一个session数组
  * @method void set(string $name, mixed $value , string $prefix = null) static 设置session数据
@@ -34,4 +34,13 @@ use think\Facade;
  */
 class Session extends Facade
 {
+    /**
+     * 获取当前Facade对应类名（或者已经绑定的容器对象标识）
+     * @access protected
+     * @return string
+     */
+    protected static function getFacadeClass()
+    {
+        return 'session';
+    }
 }

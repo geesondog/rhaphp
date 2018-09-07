@@ -29,7 +29,6 @@ use think\facade\Request;
 use think\facade\Route;
 use think\facade\Session;
 use think\facade\Url;
-use think\Loader;
 use think\Response;
 use think\route\RuleItem;
 
@@ -71,7 +70,7 @@ if (!function_exists('app')) {
      * @param string    $name 类名或标识 默认获取当前应用实例
      * @param array     $args 参数
      * @param bool      $newInstance    是否每次创建新的实例
-     * @return object
+     * @return mixed|\think\App
      */
     function app($name = 'think\App', $args = [], $newInstance = false)
     {
@@ -102,7 +101,7 @@ if (!function_exists('bind')) {
      */
     function bind($abstract, $concrete = null)
     {
-        return Container::getInstance()->bind($abstract, $concrete);
+        return Container::getInstance()->bindTo($abstract, $concrete);
     }
 }
 
@@ -302,6 +301,21 @@ if (!function_exists('debug')) {
         } else {
             return 'm' == $dec ? Debug::getRangeMem($start, $end) : Debug::getRangeTime($start, $end, $dec);
         }
+    }
+}
+
+if (!function_exists('download')) {
+    /**
+     * 获取\think\response\Download对象实例
+     * @param string  $filename 要下载的文件
+     * @param string  $name 显示文件名
+     * @param bool    $content 是否为内容
+     * @param integer $expire 有效期（秒）
+     * @return \think\response\Download
+     */
+    function download($filename, $name = '', $content = false, $expire = 180)
+    {
+        return Response::create($filename, 'download')->name($name)->isContent($content)->expire($expire);
     }
 }
 
@@ -659,10 +673,6 @@ if (!function_exists('view')) {
      */
     function view($template = '', $vars = [], $code = 200, $filter = null)
     {
-        if ('' === $template) {
-            $template = Loader::parseName(request()->action(true));
-        }
-
         return Response::create($template, 'view', $code)->assign($vars)->filter($filter);
     }
 }
@@ -692,5 +702,19 @@ if (!function_exists('xml')) {
     function xml($data = [], $code = 200, $header = [], $options = [])
     {
         return Response::create($data, 'xml', $code, $header, $options);
+    }
+}
+
+if (!function_exists('yaconf')) {
+    /**
+     * 获取yaconf配置
+     *
+     * @param  string    $name 配置参数名
+     * @param  mixed     $default   默认值
+     * @return mixed
+     */
+    function yaconf($name, $default = null)
+    {
+        return Config::yaconf($name, $default);
     }
 }

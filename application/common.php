@@ -236,9 +236,13 @@ function loadAdApi($name = null, $msg = [], $param = [])
     if ($_addon['status'] != 1) replyText('Application has been withdrawn or not installed');
     session('apiParam', $param);
     $filename = ADDON_PATH . $name . '/controller/Api.php';
+    $commonFile = ADDON_PATH . $name . '/Common.php';
+    if(file_exists($commonFile)){
+        include_once $commonFile;
+    }
     session('addonName', $name);
     if (file_exists($filename)) {
-        include_once ADDON_PATH . $name . "/controller/Api.php";
+        include_once $filename;
         $class = '\addons\\' . $name . '\controller\Api';
         if (class_exists($class)) {
             $apiObj = new $class;
@@ -529,7 +533,6 @@ function getAddonConfigByFile($name = '', $key = '')
     } else {
         return false;
     }
-
 }
 
 function getAdmin()
@@ -537,19 +540,10 @@ function getAdmin()
     if (empty(session('admin')) && empty(cookie('admin'))) {
         return false;
     } else {
-
         $arr1 = session('admin') ? session('admin') : [];
         $arr2 = cookie('admin') ? cookie('admin') : [];
-        $_admin = array_merge($arr1, $arr2);
-        $where = [
-            ['id', '=', $_admin['id']],
-            ['status', '=', 1]
-        ];
-        return \think\Db::name('admin')->where($where)
-            ->cache('ststemAdmin')->find();
+        return $_admin = array_merge($arr1, $arr2);
     }
-
-
 }
 
 /**
@@ -1099,6 +1093,30 @@ function xml_to_array($xml)
     } else {
         return $xml;
     }
+}
+
+/**
+ * 数组转XML
+ * @param $array
+ * @return string
+ * @throws \think\Exception
+ */
+function array_to_xml($array)
+{
+    if (!is_array($array)) {
+        throw new \think\Exception("参数不是数组！");
+    }
+
+    $xml = "<xml>";
+    foreach ($array as $key => $val) {
+        if (is_numeric($val)) {
+            $xml .= "<" . $key . ">" . $val . "</" . $key . ">";
+        } else {
+            $xml .= "<" . $key . "><![CDATA[" . $val . "]]></" . $key . ">";
+        }
+    }
+    $xml .= "</xml>";
+    return $xml;
 }
 
 /**
@@ -1694,8 +1712,24 @@ function wxpayNotify()
                 && isset($array['openid'])
                 && isset($array['mch_id'])
             ) {
-                queryOrder($array['out_trade_no']);
-                // file_put_contents('ok.txt', json_encode($array));
+                $paymentModel = new \app\common\model\Payment();
+                if (!$payment = $paymentModel->getPaymentByFind(['order_number' => $array['out_trade_no']])) {
+                    $data = ['return_code' => 'FAIL', 'return_msg' => '定单号不存在'];
+                } else {
+                    try {
+                        setWxpayConfig($payment['mpid']);
+                        \WxPayResults::Init($xml);
+                        $result = queryOrder($array['out_trade_no']);
+                        if ($result['errCode'] == 'ok') {
+                            $data = ['return_code' => 'SUCCESS', 'return_msg' => 'OK'];
+                        } else {
+                            $data = ['return_code' => 'FAIL', 'return_msg' => $result['errMsg']];
+                        }
+                    } catch (\Exception $exception) {
+                        $data = ['return_code' => 'FAIL', 'return_msg' => $exception->getMessage()];
+                    }
+                }
+                echo array_to_xml($data);
             }
         }
     }
@@ -2048,7 +2082,7 @@ function getWxPayUrl($mid = '', $param = [])
 function setMpKeywordByNews($keyword = '', $title = '', $picurl = '', $desc = '', $link = '')
 {
     $mp = getMpInfo();
-    if (!$keyword || !$title || !$picurl || !$desc || !$link || !isset($mp['id'])) {
+    if (!$keyword || !$title || !$picurl || !$link || !isset($mp['id'])) {
         return false;//['status'=>0,'msg'=>'参数缺失'];
     }
     $data['mpid'] = $mp['id'];
@@ -2237,4 +2271,79 @@ function getThumb($file_path, $type = 1)
 
     return getHostDomain() . DS . $file;
 
+}
+
+/**
+ * 发送模板消息
+ * @param array $data 消息结构
+ * ｛
+ * "touser":"OPENID",
+ * "template_id":"ngqIpbwh8bUfcSsECmogfXcV14J0tQlEpBO27izEYtY",
+ * "url":"http://weixin.qq.com/download",
+ * "topcolor":"#FF0000",
+ * "data":{
+ * "参数名1": {
+ * "value":"参数",
+ * "color":"#173177"     //参数颜色
+ * },
+ * "Date":{
+ * "value":"06月07日 19时24分",
+ * "color":"#173177"
+ * },
+ * "CardNumber":{
+ * "value":"0426",
+ * "color":"#173177"
+ * },
+ * "Type":{
+ * "value":"消费",
+ * "color":"#173177"
+ * }
+ * }
+ * }
+ * @return boolean|array
+ */
+function sendTemplateMessage($data = [])
+{
+    $wxObj = getWechatActiveObj();
+    $result = $wxObj->sendTemplateMessage($data);
+    if (isset($result['errcode']) && $result['errcode'] == '0') {
+        return $result;
+    }
+    if ($msg = wxApiResultErrorCode($wxObj->errCode)) {
+        return ['errcode' => -1, 'errmsg' => $msg];
+    }
+    return ['errcode' => -1, 'errmsg' => ' errCode:' . $wxObj->errCode . ' errMsg:' . $wxObj->errMsg];
+
+}
+
+function getRuleTypeName($type)
+{
+    switch ($type) {
+        case 'text':
+            return '回复文本';
+            break;
+        case 'news':
+            return '回复图文';
+            break;
+        case 'addon':
+            return '触发应用';
+            break;
+        case 'voice':
+            return '回复语音';
+            break;
+        case 'image':
+            return '回复图片';
+            break;
+        case 'video':
+            return '回复视频';
+            break;
+        case 'music':
+            return '回复音乐';
+            break;
+        case 'multi_news':
+            return '回复多图文';
+            break;
+        default:
+            return '未知';
+    }
 }

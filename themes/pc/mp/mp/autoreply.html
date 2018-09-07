@@ -1,6 +1,30 @@
 {extend name="../admin/common/base" /}
 {block name="nav_title"}
-<a href="{:url('addKeyword')}" id="addkw" class="layui-btn layui-btn-normal layui-btn-sm rha-nav-title">增加关键词</a>
+    <div class="layui-row">
+        <div class="layui-col-md10">
+            <form class="layui-form" action="">
+                <div class="layui-col-md2">
+                    <div class="layui-form-item">
+                        <select name="search_type" lay-filter="types" lay-verify="required">
+                            <option {if $search_type==1} selected {/if} value="1">全部</option>
+                            <option {if $search_type==2} selected {/if} value="2">当前类型</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-col-md5" style="margin-left: 5px; line-height: 38px;">
+                    <div class="layui-form-item">
+                        <input name="keyword" placeholder="请输入关键词" value="{:input('keyword')}" class="layui-input" type="text">
+                    </div>
+                </div>
+                <div class="layui-col-md4" style="margin-left: 5px; line-height: 38px;">
+                    <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="formDemo">搜索内容</button>
+                </div>
+            </form>
+        </div>
+        <div class="layui-col-md2">
+            <a href="{:url('addKeyword')}" id="addkw" class="layui-btn layui-btn-normal layui-btn-sm" style="float: right;margin-top: 5px;">增加关键词</a>
+        </div>
+    </div>
 {/block}
 {block name="body"}
 {include file="/common/autoreplay_nav" /}
@@ -13,6 +37,9 @@
         <li {eq name="type" value="image"}class="layui-this"{/eq}><a href="{:url('mp/Mp/autoReply',['type'=>'image'])}">回复图片</a></li>
         <li {eq name="type" value="video"}class="layui-this"{/eq}><a href="{:url('mp/Mp/autoReply',['type'=>'video'])}">回复视频</a></li>
         <li {eq name="type" value="music"}class="layui-this"{/eq}><a href="{:url('mp/Mp/autoReply',['type'=>'music'])}">回复音乐</a></li>
+        {if input('keyword')}
+        <li {eq name="type" value="search"}class="layui-this"{/eq}><a>搜索全部</a></li>
+        {/if}
     </ul>
     <div class="layui-tab-content">
 
@@ -326,10 +353,58 @@
         </table>
         {$data->render()|raw}
         {/case}
+        {case value="search"}
+        <table class="layui-table" lay-skin="line">
+            <colgroup>
+                <col width="120">
+                <col >
+                <col width="100" >
+                <col width="150">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>关键词</th>
+                <th>类型</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="data" id="vo"}
+            <tr>
+                <td>{$vo.keyword}</td>
+                <td>{:getRuleTypeName($vo.type)}</td>
+                <td>{if condition="$vo.status=='1'"}使用中{else/}已停用{/if}</td>
+                <td>
+                    <div class="">
+                        <a class="rha-bt-a" href="javascript:;" onclick="editReply('{$vo.id}')">修改</a>
+                        {if condition="$vo.status=='1'"}
+                        <a class="rha-bt-a" href="javascript:;" onclick="updateReply('{$vo.id}','0')">停用</a>
+                        {else/}
+                        <a class="rha-bt-a" href="javascript:;" onclick="updateReply('{$vo.id}','1')">开启</a>
+                        {/if}
+                        <a class="rha-bt-a" href="javascript:;" onclick="delReply('{$vo.id}')">删除</a>
+                    </div>
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+        {$data->render()|raw}
+        {/case}
         {/switch}
     </div>
 </div>
 <script>
+    var layer;
+    var form;
+    layui.use(['layer','form'], function() {
+        layer = layui.layer;
+        form = layui.form;
+        form.on('select(types)', function(data){
+            $.post("",{search_type:data.value},function (res) {})
+        });
+    })
     function delReply(id) {
         layui.use('layer', function(){
             var layer = layui.layer;

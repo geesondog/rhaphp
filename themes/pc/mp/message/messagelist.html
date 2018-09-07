@@ -43,7 +43,7 @@
                             </div>
                         </div>
             </td>
-            <td>{$vo.create_time}</td>
+            <td>{$vo.create_time|date="y-m-d H:i"}</td>
             <td><a class="rha-bt-a" href="{:url('replyMsg',['openid'=>$vo.openid])}">回复消息</a> </td>
         </tr>
         {/volist}

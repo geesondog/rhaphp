@@ -3,7 +3,9 @@
 <dl>
     <dt><i class="type-ico ico-trade rha-icon">&#xe617;</i>应用配置</dt></dt>
     <dd class="{eq name="$action_name" value="index"}selected{/eq}"><a href="{:url('mp/App/index',['name'=>$addonInfo.addon,'type'=>'news'])}">入口配置</a></dd>
-    {if condition="isset($addonInfo.config) && !empty($addonInfo.config)"}
+    {if condition="isset($addonInfo.config) && !empty($addonInfo.config)"}{/if}
+    <!--暂保留原判断-->
+    {if $isShowConfigMenu == true}
     <dd class="{eq name="$action_name" value="config"}selected{/eq}"><a href="{:url('mp/App/config',['name'=>$addonInfo.addon])}">参数设置</a></dd>
     {/if}
 </dl>

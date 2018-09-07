@@ -14,12 +14,12 @@
 {/if}
 <iframe id="iframe" onload="changeFrameHeight()" frameborder="no" border="0" width="100%"  marginwidth="0" marginheight="0"  allowtransparency="yes" src="{$url}"></iframe>
 <script type="text/javascript">
-    function changeFrameHeight(){
-        var ifm= document.getElementById("iframe");
-        ifm.height=document.documentElement.clientHeight;
+    function reinitIframe(){
+        var iframe = document.getElementById("iframe");
+        var bodyHeight = $("#iframe").contents().find("body").height();
+        if(bodyHeight<500) bodyHeight=500;
+        iframe.height = bodyHeight+50;
     }
-    window.onresize=function(){
-        changeFrameHeight();
-    }
+    window.setInterval("reinitIframe()", 1);
 </script>
 {/block}

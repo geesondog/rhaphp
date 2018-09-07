@@ -8,24 +8,25 @@
 // +----------------------------------------------------------------------
 
 namespace app\behavior;
-use think\Loader;
 
 class Jssdk
 {
-    public function run($param=null){
-        $mp=getMpInfo();
-        include_once EXTEND_PATH.'Jssdk/jssdk.php';
-        $jssdk=new \JSSDK($mp['appid'],$mp['appsecret']);
-        $wx= $jssdk->getSignPackage();
-        $httpType=getHttpType();
-        echo  "<script src=\"{$httpType}res.wx.qq.com/open/js/jweixin-1.2.0.js\"></script>
+    public function run($param = null)
+    {
+        $mp = getMpInfo();
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+        $url = "$protocol$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $wxObj = getWechatActiveObj($mp['id']);
+        $wx = $wxObj->getJsSign($url);
+        $httpType = getHttpType();
+        echo "<script src=\"{$httpType}res.wx.qq.com/open/js/jweixin-1.2.0.js\"></script>
         <script>
           wx.config({
               debug: false,
-              appId: '".$wx['appId']."',
-              timestamp: '".$wx['timestamp']."',
-              nonceStr: '".$wx['nonceStr']."',
-              signature: '".$wx['signature']."',
+              appId: '" . $wx['appId'] . "',
+              timestamp: '" . $wx['timestamp'] . "',
+              nonceStr: '" . $wx['nonceStr'] . "',
+              signature: '" . $wx['signature'] . "',
               jsApiList: [
                 'checkJsApi',
                 'onMenuShareTimeline',

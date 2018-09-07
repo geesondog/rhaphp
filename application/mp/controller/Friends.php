@@ -80,7 +80,10 @@ class Friends extends Base
         $table = config('database.prefix') . 'syn_openid';
         $sql = "DELETE FROM {$table} WHERE openid IN (SELECT * FROM(SELECT openid FROM {$table} WHERE mpid = {$this->mid}  GROUP BY openid HAVING COUNT(openid) > 1) AS b) AND id NOT IN (SELECT * FROM (SELECT MIN(id) FROM {$table} WHERE mpid = {$this->mid}  GROUP BY openid HAVING COUNT(openid) > 1) AS c)";
         Db::execute($sql);
-        $opneidTotal = Db::name('syn_openid')->where('mpid', '=', $this->mid)->count('distinct(openid)');
+        $opneidTotal = Db::name('syn_openid')->where('mpid', '=', $this->mid)
+            ->distinct(true)
+            ->field('openid')
+            ->count();
         $friendTotal = session($this->mid . 'friendTotal');
         if ($opneidTotal >= $friendTotal  && $friendTotal >0) {
             $synOpenids = Db::name('syn_openid')->where('mpid', '=', $this->mid)

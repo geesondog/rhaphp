@@ -55,7 +55,7 @@ class Common extends Controller
         }
         if (empty(getMember())) {
             if ($this->isWexinLogin == true) {
-                if (empty(getOrSetOpenid())) {
+                //if (empty(getOrSetOpenid())) {
                     session('callbackUrl', getHostDomain() . $_SERVER['REQUEST_URI']);
                     $setingModel = new Setting();
                     $registerConfValue = $setingModel->getSetting(['mpid' => $mid, 'name' => 'register','cate'=>'mp']);
@@ -68,7 +68,7 @@ class Common extends Controller
                     } else {
                         $this->error('你还没有保存《授权&注册->注册设置》，请先前往后台进行设置');
                     }
-                }
+                //}
             }
         }
         getOrSetOpenid(input('openid'));

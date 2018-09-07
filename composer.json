@@ -20,8 +20,11 @@
         "topthink/framework": "5.1.*",
         "topthink/think-captcha": "^2.0",
         "topthink/think-image": "^1.0",
+        "topthink/think-worker": "^2.0",
+        "topthink/think-mongo": "^2.0",
         "topthink/think-helper": "^1.0",
-        "topthink/think-worker": "^1.0"
+        "topthink/think-swoole": "^2.0",
+        "topthink/think-queue": "^2.0"
     },
     "autoload": {
         "psr-4": {

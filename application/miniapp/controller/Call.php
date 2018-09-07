@@ -11,6 +11,7 @@ namespace app\miniapp\controller;
 
 use think\facade\Config;
 use think\facade\Request;
+use think\facade\View;
 
 class Call
 {
@@ -43,7 +44,9 @@ class Call
             if(!is_dir(MINIAPP_PATH.$this->addon)){
                 abort(500, lang($this->addon.'应用不存在'));
             }
-            Config::set('template.tpl_replace_string.__ADDONSTATIC__','/miniapp/'.$this->addon.'/static/');
+            $viewConfig['tpl_replace_string']['__STATIC__'] = '/public/static/';
+            $viewConfig['tpl_replace_string']['__ADDONSTATIC__'] = '/miniapp/' . $this->addon . '/static/';
+            View::config($viewConfig);
             if (file_exists($filename)) {
                 include_once MINIAPP_PATH.$this->addon.'/controller/'. ucfirst($this->col).'.php';
                 $class = '\miniapp\\' . $this->addon . '\controller\\' . ucfirst($this->col);

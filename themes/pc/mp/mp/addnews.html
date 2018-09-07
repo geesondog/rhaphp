@@ -7,6 +7,11 @@
 {js href='__STATIC__/admin/ueditor/ueditor.config.js' /}
 {js href='__STATIC__/admin/ueditor/ueditor.all.js' /}
 {js href='__STATIC__/js/ajax_file_upload.js' /}
+<style>
+    #edui1_iframeholder img{ width: 100%;}
+    #edui1_iframeholder{
+        height: 450px !important;}
+</style>
 {/block}
 {block name="body"}
 
@@ -86,7 +91,7 @@
         <p class="rha_news_content"><span style="color:red;"> *</span> 正文</p>
         <div class="controls" id="discripContainer">
             <textarea id="tareaProductDiscrip1" name="discripArea" style=" width: 100%; display: none;"></textarea>
-            <script id="editor" type="text/plain" style="width: 100%; height: 400px;"></script>
+            <script id="editor" type="text/plain" style="width: 380px; height: 400px;"></script>
         </div>
         <p></p>
         <p>原文链接</p>
@@ -180,7 +185,7 @@
         <p class="rha_news_content"><span style="color:red;"> * </span>正文</p>
         <div class="controls" id="discripContainer">
                 <textarea id="tareaProductDiscrip" name="discripArea" style=" width: 100%; display: none; "></textarea>
-            <script id="editor1" type="text/plain" style="width: 100%; height: 400px;"></script>
+            <script id="editor1" type="text/plain" style="width: 380px; height: 400px !important;"></script>
         </div>
         <p></p>
         <p>原文链接</p>

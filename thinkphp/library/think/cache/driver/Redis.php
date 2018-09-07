@@ -41,28 +41,40 @@ class Redis extends Driver
      */
     public function __construct($options = [])
     {
-        if (!extension_loaded('redis')) {
-            throw new \BadFunctionCallException('not support: redis');
-        }
-
         if (!empty($options)) {
             $this->options = array_merge($this->options, $options);
         }
 
-        $this->handler = new \Redis;
+        if (extension_loaded('redis')) {
+            $this->handler = new \Redis;
 
-        if ($this->options['persistent']) {
-            $this->handler->pconnect($this->options['host'], $this->options['port'], $this->options['timeout'], 'persistent_id_' . $this->options['select']);
+            if ($this->options['persistent']) {
+                $this->handler->pconnect($this->options['host'], $this->options['port'], $this->options['timeout'], 'persistent_id_' . $this->options['select']);
+            } else {
+                $this->handler->connect($this->options['host'], $this->options['port'], $this->options['timeout']);
+            }
+
+            if ('' != $this->options['password']) {
+                $this->handler->auth($this->options['password']);
+            }
+
+            if (0 != $this->options['select']) {
+                $this->handler->select($this->options['select']);
+            }
+        } elseif (class_exists('\Predis\Client')) {
+            $params = [];
+            foreach ($this->options as $key => $val) {
+                if (in_array($key, ['aggregate', 'cluster', 'connections', 'exceptions', 'prefix', 'profile', 'replication', 'parameters'])) {
+                    $params[$key] = $val;
+                    unset($this->options[$key]);
+                }
+            }
+
+            $this->handler = new \Predis\Client($this->options, $params);
+
+            $this->options['prefix'] = '';
         } else {
-            $this->handler->connect($this->options['host'], $this->options['port'], $this->options['timeout']);
-        }
-
-        if ('' != $this->options['password']) {
-            $this->handler->auth($this->options['password']);
-        }
-
-        if (0 != $this->options['select']) {
-            $this->handler->select($this->options['select']);
+            throw new \BadFunctionCallException('not support: redis');
         }
     }
 
@@ -203,39 +215,4 @@ class Redis extends Driver
         return $this->handler->flushDB();
     }
 
-    /**
-     * 如果不存在则写入缓存
-     * @access public
-     * @param string $name 缓存变量名
-     * @param mixed $value 存储数据
-     * @param int $expire  有效时间 0为永久
-     * @return mixed
-     */
-    public function remember($name, $value, $expire = null)
-    {
-        if (is_null($expire)) {
-            $expire = $this->options['expire'];
-        }
-
-        // 没有过期参数时，使用setnx
-        if (!$expire) {
-            $key = $this->getCacheKey($name);
-            $val = $this->serialize($value);
-            $res = $this->handler->setnx($key, $val);
-            if ($res) {
-                $this->writeTimes++;
-                return $value;
-            } else {
-                return $this->get($name);
-            }
-        }
-
-        if ($this->has($name)) {
-            return $this->get($name);
-        } else {
-            $this->set($name, $value, $expire);
-        }
-
-        return $value;
-    }
 }

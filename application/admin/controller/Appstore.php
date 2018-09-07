@@ -80,7 +80,7 @@ class Appstore extends Base
     public function appInfo()
     {
         $url = self::$baseUrl . "publics/getAppInfo";
-        $result = json_decode(httpPost($url, input()), true);
+        $result = json_decode(httpPost($url, input()),true);
         $this->assign('info', $result);
         return view();
     }
@@ -164,7 +164,7 @@ class Appstore extends Base
 
     public function upgrade()
     {
-        if (!$this->token) $this->error('你还没有登录应用商店', Url::build('login'));
+        if (!$this->token) $this->error('你还没有登录应用商店', Url::build('login'),'',1);
         if (Request::isAjax() && Request::isPost()) {
             $url = self::$baseUrl . "Upgrade/getAppUpgradePack";
             $param = array_merge(['token' => $this->token], Request::param());

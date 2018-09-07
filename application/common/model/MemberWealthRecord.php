@@ -17,33 +17,69 @@ use think\Model;
 class MemberWealthRecord extends Model
 {
     /**
-     * @param string $id 会员 ID
+     * 增加积分
+     * @param string $member_id 会员 ID
      * @param string $mpid
      * @param int $score
      * @param string $remarks
      * @return false|int
      */
-    public function addScore($id = '', $mpid = '', $score = 0, $remarks = '')
+    public function addScore($member_id = '', $mpid = '', $score = 0, $remarks = '')
     {
-        $data = ['score' => $score, 'type' => '1', 'remark' => $remarks, 'member_id' => $id, 'mpid' => $mpid, 'time' => time()];
+        $data = ['score' => $score, 'type' => '1', 'remark' => $remarks, 'member_id' => $member_id, 'mpid' => $mpid, 'time' => time()];
         if ($result = $this->save($data)) {
-            Db::name('mp_friends')->where(['id' => $id, 'mpid' => $mpid])->setInc('score', $score);
+            Db::name('mp_friends')->where(['id' => $member_id, 'mpid' => $mpid])->setInc('score', $score);
         }
         return $result;
     }
 
     /**
-     * @param string $id 会员 ID
+     * 增加金钱
+     * @param string $member_id 会员 ID
      * @param string $mpid
      * @param int $money
      * @param string $remarks
      * @return false|int
      */
-    public function addMoney($id = '', $mpid = '', $money = 0, $remarks = '')
+    public function addMoney($member_id = '', $mpid = '', $money = 0, $remarks = '')
     {
-        $data = ['money' => $money, 'type' => '2', 'remark' => $remarks, 'member_id' => $id, 'mpid' => $mpid, 'time' => time()];
+        $data = ['money' => $money, 'type' => '2', 'remark' => $remarks, 'member_id' => $member_id, 'mpid' => $mpid, 'time' => time()];
         if ($result = $this->save($data)) {
-            Db::name('mp_friends')->where(['id' => $id, 'mpid' => $mpid])->setInc('money', $money);
+            Db::name('mp_friends')->where(['id' => $member_id, 'mpid' => $mpid])->setInc('money', $money);
+        }
+        return $result;
+    }
+
+    /**
+     * 减积分
+     * @param string $member_id 会员 ID
+     * @param string $mpid
+     * @param int $score
+     * @param string $remarks
+     * @return false|int
+     */
+    public function subtractScore($member_id = '', $mpid = '', $score = 0, $remarks = '')
+    {
+        $data = ['score' => '-' . $score, 'type' => '1', 'remark' => $remarks, 'member_id' => $member_id, 'mpid' => $mpid, 'time' => time()];
+        if ($result = $this->save($data)) {
+            Db::name('mp_friends')->where(['id' => $member_id, 'mpid' => $mpid])->setDec('score', $score);
+        }
+        return $result;
+    }
+
+    /**
+     * 减金钱
+     * @param string $member_id 会员 ID
+     * @param string $mpid
+     * @param int $money
+     * @param string $remarks
+     * @return false|int
+     */
+    public function subtractMoney($member_id = '', $mpid = '', $money = 0, $remarks = '')
+    {
+        $data = ['money' => '-' . $money, 'type' => '2', 'remark' => $remarks, 'member_id' => $member_id, 'mpid' => $mpid, 'time' => time()];
+        if ($result = $this->save($data)) {
+            Db::name('mp_friends')->where(['id' => $member_id, 'mpid' => $mpid])->setDec('money', $money);
         }
         return $result;
     }

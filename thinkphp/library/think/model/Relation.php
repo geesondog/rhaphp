@@ -119,12 +119,27 @@ abstract class Relation
 
     protected function getQueryWhere(&$where, $relation)
     {
-        foreach ($where as $key => $val) {
+        foreach ($where as $key => &$val) {
             if (is_string($key)) {
                 $where[] = [false === strpos($key, '.') ? $relation . '.' . $key : $key, '=', $val];
                 unset($where[$key]);
+            } elseif (isset($val[0]) && false === strpos($val[0], '.')) {
+                $val[0] = $relation . '.' . $val[0];
             }
         }
+    }
+
+    /**
+     * 删除记录
+     * @access public
+     * @param  mixed $data 表达式 true 表示强制删除
+     * @return int
+     * @throws Exception
+     * @throws PDOException
+     */
+    public function delete($data = null)
+    {
+        return $this->query->delete($data);
     }
 
     /**

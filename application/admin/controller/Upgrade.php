@@ -9,6 +9,7 @@
 namespace app\admin\controller;
 
 
+use think\Exception;
 use think\facade\Config;
 use think\Db;
 use think\facade\Request;
@@ -46,7 +47,11 @@ class Upgrade extends Base
                 $zip = new \ZipArchive;
                 $res = $zip->open($temFile);
                 if ($res === TRUE) {
-                    $zip->extractTo(ROOT_PATH);
+                    try{
+                        $zip->extractTo(ROOT_PATH);
+                    }catch (\Exception $exception){
+                        return ['code' => '1', 'msg' => '解压失败，请确认当前目录是否有写入权限！'];
+                    }
                     $zip->close();
                     $sqlFile = ROOT_PATH . '/data/upgrade.sql';
                     if (is_file($sqlFile)) {
@@ -56,19 +61,23 @@ class Upgrade extends Base
                         $prefix = Config::get('database.prefix');
                         $orginal = 'rh_';
                         $sql = str_replace(" `{$orginal}", " `{$prefix}", $sql);
-                        foreach ($sql as $value) {
-                            $value = trim($value);
-                            if (empty($value)) continue;
-                            if (substr($value, 0, 12) == 'CREATE TABLE') {
-                                $name = preg_replace("/^CREATE TABLE `(\w+)` .*/s", "\\1", $value);
-                                if (false !== Db::execute($value)) {
+                        try {
+                            foreach ($sql as $value) {
+                                $value = trim($value);
+                                if (empty($value)) continue;
+                                if (substr($value, 0, 12) == 'CREATE TABLE') {
+                                    $name = preg_replace("/^CREATE TABLE `(\w+)` .*/s", "\\1", $value);
+                                    if (false !== Db::execute($value)) {
 
+                                    } else {
+                                        return ['code' => '1', 'msg' => '创建' . $name . '失败!'];
+                                    }
                                 } else {
-                                    return ['code' => '1', 'msg' => '创建' . $name . '失败!'];
+                                    Db::query($value);
                                 }
-                            } else {
-                                Db::query($value);
                             }
+                        }catch (\Exception $exception){
+                            return ['code' => '1', 'msg' => $exception->getMessage()];
                         }
                         unlink($sqlFile);
                         unlink($temFile);

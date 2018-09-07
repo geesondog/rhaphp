@@ -8,37 +8,22 @@
 // +----------------------------------------------------------------------
 
 namespace app\behavior;
-use think\facade\Config;
+
+use think\facade\Env;
 use think\facade\Request;
+use think\facade\View;
 
 class ChangeTheme
 {
-
     public function run()
     {
-
-        $defaultViewPath = Config::get('template.view_path');
-        if ($defaultViewPath != '') {
-            $module = strtolower(Request::module());
-            $pcPath = Config::get('template.theme.pc');
-            $mobilePath = Config::get('template.theme.mobile');
-            if (Request::isMobile()) {
-                if($mobilePath==''){
-                    $themePath = $pcPath;
-                }else{
-                    $themePath = $mobilePath;
-                }
-            } else {
-                $themePath = $pcPath;
-            }
-            Config::set('template.view_path', ROOT_PATH.$defaultViewPath . DS . $themePath . DS . $module.DS);
+        $root_path = Env::get('root_path');
+        $model = Request::module();
+        if (Request::isMobile()) {
+            $view_path = $root_path . 'themes/mobile/' . $model . '/';
+        } else {
+            $view_path = $root_path . 'themes/pc/' . $model . '/';
         }
-        if(ENTR_PATH==''){
-            $path='/public/static';
-        }else{
-            $path='/static';
-        }
-        Config::set('template.tpl_replace_string.__STATIC__', $path);
+        View::config('view_path', $view_path);
     }
-
 }

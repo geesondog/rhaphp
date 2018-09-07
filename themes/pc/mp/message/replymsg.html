@@ -39,7 +39,7 @@
                     </div>
                 </div>
             </td>
-            <td>{$vo.create_time}</td>
+            <td>{$vo.create_time|date="y-m-d H:i"}</td>
             <td><a class="rha-bt-a" href="javascript:;" onclick="delMsg('{$vo.msg_id}','{$vo.openid}')">删除</a> </td>
         </tr>
         {/volist}

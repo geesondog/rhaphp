@@ -6,25 +6,31 @@
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
-// | Author: liu21st <liu21st@gmail.com>
+// | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
 
-namespace think\log\driver;
+namespace think\queue;
 
-/**
- * 模拟测试输出
- */
-class Test
+class CallQueuedHandler
 {
-    /**
-     * 日志写入接口
-     * @access public
-     * @param  array $log 日志信息
-     * @return bool
-     */
-    public function save(array $log = [])
+
+    public function call(Job $job, array $data)
     {
-        return true;
+        $command = unserialize($data['command']);
+
+        call_user_func([$command, 'handle']);
+
+        if (!$job->isDeletedOrReleased()) {
+            $job->delete();
+        }
     }
 
+    public function failed(array $data)
+    {
+        $command = unserialize($data['command']);
+
+        if (method_exists($command, 'failed')) {
+            $command->failed();
+        }
+    }
 }

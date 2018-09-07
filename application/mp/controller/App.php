@@ -38,25 +38,33 @@ class App extends Base
         if ($addonCfByDb['addon'] != $addonCfByFile['addon']) {
             $this->error('应用信息不相符，请检查');
         }
-        $addonMenu=isset($addonCfByFile['menu'])?$addonCfByFile['menu']:'';
-        $node=input('node');
+        $addonMenu = isset($addonCfByFile['menu']) ? $addonCfByFile['menu'] : '';
+        $node = input('node');
         if (!empty($addonMenu) && is_array($addonMenu)) {
-            foreach ($addonMenu as $key=>$val){
-                $addonMenu[$key]['show']=0;
-                if($node==$addonMenu[$key]['url']=str_replace('/','_',$val['url'])){
-                    $addonMenu[$key]['show']=1;
+            foreach ($addonMenu as $key => $val) {
+                $addonMenu[$key]['show'] = 0;
+                if ($node == $addonMenu[$key]['url'] = str_replace('/', '_', $val['url'])) {
+                    $addonMenu[$key]['show'] = 1;
                 }
-                if(isset($val['child']) && !empty($val['child']) && is_array($val['child'])){
-                    foreach ($val['child'] as $k=>$v){
-                        if($node==$addonMenu[$key]['url']=str_replace('/','_',$v['url'])){
-                            $addonMenu[$key]['show']=1;
+                if (isset($val['child']) && !empty($val['child']) && is_array($val['child'])) {
+                    foreach ($val['child'] as $k => $v) {
+                        if ($node == $addonMenu[$key]['url'] = str_replace('/', '_', $v['url'])) {
+                            $addonMenu[$key]['show'] = 1;
                         }
-                        $addonMenu[$key]['child'][$k]['url']=str_replace('/','_',$v['url']);
+                        $addonMenu[$key]['child'][$k]['url'] = str_replace('/', '_', $v['url']);
                     }
                 }
             }
         }
-        $this->assign('node',$node);
+        $isShowConfigMenu = false;
+        if (isset($this->addonCfByFile['config']) && !empty($this->addonCfByFile['config'])) {
+            $isShowConfigMenu = true;
+        }
+        if (isset($this->addonCfByFile['is_theme']) && $this->addonCfByFile['is_theme'] == true) {
+            $isShowConfigMenu = true;
+        }
+        $this->assign('isShowConfigMenu', $isShowConfigMenu);
+        $this->assign('node', $node);
         $this->assign('addonMenu', $addonMenu);
         $this->assign('addonInfo', $addonCfByDb);
         $this->assign('name', $name);
@@ -184,6 +192,8 @@ class App extends Base
                 ->order('r.id DESC')
                 ->find();
             $rule = $ruleModel->where(['type' => 'addon', 'addon' => input('name'), 'mpid' => $this->mid])->find();
+            $apiFile = ADDON_PATH . input('name') . '/controller/Api.php';
+            $this->assign('isShowApi', file_exists($apiFile));
             $this->assign('news', $rePly);
             $this->assign('addon', $rule);
             $this->assign('entryUrl', $url);
@@ -218,46 +228,68 @@ class App extends Base
             $result = Db::name('addon_info')->where(['mpid' => $this->mid, 'addon' => $name])->find();
             $addonConfigByMp = json_decode($result['infos'], true);
             $config = json_decode($this->addonCfByDb['config'], true);
-
             if (!empty($addonConfigByMp)) {
-                foreach ($config as $key1 => $val1) {
-                    foreach ($addonConfigByMp as $name => $val2) {
-                        if ($val1['name'] == $name) {
-                            $config[$key1] = $val1;
-                            if ($val1['type'] == 'radio') {
-                                foreach ($val1['value'] as $key3 => $val3) {
-                                    if ($val3['value'] == $val2) {
-                                        $config[$key1]['value'][$key3]['checked'] = 1;
-                                    } else {
-                                        $config[$key1]['value'][$key3]['checked'] = 0;
-                                    }
-                                }
-                            } elseif ($val1['type'] == 'checkbox') {
-                                foreach ($val1['value'] as $key3 => $val3) {
-                                    foreach ($val2 as $key4 => $val4) {
-                                        if ($val3['name'] == $key4) {
+                if (!empty($config)) {
+                    foreach ($config as $key1 => $val1) {
+                        foreach ($addonConfigByMp as $name => $val2) {
+                            if ($val1['name'] == $name) {
+                                $config[$key1] = $val1;
+                                if ($val1['type'] == 'radio') {
+                                    foreach ($val1['value'] as $key3 => $val3) {
+                                        if ($val3['value'] == $val2) {
                                             $config[$key1]['value'][$key3]['checked'] = 1;
-                                            break;
                                         } else {
                                             $config[$key1]['value'][$key3]['checked'] = 0;
                                         }
                                     }
-                                }
-                            } elseif ($val1['type'] == 'select') {
-                                foreach ($val1['value'] as $key3 => $val3) {
-                                    if ($val3['value'] == $val2) {
-                                        $config[$key1]['value'][$key3]['selected'] = 1;
-                                    } else {
-                                        $config[$key1]['value'][$key3]['selected'] = 0;
+                                } elseif ($val1['type'] == 'checkbox') {
+                                    foreach ($val1['value'] as $key3 => $val3) {
+                                        foreach ($val2 as $key4 => $val4) {
+                                            if ($val3['name'] == $key4) {
+                                                $config[$key1]['value'][$key3]['checked'] = 1;
+                                                break;
+                                            } else {
+                                                $config[$key1]['value'][$key3]['checked'] = 0;
+                                            }
+                                        }
                                     }
+                                } elseif ($val1['type'] == 'select') {
+                                    foreach ($val1['value'] as $key3 => $val3) {
+                                        if ($val3['value'] == $val2) {
+                                            $config[$key1]['value'][$key3]['selected'] = 1;
+                                        } else {
+                                            $config[$key1]['value'][$key3]['selected'] = 0;
+                                        }
+                                    }
+                                } else {
+                                    $config[$key1]['value'] = $val2;
                                 }
-                            } else {
-                                $config[$key1]['value'] = $val2;
                             }
                         }
                     }
                 }
             }
+            $themes = [];
+            $selected = '';
+            if (isset($this->addonCfByFile['is_theme']) && $this->addonCfByFile['is_theme'] == true) {
+                $AddonPath = ADDON_PATH . input('name') . '/view/';
+                if (!is_dir($AddonPath)) return false;
+                $handle = opendir($AddonPath);
+                if ($handle) {
+                    while (false !== ($item = readdir($handle))) {
+                        if ($item != '.' && $item != '..' && $item != 'common' && $item != 'admin') {
+                            if (!strpos($item, '.')) {
+                                $themes[] = $item;
+                            }
+                        }
+                    }
+                }
+                if (isset($addonConfigByMp['theme']) && !empty($addonConfigByMp['theme'])) {
+                    $selected = $addonConfigByMp['theme'];
+                }
+            }
+            $this->assign('selected', $selected);
+            $this->assign('themes', $themes);
             $this->assign('config', $config);
             return view();
         }
@@ -265,7 +297,7 @@ class App extends Base
 
     public function toView($node)
     {
-        $node=str_replace('_','/',$node);
+        $node = str_replace('_', '/', $node);
         $url = addonUrl($node, ['mid' => $this->mid]);
         $this->assign('url', $url);
         return view('view');

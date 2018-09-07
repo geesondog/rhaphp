@@ -1,0 +1,31 @@
+{
+    "name": "topthink/think-swoole",
+    "description": "Swoole extend for thinkphp5.1",
+    "license": "Apache-2.0",
+    "type": "think-extend",
+    "authors": [
+        {
+            "name": "liu21st",
+            "email": "liu21st@gmail.com"
+        }
+    ],
+    "require": {
+	"ext-swoole": ">=1.9.5",
+	"topthink/think-installer": "^2.0",
+	"topthink/framework": "~5.1.20"
+    },
+    "autoload": {
+        "psr-4": {
+            "think\\swoole\\": "src"
+        },
+        "files": [
+            "src/command.php"
+        ]
+    },
+    "extra": {
+        "think-config": {
+        "swoole": "src/config.php",
+	    "swoole_server":"src/server_config.php"
+        }
+    }
+}

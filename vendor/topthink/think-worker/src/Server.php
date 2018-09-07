@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006-2014 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006-2018 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -19,11 +19,13 @@ use Workerman\Worker;
 abstract class Server
 {
     protected $worker;
-    protected $socket    = '';
-    protected $protocol  = 'http';
-    protected $host      = '0.0.0.0';
-    protected $port      = '2346';
-    protected $processes = 4;
+    protected $socket   = '';
+    protected $protocol = 'http';
+    protected $host     = '0.0.0.0';
+    protected $port     = '2346';
+    protected $option   = [];
+    protected $context  = [];
+    protected $event    = ['onWorkerStart', 'onConnect', 'onMessage', 'onClose', 'onError', 'onBufferFull', 'onBufferDrain', 'onWorkerReload'];
 
     /**
      * 架构函数
@@ -32,18 +34,25 @@ abstract class Server
     public function __construct()
     {
         // 实例化 Websocket 服务
-        $this->worker = new Worker($this->socket ?: $this->protocol . '://' . $this->host . ':' . $this->port);
-        // 设置进程数
-        $this->worker->count = $this->processes;
-        // 初始化
-        $this->init();
+        $this->worker = new Worker($this->socket ?: $this->protocol . '://' . $this->host . ':' . $this->port, $this->context);
+
+        // 设置参数
+        if (!empty($this->option)) {
+            foreach ($this->option as $key => $val) {
+                $this->worker->$key = $val;
+            }
+        }
 
         // 设置回调
-        foreach (['onWorkerStart', 'onConnect', 'onMessage', 'onClose', 'onError', 'onBufferFull', 'onBufferDrain', 'onWorkerStop', 'onWorkerReload'] as $event) {
+        foreach ($this->event as $event) {
             if (method_exists($this, $event)) {
                 $this->worker->$event = [$this, $event];
             }
         }
+
+        // 初始化
+        $this->init();
+
         // Run worker
         Worker::runAll();
     }
@@ -52,4 +61,13 @@ abstract class Server
     {
     }
 
+    public function __set($name, $value)
+    {
+        $this->worker->$name = $value;
+    }
+
+    public function __call($method, $args)
+    {
+        call_user_func_array([$this->worker, $method], $args);
+    }
 }
