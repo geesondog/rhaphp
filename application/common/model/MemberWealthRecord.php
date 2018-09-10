@@ -27,10 +27,22 @@ class MemberWealthRecord extends Model
     public function addScore($member_id = '', $mpid = '', $score = 0, $remarks = '')
     {
         $data = ['score' => $score, 'type' => '1', 'remark' => $remarks, 'member_id' => $member_id, 'mpid' => $mpid, 'time' => time()];
-        if ($result = $this->save($data)) {
-            Db::name('mp_friends')->where(['id' => $member_id, 'mpid' => $mpid])->setInc('score', $score);
+        Db::startTrans();
+        try {
+            if (Db::name('member_wealth_record')->insert($data)) {
+                if (!Db::name('mp_friends')->where(['id' => $member_id, 'mpid' => $mpid])->setInc('score', $score)) {
+                    Db::rollback();
+                    return false;
+                }
+                Db::commit();
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Exception $exception) {
+            Db::rollback();
+            return false;
         }
-        return $result;
     }
 
     /**
@@ -41,13 +53,32 @@ class MemberWealthRecord extends Model
      * @param string $remarks
      * @return false|int
      */
-    public function addMoney($member_id = '', $mpid = '', $money = 0, $remarks = '')
+    public function addMoney($member_id = '', $mpid = '', $money = 0, $remarks = '', $order_number = '')
     {
         $data = ['money' => $money, 'type' => '2', 'remark' => $remarks, 'member_id' => $member_id, 'mpid' => $mpid, 'time' => time()];
-        if ($result = $this->save($data)) {
-            Db::name('mp_friends')->where(['id' => $member_id, 'mpid' => $mpid])->setInc('money', $money);
+        Db::startTrans();
+        try {
+            if (Db::name('member_wealth_record')->insert($data)) {
+                if (Db::name('mp_friends')->where(['id' => $member_id, 'mpid' => $mpid])->setInc('money', $money)) {
+                    if ($order_number) {
+                        if (!Db::name('payment')->where(['mpid' => $mpid, 'order_number' => $order_number])->update(['status' => 1])) {
+                            Db::rollback();
+                            return false;
+                        }
+                    }
+                } else {
+                    Db::rollback();
+                    return false;
+                }
+                Db::commit();
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Exception $exception) {
+            Db::rollback();
+            return false;
         }
-        return $result;
     }
 
     /**
@@ -61,10 +92,22 @@ class MemberWealthRecord extends Model
     public function subtractScore($member_id = '', $mpid = '', $score = 0, $remarks = '')
     {
         $data = ['score' => '-' . $score, 'type' => '1', 'remark' => $remarks, 'member_id' => $member_id, 'mpid' => $mpid, 'time' => time()];
-        if ($result = $this->save($data)) {
-            Db::name('mp_friends')->where(['id' => $member_id, 'mpid' => $mpid])->setDec('score', $score);
+        Db::startTrans();
+        try {
+            if (Db::name('member_wealth_record')->insert($data)) {
+                if (!Db::name('mp_friends')->where(['id' => $member_id, 'mpid' => $mpid])->setDec('score', $score)) {
+                    Db::rollback();
+                    return false;
+                }
+                Db::commit();
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Exception $exception) {
+            Db::rollback();
+            return false;
         }
-        return $result;
     }
 
     /**
@@ -78,10 +121,22 @@ class MemberWealthRecord extends Model
     public function subtractMoney($member_id = '', $mpid = '', $money = 0, $remarks = '')
     {
         $data = ['money' => '-' . $money, 'type' => '2', 'remark' => $remarks, 'member_id' => $member_id, 'mpid' => $mpid, 'time' => time()];
-        if ($result = $this->save($data)) {
-            Db::name('mp_friends')->where(['id' => $member_id, 'mpid' => $mpid])->setDec('money', $money);
+        Db::startTrans();
+        try {
+            if (Db::name('member_wealth_record')->insert($data)) {
+                if (!Db::name('mp_friends')->where(['id' => $member_id, 'mpid' => $mpid])->setDec('money', $money)) {
+                    Db::rollback();
+                    return false;
+                }
+                Db::commit();
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Exception $exception) {
+            Db::rollback();
+            return false;
         }
-        return $result;
     }
 
     public function getMemberScoreBySum($id = '', $mpid = '')

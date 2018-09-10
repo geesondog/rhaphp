@@ -1673,14 +1673,17 @@ function queryOrder($order_number = '')
         if (!empty($orderRes)) {
             if (isset($orderRes['trade_state']) && $orderRes['trade_state'] == 'SUCCESS') {//已经支付
                 if ($payment['status'] == '0') {//订单状态未处理为成功
-                    $model = new \app\common\model\MemberWealthRecord();
-                    if ($model->addMoney($payment['member_id'], $payment['mpid'], $payment['money'], $payment['title'])) {
-                        if (!$paymentModel->save(['status' => 1], ['order_number' => $order_number])) {
-                            return ['errCode' => -1, 'errMsg' => '改变订单状态失败'];
+                    $C_lk =\think\facade\Cache::get($order_number);
+                    if(empty($C_lk)){
+                        \think\facade\Cache::set($order_number,'1');
+                        $model = new \app\common\model\MemberWealthRecord();
+                        if ($model->addMoney($payment['member_id'], $payment['mpid'], $payment['money'], $payment['title'],$order_number)) {
+                            \think\facade\Cache::rm($order_number);
+                            return ['errCode' => 'ok', 'errMsg' => '交易完成'];
+                        } else {
+                            \think\facade\Cache::rm($order_number);
+                            return ['errCode' => -1, 'errMsg' => '改变账户金额失败'];
                         }
-                        return ['errCode' => 'ok', 'errMsg' => '交易完成'];
-                    } else {
-                        return ['errCode' => -1, 'errMsg' => '改变账户金额失败'];
                     }
                 } else {
                     return ['errCode' => 'ok', 'errMsg' => '交易完成'];
