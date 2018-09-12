@@ -16,33 +16,35 @@ class Entr
 {
     public $_mid;
     public function index($_mid){
-        if (empty($_GET['echostr']) || empty($_GET["signature"]) || empty ($_GET["nonce"]) || empty($_mid)) {
+        if (empty($_GET["signature"]) || empty($_GET["nonce"]) || empty($_mid)) {
             exit('Access denied');
         }
-        $this->_mid=$_mid;
-        $miniappInfo=getMimiappInfo($this->_mid);
+        $this->_mid = $_mid;
+        $miniappInfo = getMimiappInfo($this->_mid);
         $options['appid'] = $miniappInfo['appid'];
         $options['appsecret'] = $miniappInfo['appsecret'];
         $options['token'] = $miniappInfo['token'];
         $options['encodingaeskey'] = $miniappInfo['encodingaeskey'];
-        $mpObject=getMiniProgramObj($options);
-        if($mpObject->init() == 'success'){
-            echo $_GET["echostr"];
-            exit;
+        $mpObject = getMiniProgramObj($options);
+        if ($mpObject->init() == 'success') {
+            if(isset($_GET['echostr']) && !empty($_GET['echostr'])){
+                echo $_GET["echostr"];
+                exit;
+            }
         }
-        $msgData=$mpObject->getRev();
+        $msgData = $mpObject->getRev();
         $msg['mpid'] = $this->_mid;
         $msg['openid'] = $msgData['FromUserName'];
         $msg['type'] = $msgData['MsgType'];
         $msg['create_time'] = time();
         $model = new MiniappMsg();
-        switch ($msgData['MsgType']){
+        switch ($msgData['MsgType']) {
             case 'text'://文本消息
                 $msg['content'] = $msgData['Content'];
                 $model->save($msg);
                 break;
             case 'image'://图片消息
-                $msg['content'] = getHostDomain() . url('mp/Show/image').'?url='.urlencode($msgData['PicUrl']);
+                $msg['content'] = getHostDomain() . url('mp/Show/image') . '?url=' . urlencode($msgData['PicUrl']);
                 $model->save($msg);
                 break;
             case 'miniprogrampage'://卡片消息
