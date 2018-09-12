@@ -14,7 +14,9 @@ namespace app\admin\controller;
 use think\Controller;
 use think\Db;
 use think\facade\Config;
+use think\facade\Cookie;
 use think\facade\Request;
+use think\facade\Session;
 
 
 class Base extends Controller
@@ -32,9 +34,14 @@ class Base extends Controller
         $admin = getAdmin();
         if (empty($admin)) {
             $this->redirect(url('admin/Login/index'));
-        } else {
-            $this->admin_id = $admin['id'];
         }
+        $adminInfo = Db::name('admin')->where('id', $admin['id'])->field('password')->find();
+        if ($admin['password'] != $adminInfo['password']) {
+            Session::clear('think_');
+            Cookie::clear('think_');
+            $this->redirect('admin/Login/index');
+        }
+        $this->admin_id = $admin['id'];
         $node = MODULE_NAME . '/' . CONTROLLER_NAME . '/' . ACTION_NAME;
         $t_menu = Db::name('menu')->where('pid', 0)->order('sort ASC')->select();
         $allMenu = Db::name('menu')->order('sort ASC')->select();
