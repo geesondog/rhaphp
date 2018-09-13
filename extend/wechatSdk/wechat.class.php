@@ -1219,7 +1219,7 @@ class Wechat
     protected function setCache($cachename, $value, $expired)
     {
         //cache($cachename,$value,$expired);
-        $path = \think\facade\Env::get('runtime_path') . 'cache/';
+        $path =\think\facade\Config::get('cache.path');
         $file = $path . $cachename . '.php';
         $fp = fopen($file, "w");
         fwrite($fp, "<?php exit();?>" . json_encode(['value' => $value, 'time' => time() + $expired]));
@@ -1235,7 +1235,7 @@ class Wechat
     protected function getCache($cachename)
     {
         // return cache($cachename);
-        $path = \think\facade\Env::get('runtime_path') . 'cache/';
+        $path =\think\facade\Config::get('cache.path');
         $file = $path . $cachename . '.php';
         if(!file_exists($file)){
             return false;
