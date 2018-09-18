@@ -17,7 +17,7 @@ use app\common\model\Addons;
 class Addon extends Common
 {
 
-    use Jump;
+    //use Jump;
     public $mpInfo;//当前公众号信息
     private $addonName;//应用名称
     private $addonController;
