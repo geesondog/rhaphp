@@ -237,7 +237,7 @@ function loadAdApi($name = null, $msg = [], $param = [])
     session('apiParam', $param);
     $filename = ADDON_PATH . $name . '/controller/Api.php';
     $commonFile = ADDON_PATH . $name . '/Common.php';
-    if(file_exists($commonFile)){
+    if (file_exists($commonFile)) {
         include_once $commonFile;
     }
     session('addonName', $name);
@@ -879,6 +879,7 @@ function httpGet($url)
 
 function httpPost($url, $data, $curlFile = false)
 {
+
     if ($curlFile == true) {
         $data = json_decode($data, true);
         if (is_array($data)) {
@@ -898,7 +899,7 @@ function httpPost($url, $data, $curlFile = false)
     curl_setopt($cl, CURLOPT_HEADER, false);
     curl_setopt($cl, CURLOPT_POST, true);
     curl_setopt($cl, CURLOPT_TIMEOUT, 60);
-    curl_setopt($cl, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($cl, CURLOPT_POSTFIELDS, http_build_query($data));
     list($content, $status) = array(curl_exec($cl), curl_getinfo($cl), curl_close($cl));
     return (intval($status["http_code"]) === 200) ? $content : false;
 }
@@ -1673,11 +1674,11 @@ function queryOrder($order_number = '')
         if (!empty($orderRes)) {
             if (isset($orderRes['trade_state']) && $orderRes['trade_state'] == 'SUCCESS') {//已经支付
                 if ($payment['status'] == '0') {//订单状态未处理为成功
-                    $C_lk =\think\facade\Cache::get($order_number);
-                    if(empty($C_lk)){
-                        \think\facade\Cache::set($order_number,'1');
+                    $C_lk = \think\facade\Cache::get($order_number);
+                    if (empty($C_lk)) {
+                        \think\facade\Cache::set($order_number, '1');
                         $model = new \app\common\model\MemberWealthRecord();
-                        if ($model->addMoney($payment['member_id'], $payment['mpid'], $payment['money'], $payment['title'],$order_number)) {
+                        if ($model->addMoney($payment['member_id'], $payment['mpid'], $payment['money'], $payment['title'], $order_number)) {
                             \think\facade\Cache::rm($order_number);
                             return ['errCode' => 'ok', 'errMsg' => '交易完成'];
                         } else {
@@ -1700,7 +1701,8 @@ function queryOrder($order_number = '')
 
 /**
  * 微信支付回调
- * @return bool
+ * @return bool|xml
+ * @throws \think\Exception
  */
 function wxpayNotify()
 {
@@ -1724,6 +1726,18 @@ function wxpayNotify()
                         \WxPayResults::Init($xml);
                         $result = queryOrder($array['out_trade_no']);
                         if ($result['errCode'] == 'ok') {
+                            if ($payment['callback'] && $payment['callback_status'] == 0) {
+                                $param = json_decode(json_encode($payment), true);
+                                $param['notify_data'] = $array;
+                                if ($callbackResult = httpPost(\think\facade\Request::domain() . $payment['callback'], $param)) {
+                                    $CBarray = json_decode($callbackResult, true);
+                                    if (!isset($CBarray['errCode']) || $CBarray['errCode'] != 0) {
+                                        return false;
+                                    }
+                                } else {
+                                    return false;
+                                }
+                            }
                             $data = ['return_code' => 'SUCCESS', 'return_msg' => 'OK'];
                         } else {
                             $data = ['return_code' => 'FAIL', 'return_msg' => $result['errMsg']];
@@ -1740,10 +1754,12 @@ function wxpayNotify()
 
 function unClient($mid = '')
 {
-    $sslcert = ROOT_PATH . 'data/' . $mid . '_' . '_apiclient_cert.pem';
-    $sslkey = ROOT_PATH . 'data/' . $mid . '_' . '_apiclient_key.pem';
-    @unlink($sslcert);
-    @unlink($sslkey);
+    try{
+        $sslcert = ROOT_PATH . 'data/' . $mid . '_' . '_apiclient_cert.pem';
+        $sslkey = ROOT_PATH . 'data/' . $mid . '_' . '_apiclient_key.pem';
+        @unlink($sslcert);
+        @unlink($sslkey);
+    }catch (\ErrorException $exception){ }
 }
 
 /**

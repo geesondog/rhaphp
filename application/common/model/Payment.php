@@ -17,14 +17,17 @@ class Payment extends Model
 {
     /**
      * 下单
-     * @param string $member_id
-     * @param string $mid
-     * @param string $money
-     * @param string $title
-     * @param string $pay_type
-     * @param string $remark
+     * @param string $member_id 会员ID
+     * @param string $mid 公众号 ID
+     * @param string $money 金额
+     * @param string $title 标题信息
+     * @param string $callback 回调地址 addonUrl函数生成地址
+     * @param string $pay_type 1微信支付、2支付宝
+     * @param string $remark 详细|备注
+     * @param string $attach 附加信息
+     * @return bool|int|string
      */
-    public function addPayment($member_id = '', $mid = '', $money = '', $title = '', $attach = '', $pay_type = '1', $remark = '')
+    public function addPayment($member_id = '', $mid = '', $money = '', $title = '', $callback = '', $pay_type = '1', $remark = '', $attach = '')
     {
         $member = getMember($member_id);
         $data['member_id'] = $member_id;
@@ -35,6 +38,7 @@ class Payment extends Model
         $data['pay_type'] = $pay_type;
         $data['remark'] = $remark;
         $data['attach'] = $attach;
+        $data['callback'] = $callback;
         $data['create_time'] = time();
         $data['order_number'] = time() . rand_string(22, 1);
         $id = $this->insertGetId($data);
