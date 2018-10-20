@@ -16,6 +16,14 @@
     {CSS href="__STATIC__/layui/css/layui.css" /}
     {CSS href="__STATIC__/icon/icon.css" /}
     {block name="jscss"}{/block}
+    <style>
+        {if $setScreen ==1}
+        .container_body, .wrap{width: 100%;}
+        .sidebar{float:left;width: 10%;}
+        .content{float: left;width: 89%;}
+        .main-logo{margin-left: 5px;}
+        {/if}
+    </style>
 </head>
 <body class="trade-order">
 <div class="topbar" id="gotop">
@@ -29,6 +37,7 @@
                 <a href="{:url('mp/Message/messagelist')}"><i class="layui-icon">&#xe645;</i>用户消息<span class="num-feed rhaphp-msg-user show" style="display: none;">0</span></a>
                 {/notempty}
                 <a href="javascript:;" onclick="cacheClear()"><i class="layui-icon">&#xe640;</i>清空缓存</a>
+                <a href="javascript:;" onclick="setScreen()"><i style="font-size: 14px;" class="rha-icon">&#xe879;</i>宽屏</a>
                 <a class="quit" href="{:url('admin/Login/out')}"><i class="rha-icon">&#xe696;</i>退出</a>
             </li>
         </ul>
@@ -181,7 +190,13 @@
             layer.close(index);
             layer.alert(res.msg);
         })
-
+    }
+    function setScreen() {
+        var index =layer.load(1)
+        $.post("{:url('admin/system/setScreen')}",function (res) {
+            layer.close(index);
+            window.location.reload();
+        })
     }
 </script>
 </html>

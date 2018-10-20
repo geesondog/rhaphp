@@ -99,6 +99,7 @@ class Base extends Controller
         $this->assign('admin', $admin);
         $this->assign('mpInfo', session('mpInfo'));
         $this->assign('copy', $config['copyright']);
+        $this->assign('setScreen',Cookie::get('setScreen'));
     }
 
     public function getSon($allMenu = [], $node)

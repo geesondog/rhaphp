@@ -13,6 +13,7 @@ namespace app\admin\controller;
 use think\exception\ErrorException;
 use think\facade\Cache;
 use think\Db;
+use think\facade\Cookie;
 use think\facade\Env;
 use think\facade\Request;
 use think\facade\Session;
@@ -216,7 +217,7 @@ class System extends Base
         if ($handle) {
             while (false !== ($item = readdir($handle))) {
                 if ($item != '.' && $item != '..')
-                    is_dir($path.DS.$item) ? $this->delDirAndFile($path.DS.$item, $delDir) : unlink($path.DS.$item);
+                    is_dir($path . DS . $item) ? $this->delDirAndFile($path . DS . $item, $delDir) : unlink($path . DS . $item);
             }
             closedir($handle);
             if ($delDir)
@@ -227,6 +228,15 @@ class System extends Base
             }
         }
         return true;
+    }
+
+    public function setScreen()
+    {
+        if (Cookie::has('setScreen')) {
+            Cookie::delete('setScreen');
+        } else {
+            Cookie::set('setScreen', 1);
+        }
     }
 
 }
