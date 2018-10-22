@@ -43,8 +43,10 @@ class App extends Base
         if (!empty($addonMenu) && is_array($addonMenu)) {
             foreach ($addonMenu as $key=>$val){
                 $addonMenu[$key]['show']=0;
-                if($node==$addonMenu[$key]['url']=str_replace('/','_',$val['url'])){
-                    $addonMenu[$key]['show']=1;
+                $addonMenu[$key]['show'] = 0;
+                $addonMenu[$key]['url'] = str_replace('/', '_', $val['url']);
+                if ($node == $addonMenu[$key]['url'] && !empty($node)) {
+                    $addonMenu[$key]['show'] = 1;
                 }
                 if(isset($val['child']) && !empty($val['child']) && is_array($val['child'])){
                     foreach ($val['child'] as $k=>$v){
