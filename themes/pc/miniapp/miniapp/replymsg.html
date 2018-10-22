@@ -69,10 +69,10 @@
     function delMsg(id, openid) {
         layui.use('layer', function () {
             var layer = layui.layer;
-            load = layer.load(1);
             layer.confirm('你确定需要删除吗？', {
                 btn: ['是', '不'] //按钮
             }, function () {
+                load = layer.load(1);
                 $.post("{:url('delMsg')}", {'id': id, 'openid': openid}, function (res) {
                     if (res.status == 1) {
                         layer.msg(res.msg, {time: 2000}, function (index) {
