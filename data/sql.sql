@@ -632,3 +632,5 @@ ALTER TABLE `rh_syn_openid`
 ALTER TABLE `rh_payment` ADD `callback` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '回调地址：addonUrl函数生成地址' AFTER `refund`;
 
 ALTER TABLE `rh_payment` ADD `callback_status` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '回调成功状态：0:未成功，1:成功' AFTER `callback`;
+
+ALTER TABLE `rh_mp_rule` ADD INDEX(`mpid`);
