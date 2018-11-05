@@ -1502,9 +1502,11 @@ function getMember($member_id = '')
         if (!$mid = input('mid')) {
             exit('公众号标识mid不存在');
         }
-        $c = cookie('member_' . $mid) ? cookie('member_' . $mid) : [];
-        $s = session('member_' . $mid) ? session('member_' . $mid) : [];
-        $member = array_merge($c, $s);
+        //2018-11-03起 取消会员信息存入COOKIE中
+        //$c = cookie('member_' . $mid) ? cookie('member_' . $mid) : [];
+        //$s = session('member_' . $mid) ? session('member_' . $mid) : [];
+        //$member = array_merge($c, $s);
+        $member = session('member_' . $mid) ? session('member_' . $mid) : [];
     }
     if (!empty($member)) {
         $group = \think\Db::name('member_group')->where(['mpid' => $member['mpid']])->order('up_score ASC,up_money ASC,discount ASC')->select();
