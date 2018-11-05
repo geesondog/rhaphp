@@ -1665,7 +1665,9 @@ function WxPayRefundQuery($parment_id)
 function queryOrder($order_number = '')
 {
     $paymentModel = new \app\common\model\Payment();
-    if (!$payment = $paymentModel->getPaymentByFind(['order_number' => $order_number])) {
+    $paymentModel->startTrans();
+    if (!$payment = $paymentModel->where('order_number', $order_number)->lock(true)->find()) {
+        $paymentModel->rollback();
         return ['errCode' => -1, 'errMsg' => '交易单号不存在'];
     }
     if (setWxpayConfig($payment['mpid'])) {
@@ -1679,25 +1681,29 @@ function queryOrder($order_number = '')
                     $C_lk = \think\facade\Cache::get($order_number);
                     if (empty($C_lk)) {
                         \think\facade\Cache::set($order_number, '1');
-                        $model = new \app\common\model\MemberWealthRecord();
-                        if ($model->addMoney($payment['member_id'], $payment['mpid'], $payment['money'], $payment['title'], $order_number)) {
+                        if ($paymentModel->where(['mpid' => $payment['mpid'], 'order_number' => $order_number])->update(['status' => 1])) {
                             \think\facade\Cache::rm($order_number);
+                            $paymentModel->commit();
                             return ['errCode' => 'ok', 'errMsg' => '交易完成'];
                         } else {
                             \think\facade\Cache::rm($order_number);
-                            return ['errCode' => -1, 'errMsg' => '改变账户金额失败'];
+                           $paymentModel->rollback();
                         }
                     }
                 } else {
+                    $paymentModel->rollback();
                     return ['errCode' => 'ok', 'errMsg' => '交易完成'];
                 }
             } else {
+                $paymentModel->rollback();
                 return ['errCode' => -1, 'errMsg' => '未完成交易'];
             }
         } else {
+            $paymentModel->rollback();
             return ['errCode' => -1, 'errMsg' => '交易单号不存在'];
         }
     }
+    $paymentModel->rollback();
     return ['errCode' => -1, 'errMsg' => '没有公众号配置信息'];
 }
 

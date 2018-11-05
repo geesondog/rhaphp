@@ -46,33 +46,27 @@ class MemberWealthRecord extends Model
     }
 
     /**
-     * 增加金钱
-     * @param string $member_id 会员 ID
-     * @param string $mpid
-     * @param int $money
-     * @param string $remarks
-     * @return false|int
+     * 增金额
+     * @param string $member_id 会员ID
+     * @param string $mpid 公众号标识
+     * @param int $money 金额
+     * @param string $remarks 备注摘要
+     * @return bool
      */
-    public function addMoney($member_id = '', $mpid = '', $money = 0, $remarks = '', $order_number = '')
+    public function addMoney($member_id = '', $mpid = '', $money = 0, $remarks = '')
     {
         $data = ['money' => $money, 'type' => '2', 'remark' => $remarks, 'member_id' => $member_id, 'mpid' => $mpid, 'time' => time()];
         Db::startTrans();
         try {
             if (Db::name('member_wealth_record')->insert($data)) {
-                if (Db::name('mp_friends')->where(['id' => $member_id, 'mpid' => $mpid])->setInc('money', $money)) {
-                    if ($order_number) {
-                        if (!Db::name('payment')->where(['mpid' => $mpid, 'order_number' => $order_number])->update(['status' => 1])) {
-                            Db::rollback();
-                            return false;
-                        }
-                    }
-                } else {
+                if (!Db::name('mp_friends')->where(['id' => $member_id, 'mpid' => $mpid])->setInc('money', $money)) {
                     Db::rollback();
                     return false;
                 }
                 Db::commit();
                 return true;
             } else {
+                Db::rollback();
                 return false;
             }
         } catch (\Exception $exception) {
@@ -111,7 +105,7 @@ class MemberWealthRecord extends Model
     }
 
     /**
-     * 减金钱
+     * 减金额
      * @param string $member_id 会员 ID
      * @param string $mpid
      * @param int $money
