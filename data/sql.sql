@@ -544,10 +544,10 @@ ALTER TABLE `rh_mp_rule`
 
 ALTER TABLE `rh_payment`
   ADD PRIMARY KEY (`payment_id`),
+  ADD UNIQUE KEY `order_number` (`order_number`),
   ADD KEY `openid` (`openid`),
   ADD KEY `member_id` (`member_id`),
-  ADD KEY `mpid` (`mpid`),
-  ADD KEY `order_number` (`order_number`);
+  ADD KEY `mpid` (`mpid`);
 
 ALTER TABLE `rh_qrcode`
   ADD PRIMARY KEY (`id`),
