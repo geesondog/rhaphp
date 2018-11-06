@@ -59,11 +59,6 @@
     layui.use('form', function () {
         var form = layui.form;
         $('#getMobileCode').click(function(){
-            var myregs = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
-            if(!myregs.test($("#phone").val())) {
-                layer.msg('请输入有效的手机号码！');
-                return false;
-            }
             var countdown=60;
             var t;
             function settime(obj) {
