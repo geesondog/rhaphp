@@ -53,7 +53,7 @@ class Addon extends Common
         }
         if (isset($this->addonInfoByFile['is_theme']) && $this->addonInfoByFile['is_theme'] == true) {
             if (!isset($this->getAaddonConfigByMp['theme']) || empty($this->getAaddonConfigByMp['theme'])) {
-                $this->error('你还没有在管理后台对此应用进行“参数设置”进入提交保存');
+                $this->error('你还没有在管理后台对此应用进行“参数设置”进入提交保存或者你开启了主题并没有主题目录');
             }
         }
         if (empty($this->theme)) {
