@@ -1394,34 +1394,29 @@ class Wechat
 
     /**
      * 获取卡券签名cardSign
-     * @param string $card_type 卡券的类型，不可为空，官方jssdk文档说这个值可空，但签名验证工具又必填这个值，官方文档到处是坑，
-     * @param string $card_id 卡券的ID，可空
-     * @param string $location_id 卡券的适用门店ID，可空
+     * @param array $arr 参与签名cardExt参数 code|openid|card_id|catd_type
      * @param string $timestamp 当前时间戳 (为空则自动生成)
      * @param string $noncestr 随机串 (为空则自动生成)
      * @param string $appid 用于多个appid时使用,可空
      * @return array|bool 返回签名字串
      */
-    public function getCardSign($card_type = '', $card_id = '', $code = '', $location_id = '', $timestamp = 0, $noncestr = '', $appid = '')
+    public function getCardSign($arr = [], $timestamp = 0, $noncestr = '', $appid = '')
     {
         if (!$this->api_ticket && !$this->getJsCardTicket($appid)) return false;
         if (!$timestamp)
             $timestamp = time();
         if (!$noncestr)
             $noncestr = $this->generateNonceStr();
-        $arrdata = array("api_ticket" => $this->api_ticket, "app_id" => $this->appid, "card_id" => $card_id, "code" => $code, "card_type" => $card_type, "location_id" => $location_id, "timestamp" => $timestamp, "noncestr" => $noncestr);
-        $sign = $this->getTicketSignature($arrdata);
+        $arr['api_ticket'] = $this->api_ticket;
+        $arr['timestamp'] = $timestamp;
+        $arr['nonce_str'] = $noncestr;
+        $sign = $this->getTicketSignature($arr);
         if (!$sign)
             return false;
-        $signPackage = array(
-            "cardType" => $card_type,
-            "cardId" => $card_id,
-            "shopId" => $location_id,         //location_id就是shopId
-            "nonceStr" => $noncestr,
-            "timestamp" => $timestamp,
-            "cardSign" => $sign
-        );
-        return $signPackage;
+        $arr['signature'] = $sign;
+        unset($arr['api_ticket']);
+        return $arr;
+
     }
 
     /**
