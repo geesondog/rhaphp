@@ -162,6 +162,7 @@ class Wechat
     const CARD_CODE_DECRYPT = '/card/code/decrypt?';
     const CARD_CODE_GET = '/card/code/get?';
     const CARD_CODE_UPDATE = '/card/code/update?';
+    const CARD_MEMBERCARD_USERINFO_GET = '/card/membercard/userinfo/get?';//拉取会员信息（积分查询）接口
     const CARD_CODE_UNAVAILABLE = '/card/code/unavailable?';
     const CARD_TESTWHILELIST_SET = '/card/testwhitelist/set?';
     const CARD_MEETINGCARD_UPDATEUSER = '/card/meetingticket/updateuser?';    //更新会议门票
@@ -3687,6 +3688,31 @@ class Wechat
                 return false;
             }
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * 拉取会员卡信息（积分查询）
+     * @param $card_id
+     * @param $code
+     * @return bool|mixed
+     */
+    public function memberCardGetUserInfo($card_id,$code){
+        $data = array(
+            'code' => $code,
+            'card_id' => $card_id,
+        );
+        if (!$this->access_token && !$this->checkAuth()) return false;
+        $result = $this->http_post(self::API_BASE_URL_PREFIX . self::CARD_MEMBERCARD_USERINFO_GET . 'access_token=' . $this->access_token, self::json_encode($data));
+        if ($result) {
+            $json = json_decode($result, true);
+            if (!$json || !empty($json['errcode'])) {
+                $this->errCode = $json['errcode'];
+                $this->errMsg = $json['errmsg'];
+                return false;
+            }
+            return $json;
         }
         return false;
     }
