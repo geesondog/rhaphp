@@ -1420,6 +1420,33 @@ class Wechat
     }
 
     /**
+     * 获取拉起卡券列表签名
+     * @param array $arr shopId|cardType|cardId
+     * @param int $timestamp
+     * @param string $noncestr
+     * @param string $appid
+     * @return array|bool
+     */
+    public function getChooseCardSign($arr = [], $timestamp = 0, $noncestr = '', $appid = '')
+    {
+        if (!$this->api_ticket && !$this->getJsCardTicket($appid)) return false;
+        if (!$timestamp)
+            $timestamp = time();
+        if (!$noncestr)
+            $noncestr = $this->generateNonceStr();
+        $arr['app_id']=$this->appid;
+        $arr['api_ticket'] = $this->api_ticket;
+        $arr['timestamp'] = $timestamp;
+        $arr['nonce_str'] = $noncestr;
+        $sign = $this->getTicketSignature($arr);
+        if (!$sign)
+            return false;
+        $arr['signature'] = $sign;
+        unset($arr['api_ticket']);
+        return $arr;
+    }
+
+    /**
      * 微信api不支持中文转义的json结构
      * @param array $arr
      */
