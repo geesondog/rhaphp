@@ -1,0 +1,25 @@
+改进订单查询函数queryOrder，并发下可能出现数据重复插入
+改进MemberWealthRecord模型对金额与积分变动使用事务
+wechat.class.php动态获取缓存地址
+修改密码后对退出增加判断
+改进小程序接入
+common/common.php.wexinLogin增加返回会员信息
+
+9.30
+对 Payment表增加回调
+ALTER TABLE `rh_payment` ADD `callback` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '回调地址：addonUrl函数生成地址' AFTER `refund`;
+ALTER TABLE `rh_payment` ADD `callback_status` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '回调成功状态：0:未成功，1:成功' AFTER `callback`;
+
+10.8
+/Users/ima/GitHub/rhaphp/themes/pc/admin/appstore/login.html
+应用商城登录页面增加密码找回
+/Users/ima/GitHub/rhaphp/application/mp/controller/App.php
+修正业务菜单为二级时默认展开问题
+支持宽屏与中屏的切换
+ALTER TABLE `rh_mp_rule` ADD INDEX(`mpid`);
+ALTER TABLE `rh_payment` ADD UNIQUE(`order_number`);
+取消支付回调对金额入库
+
+11.17
+ALTER TABLE `rh_mp_friends` ADD `group_score` INT NOT NULL DEFAULT '0' COMMENT '影响角色组等级升降的积分' AFTER `money`, ADD `group_money` DECIMAL(11,2) NOT NULL DEFAULT '0' COMMENT '影响角色组等级升降的金额' AFTER `group_score`;
+ALTER TABLE `rh_member_group` ADD `level` INT NOT NULL DEFAULT '0' COMMENT '级别' AFTER `description`;

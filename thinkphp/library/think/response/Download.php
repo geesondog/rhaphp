@@ -20,7 +20,7 @@ class Download extends Response
     protected $name;
     protected $mimeType;
     protected $isContent = false;
-
+    protected $openinBrower = false;
     /**
      * 处理数据
      * @access protected
@@ -53,7 +53,7 @@ class Download extends Response
         $this->header['Pragma']                    = 'public';
         $this->header['Content-Type']              = $mimeType ?: 'application/octet-stream';
         $this->header['Cache-control']             = 'max-age=' . $this->expire;
-        $this->header['Content-Disposition']       = 'attachment; filename="' . $name . '"';
+        $this->header['Content-Disposition']       = $this->openinBrower ? 'inline' : 'attachment; filename="' . $name . '"';
         $this->header['Content-Length']            = $size;
         $this->header['Content-Transfer-Encoding'] = 'binary';
         $this->header['Expires']                   = gmdate("D, d M Y H:i:s", time() + $this->expire) . ' GMT';
@@ -128,10 +128,21 @@ class Download extends Response
     {
         $this->name = $filename;
 
-        if ($extension && !strpos($filename, '.')) {
+        if ($extension && false === strpos($filename, '.')) {
             $this->name .= '.' . pathinfo($this->data, PATHINFO_EXTENSION);
         }
 
+        return $this;
+    }
+
+    /**
+     * 设置是否在浏览器中显示文件
+     * @access public
+     * @param  bool  $openinBrower 是否在浏览器中显示文件
+     * @return $this
+     */
+    public function openinBrower($openinBrower) {
+        $this->openinBrower = $openinBrower;
         return $this;
     }
 }
