@@ -1513,10 +1513,11 @@ function getMember($member_id = '')
         $group_id = '0';
         $group_name = '';
         if (!empty($group)) {
-            $model = new \app\common\model\MemberWealthRecord();
-            $score = $model->getMemberScoreBySum($member['id'], $member['mpid']);
-            $money = $model->getMemberMoneyBySum($member['id'], $member['mpid']);
-
+            //$model = new \app\common\model\MemberWealthRecord();
+            //$score = $model->getMemberScoreBySum($member['id'], $member['mpid']);
+            //$money = $model->getMemberMoneyBySum($member['id'], $member['mpid']);
+            $score = $member['group_score'];
+            $money = $member['group_money'];
             foreach ($group as $key => $val) {
                 if ($val['up_type'] == '0') {
                     if ($score >= $val['up_score'] || $money >= $val['up_money']) {
@@ -1687,7 +1688,7 @@ function queryOrder($order_number = '')
                             return ['errCode' => 'ok', 'errMsg' => '交易完成'];
                         } else {
                             \think\facade\Cache::rm($order_number);
-                           $paymentModel->rollback();
+                            $paymentModel->rollback();
                         }
                     }
                 } else {
@@ -1746,6 +1747,7 @@ function wxpayNotify()
                                     return false;
                                 }
                             }
+                            \app\common\model\Payment::setCallbackStatus($payment['payment_id']);
                             $data = ['return_code' => 'SUCCESS', 'return_msg' => 'OK'];
                         } else {
                             $data = ['return_code' => 'FAIL', 'return_msg' => $result['errMsg']];
@@ -1762,12 +1764,13 @@ function wxpayNotify()
 
 function unClient($mid = '')
 {
-    try{
+    try {
         $sslcert = ROOT_PATH . 'data/' . $mid . '_' . '_apiclient_cert.pem';
         $sslkey = ROOT_PATH . 'data/' . $mid . '_' . '_apiclient_key.pem';
         @unlink($sslcert);
         @unlink($sslkey);
-    }catch (\ErrorException $exception){ }
+    } catch (\ErrorException $exception) {
+    }
 }
 
 /**

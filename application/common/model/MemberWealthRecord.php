@@ -17,6 +17,7 @@ use think\Model;
 class MemberWealthRecord extends Model
 {
     /**
+     * （1.5.7版本开始，不建议使用此方法）
      * 增加积分
      * @param string $member_id 会员 ID
      * @param string $mpid
@@ -46,6 +47,7 @@ class MemberWealthRecord extends Model
     }
 
     /**
+     * （1.5.7版本开始，不建议使用此方法）
      * 增金额
      * @param string $member_id 会员ID
      * @param string $mpid 公众号标识
@@ -76,6 +78,7 @@ class MemberWealthRecord extends Model
     }
 
     /**
+     * （1.5.7版本开始，不建议使用此方法）
      * 减积分
      * @param string $member_id 会员 ID
      * @param string $mpid
@@ -105,6 +108,7 @@ class MemberWealthRecord extends Model
     }
 
     /**
+     * （1.5.7版本开始，不建议使用此方法）
      * 减金额
      * @param string $member_id 会员 ID
      * @param string $mpid

@@ -905,6 +905,9 @@ class Mp extends Base
                     case 'unidentified':
                         $this->doSpecial('unidentified', $td);
                         break;
+                    case 'card':
+                        $this->doSpecial('card', $td);
+                        break;
                 }
             }
             ajaxMsg('1', '保存成功');
@@ -923,6 +926,7 @@ class Mp extends Base
                 '8' => 'subscribe',
                 '9' => 'unsubscribe',
                 '10' => 'unidentified',
+                '11' => 'card',
             ];
             foreach ($where as $key => $v) {
                 $result = Db::name('mp_rule')

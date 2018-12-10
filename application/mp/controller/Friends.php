@@ -30,7 +30,7 @@ class Friends extends Base
         $nickname = '';
         $times = '';
         $need = '';
-        $sex = '';
+        $sex = '-1';
         if (Request::isGet()) {
             $_data = input('get.');
             $nickname = isset($_data['nickname']) ? $_data['nickname'] : '';
@@ -50,8 +50,8 @@ class Friends extends Base
                 $where[] = ['last_time', '>', (time() - (86400 * 2))];
                 $need = 1;
             }
-            if (isset($_data['sex']) && $_data['sex'] != 0) {
-                $sex = $_data['sex'] ? $_data['sex'] : '0';
+            if (isset($_data['sex']) && $_data['sex'] > 0) {
+                $sex = $_data['sex'] ? $_data['sex'] : -1;
                 $where[] = ['sex', '=', $_data['sex']];
             }
         }
@@ -61,7 +61,7 @@ class Friends extends Base
         $post['sex'] = $sex;
         $FriendList = MpFriends::where(['mpid' => $this->mid, 'subscribe' => 1])
             ->where($where)
-            ->order('subscribe_time DESC')->paginate(20);
+            ->order('subscribe_time DESC')->paginate(20,false,['query'=>input()]);
         $this->assign('friendList', $FriendList);
         $this->assign('post', $post);
         return view();

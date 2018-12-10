@@ -127,5 +127,101 @@ class MpFriends extends Model
         $this->save(['last_time' => time()], ['openid' => $msgData['FromUserName']]);
     }
 
+    /**
+     * 会员|粉丝、金額自增
+     * @param array $where 条件
+     * @param $sum 增加金额总额
+     * @return bool
+     * @throws \think\Exception
+     */
+    static function setIncMoney($where = [], $sum)
+    {
+        return self::where($where)->setInc('money', $sum);
+    }
+
+    /**
+     * 会员|粉丝、金额自减
+     * @param array $where条件
+     * @param $sum 自减金额总额
+     * @return bool
+     * @throws \think\Exception
+     */
+    static function setDelMoney($where = [], $sum)
+    {
+        return self::where($where)->setDec('money', $sum);
+    }
+
+    /**
+     * 会员|粉丝、积分自增
+     * @param array $where
+     * @param $sum
+     * @return bool
+     * @throws \think\Exception
+     */
+    static function setIncScore($where = [], $sum)
+    {
+        return self::where($where)->setInc('score', $sum);
+    }
+
+    /**
+     * 会员|粉丝、积分自减
+     * @param array $where
+     * @param $sum
+     * @return bool
+     * @throws \think\Exception
+     */
+    static function setDelScore($where = [], $sum)
+    {
+        return self::where($where)->setDec('score', $sum);
+    }
+
+    /**
+     * 自增影响角色组等级升降的金额
+     * @param array $where
+     * @param $sum
+     * @return bool
+     * @throws \think\Exception
+     */
+    static function setIncGroupMoney($where = [], $sum)
+    {
+        return self::where($where)->setInc('group_money', $sum);
+    }
+
+    /**
+     * 自减影响角色组等级升降的金额
+     * @param array $where
+     * @param $sum
+     * @return bool
+     * @throws \think\Exception
+     */
+    static function setDelGroupMoney($where = [], $sum)
+    {
+        return self::where($where)->setDec('group_money', $sum);
+    }
+
+    /**
+     * 自增影响角色组等级升降的积分
+     * @param array $where
+     * @param $sum
+     * @return bool
+     * @throws \think\Exception
+     */
+    static function setIncGroupScore($where = [], $sum)
+    {
+        return self::where($where)->setInc('group_score', $sum);
+    }
+
+    /**
+     * 自减影响角色组等级升降的积分
+     * @param array $where
+     * @param $sum
+     * @return bool
+     * @throws \think\Exception
+     */
+    static function setDelGroupScore($where = [], $sum)
+    {
+        return self::where($where)->setDec('group_score', $sum);
+    }
+
 
 }
