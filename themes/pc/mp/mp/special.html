@@ -81,6 +81,45 @@
     </div>
 
 
+    <div class="layui-form-item">
+        <label class="layui-form-label">卡券事件</label>
+        <div id="replyType_card" class="layui-input-block">
+            <input type="radio" {eq name="$card['event']" value="nocol"} checked {/eq}  name="card" value="nocol" title="不处理">
+            <input type="radio" {notempty name="$card['keyword']"} checked {/notempty} name="card" value="keyword" title="触发关键词" >
+            <input type="radio" {notempty name="$card['addon']"} checked {/notempty} name="card" value="addon" title="触发应用">
+        </div>
+    </div>
+    <div id="tapNodecard">
+        <div class="layui-tab-content card">
+            <div class=" image_text layui-tab-item  {eq name="$card['event']" value="nocol"} layui-show {/eq}">
+            <div class="layui-form-item layui-form-text">
+            </div>
+        </div>
+        <div class="card_keyword layui-tab-item {notempty name="$card['keyword']"} layui-show {/notempty}">
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <input type="text" name="card_keyword" value="{$card['keyword']}" placeholder="请输入关键词" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="card_addon layui-tab-item {notempty name="$card['addon']"} layui-show  {/notempty}">
+    <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <div class="layui-input-block">
+            <select name="card_addons">
+                <option value="">请选择应用</option>
+                {volist name="addons" id="v"}
+                <option {eq name="$card['addon']" value="$v.addon"} selected {/eq}  value="{$v.addon}">{$v.name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+
 
 
     <div class="layui-form-item">
@@ -450,6 +489,11 @@
         $("#replyType_unsubscribe").click(function(){
             var class_a='unsubscribe_'+ $("input[name='unsubscribe']:checked").val();
             $('.unsubscribe div').removeClass('layui-show')
+            $('.'+class_a).addClass('layui-show')
+        });
+        $("#replyType_card").click(function(){
+            var class_a='card_'+ $("input[name='card']:checked").val();
+            $('.card div').removeClass('layui-show')
             $('.'+class_a).addClass('layui-show')
         });
         $("#replyType_image").click(function(){

@@ -38,7 +38,7 @@ class Entr
             'token' => $mpInfo['valid_token'],
             'encodingaeskey' => $mpInfo['encodingaeskey']
         );
-        include_once EXTEND_PATH."wechatSdk/wechat.class.php";
+        include_once EXTEND_PATH . "wechatSdk/wechat.class.php";
         if (!empty($_GET['echostr']) && !empty($_GET["signature"])) {
             if ($mpInfo['valid_status'] == 0) {
                 $model = new \app\common\model\Mp();
@@ -48,14 +48,15 @@ class Entr
             $weObj->valid();
             exit;
         }
-        session('mid',$mid);
+        session('mid', $mid);
         session('mp_options', $options);
         $weObj = new \Wechat($options);
         $weObj->valid();
         $weObj->getRev();//获取微信服务器发来信息(不返回结果)，被动接口必须调用
         $msgData = $weObj->getRevData();//返回微信服务器发来的信息（数组）
-        if($mpInfo['status']==0){
-            replyText($mpInfo['desc']);exit;
+        if ($mpInfo['status'] == 0) {
+            replyText($mpInfo['desc']);
+            exit;
         }
         session('openid', $msgData['FromUserName']);
         $M = new MpFriends();
@@ -135,7 +136,8 @@ class Entr
                         $this->special('view', $msgData);
                         break;
                     default:
-                        //
+                        //其它事件
+                        $this->cardEvent(strtolower($msgData['Event']), $msgData);
                         break;
                 }
                 break;
@@ -143,9 +145,33 @@ class Entr
                 //
                 break;
         }
-        //终止执行
-       // exit;
+    }
 
+    /**
+     * 卡券事件响应
+     * @param $event
+     * @param $msgData
+     */
+    public function cardEvent($event, $msgData)
+    {
+        $cardEvent = [
+            'user_get_card' => '卡券通过审核',
+            'card_not_pass_check' => '卡券未通过审核',
+            'user_get_card' => '用户领取卡券',
+            'user_gifting_card' => '用户转赠卡券',
+            'user_del_card' => '用户删除卡券',
+            'user_consume_card' => '核销事件',
+            'User_pay_from_pay_cell' => '微信买单事件',
+            'user_view_card' => '用户点击会员卡',
+            'user_enter_session_from_card' => '用户从卡券进入公众号会话',
+            'update_member_card' => '会员卡内容更新',
+            'card_sku_remind' => '库存报警',
+            'card_pay_order' => '券点流水详情事件',
+            'submit_membercard_user_info' => '会员卡激活事件推送',
+        ];
+        if (isset($cardEvent[$event])) {
+            $this->special('card', $msgData);
+        }
     }
 
     /**
@@ -166,7 +192,7 @@ class Entr
                 $model->save($msg);
                 break;
             case 'image'://图片消息
-                $msg['content'] = getHostDomain() . '/mp/Show/image?url='. urlencode($msgData['PicUrl']);
+                $msg['content'] = getHostDomain() . '/mp/Show/image?url=' . urlencode($msgData['PicUrl']);
                 $model->save($msg);
                 break;
             case 'voice'://语音消息
@@ -189,7 +215,7 @@ class Entr
                 break;
 
         }
-        $options=session('mp_options');
+        $options = session('mp_options');
         $weObj = new \Wechat($options);
         $weObj->valid();
         $weObj->getRev();
@@ -211,7 +237,7 @@ class Entr
                 $this->keyword($rule['keyword'], $msgData);
             }
             if ($rule['addon']) {
-                loadAdApi($rule['addon'], $msgData,['mid'=>$this->mid,'addon'=>$rule['addon']]);
+                loadAdApi($rule['addon'], $msgData, ['mid' => $this->mid, 'addon' => $rule['addon']]);
             }
         } else {//不存在响应处理
             $rule = Db::name('mp_rule')
@@ -221,9 +247,9 @@ class Entr
                     $this->keyword($rule['keyword'], $msgData);
                 }
                 if ($rule['addon']) {
-                    loadAdApi($rule['addon'], $msgData,['mid'=>$this->mid,'addon'=>$rule['addon']]);
+                    loadAdApi($rule['addon'], $msgData, ['mid' => $this->mid, 'addon' => $rule['addon']]);
                 }
-            }else{
+            } else {
                 $this->mpMsg($msgData);
             }
 
@@ -276,7 +302,7 @@ class Entr
         if (!empty($rule)) {
             switch ($rule['type']) {//text,addon,images,news,voice,music,video
                 case 'addon'://该关键词是插件应用响应的
-                    loadAdApi($rule['addon'], $msg,['mid'=>$this->mid,'addon'=>$rule['addon']]);
+                    loadAdApi($rule['addon'], $msg, ['mid' => $this->mid, 'addon' => $rule['addon']]);
                     break;
                 case 'text'://文本
                     $content = Db::name('mp_reply')->where(['reply_id' => $rule['reply_id']])->field('content')->find();
@@ -303,7 +329,7 @@ class Entr
                                 $news[$key1]['PicUrl'] = $v;
                             }
                             if ($key2 == 'link') {
-                                $news[$key1]['Url'] = $v. '?openid=' . getOrSetOpenid();
+                                $news[$key1]['Url'] = $v . '?openid=' . getOrSetOpenid();
                             }
                         }
                     }
@@ -357,9 +383,9 @@ class Entr
                     $this->keyword($rule['keyword'], $msg);
                 }
                 if ($rule['addon']) {
-                    loadAdApi($rule['addon'], $msg,['mid'=>$this->mid,'addon'=>$rule['addon']]);
+                    loadAdApi($rule['addon'], $msg, ['mid' => $this->mid, 'addon' => $rule['addon']]);
                 }
-            }else{
+            } else {
                 $this->mpMsg($msg);
             }
 
@@ -375,7 +401,7 @@ class Entr
     public function subscribe($msg = [], $type = 'subscribe')
     {
         $friendInfo = getFriendInfoForApi(getOrSetOpenid());
-        $friendInfo['tagid_list']=json_encode($friendInfo['tagid_list']);
+        $friendInfo['tagid_list'] = json_encode($friendInfo['tagid_list']);
         $friendModel = new MpFriends();
         if (!empty($friendInfo)) {
             $friendInfo['mpid'] = $this->mid;
@@ -384,12 +410,12 @@ class Entr
                 if (empty($Res)) {
                     $friendModel->save($friendInfo);
                 } else {
-                    $friendModel->save($friendInfo,['mpid' => $this->mid, 'openid' => getOrSetOpenid()]);
+                    $friendModel->save($friendInfo, ['mpid' => $this->mid, 'openid' => getOrSetOpenid()]);
                 }
             } elseif ($type == 'unsubscribe') {
-                $friendModel->save(['subscribe' => '0', 'unsubscribe_time' => time()],['mpid' => $this->mid, 'openid' => getOrSetOpenid()]);
+                $friendModel->save(['subscribe' => '0', 'unsubscribe_time' => time()], ['mpid' => $this->mid, 'openid' => getOrSetOpenid()]);
             }
-        }else{//公众号没有权限获取用户基本信息 可按需求扩展
+        } else {//公众号没有权限获取用户基本信息 可按需求扩展
             if ($type == 'subscribe') {
 
             } elseif ($type == 'unsubscribe') {
@@ -402,7 +428,7 @@ class Entr
                 $this->keyword($rule['keyword'], $msg);
             }
             if ($rule['addon']) {
-                loadAdApi($rule['addon'], $msg,['mid'=>$this->mid,'addon'=>$rule['addon']]);
+                loadAdApi($rule['addon'], $msg, ['mid' => $this->mid, 'addon' => $rule['addon']]);
             }
         }
 
