@@ -1,91 +1,91 @@
 {extend name="../admin/common/base" /}
 {block name="body"}
 <form action="" class="layui-form" method="get">
-<div class="layui-form-item">
-    <div class="layui-inline">
+    <div class="layui-form-item">
+        <div class="layui-inline">
             <label class="layui-form-label">呢称：</label>
             <div class="layui-input-block">
                 <input type="text" name="nickname" value="{$post.nickname}" placeholder="请输入呢称" autocomplete="off" class="layui-input">
             </div>
-    </div>
-    <div class="layui-inline">
-        <label class="layui-form-label">关注时间</label>
-        <div class="layui-input-inline">
-            <input name="times" id="rhaphp-time1" value="{$post.times|raw}" class="layui-input" placeholder="开始时间 到 结束时间" lay-key="17" type="text">
         </div>
-    </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">关注时间</label>
+            <div class="layui-input-inline">
+                <input name="times" id="rhaphp-time1" value="{$post.times|raw}" class="layui-input" placeholder="开始时间 到 结束时间" lay-key="17" type="text">
+            </div>
+        </div>
 
-    <div class="layui-inline">
-        <label class="layui-form-label">互动时间</label>
-        <div class="layui-input-block">
-            <input  name="need" {eq name="$post.need" value="1" } checked {/eq} lay-skin="primary" value="1" title="有效"  type="checkbox">
+        <div class="layui-inline">
+            <label class="layui-form-label">互动时间</label>
+            <div class="layui-input-block">
+                <input  name="need" {eq name="$post.need" value="1" } checked {/eq} lay-skin="primary" value="1" title="有效"  type="checkbox">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">性别：</label>
+            <div class="layui-input-block">
+                <input name="sex" {eq name="$post.sex" value="1" } checked {/eq} value="1" title="男" checked="" type="radio">
+                <input name="sex" {eq name="$post.sex" value="2" } checked {/eq} value="2" title="女" type="radio">
+                <input name="sex" {eq name="$post.sex" value="-1" } checked {/eq} value="-1" title="不限" type="radio">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn layui-btn-sm layui-btn-normal">
+                    <i class="layui-icon">&#xe615;</i>
+                    搜索</button>
+            </div>
         </div>
     </div>
-    <div class="layui-inline">
-        <label class="layui-form-label">性别：</label>
-        <div class="layui-input-block">
-            <input name="sex" {eq name="$post.sex" value="1" } checked {/eq} value="1" title="男" checked="" type="radio">
-            <input name="sex" {eq name="$post.sex" value="2" } checked {/eq} value="2" title="女" type="radio">
-            <input name="sex" {eq name="$post.sex" value="0" } checked {/eq} value="0" title="不限" type="radio">
-        </div>
-    </div>
-    <div class="layui-inline">
-        <div class="layui-input-block">
-            <button type="submit" class="layui-btn layui-btn-sm layui-btn-normal">
-                <i class="layui-icon">&#xe615;</i>
-                搜索</button>
-        </div>
-    </div>
-</div>
 </form>
 <form class="layui-form" action="" style="padding: 0px 10px 0px 10px;">
-<table class="layui-table" lay-skin="line">
-    <colgroup>
-        <col width="50">
-        <col width="80">
-        <col>
-    </colgroup>
-    <thead>
-    <!--<tr>-->
-    <!--<th>&nbsp;全部</th>-->
-    <!--<th></th>-->
-    <!--<th></th>-->
-    <!--<th></th>-->
-    <!--<th></th>-->
-    <!--<th></th>-->
-    <!--<th></th>-->
-    <!--<th></th>-->
-    <!--</tr>-->
-    <tr>
-        <th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>
-        <th></th>
-        <th><a id="synselect" class="layui-btn layui-btn-sm" href="javascript:;">同步选中粉丝信息</a><a id="getAllFriend" class="layui-btn layui-btn-sm" href="javascript:;">同步全部粉丝</a></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    {volist name="friendList" id="v"}
-    <tr>
-        <td><input name="openid" value="{$v.openid}" lay-skin="primary" type="checkbox"></td>
-        <td>
-            <div  style="padding: 1px; border: #e6e6e6 solid 1px; width:35px; float: left; ">
-                <img class="form_logo" src="{$v.headimgurl}" width="35" height="35">
-            </div>
-        </td>
-        <td>{$v.nickname}</td>
-        <td>关注：{$v.subscribe_time|date="Y-m-d"}</td>
-        <td>
-        <td></td>
-        <td></td>
-        <td><a class="rha-bt-a" href="{:url('Message/replyMsg',['openid'=>$v.openid])}">发送消息</a></td>
-    </tr>
-    {/volist}
-    </tbody>
-</table>
+    <table class="layui-table" lay-skin="line">
+        <colgroup>
+            <col width="50">
+            <col width="80">
+            <col>
+        </colgroup>
+        <thead>
+        <!--<tr>-->
+        <!--<th>&nbsp;全部</th>-->
+        <!--<th></th>-->
+        <!--<th></th>-->
+        <!--<th></th>-->
+        <!--<th></th>-->
+        <!--<th></th>-->
+        <!--<th></th>-->
+        <!--<th></th>-->
+        <!--</tr>-->
+        <tr>
+            <th><input name="" lay-skin="primary" lay-filter="allChoose" type="checkbox"></th>
+            <th></th>
+            <th><a id="synselect" class="layui-btn layui-btn-sm" href="javascript:;">同步选中粉丝信息</a><a id="getAllFriend" class="layui-btn layui-btn-sm" href="javascript:;">同步全部粉丝</a></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="friendList" id="v"}
+        <tr>
+            <td><input name="openid" value="{$v.openid}" lay-skin="primary" type="checkbox"></td>
+            <td>
+                <div  style="padding: 1px; border: #e6e6e6 solid 1px; width:35px; float: left; ">
+                    <img class="form_logo" src="{$v.headimgurl}" width="35" height="35">
+                </div>
+            </td>
+            <td>{$v.nickname}</td>
+            <td>关注：{$v.subscribe_time|date="Y-m-d"}</td>
+            <td>
+            <td></td>
+            <td></td>
+            <td><a class="rha-bt-a" href="{:url('Message/replyMsg',['openid'=>$v.openid])}">发送消息</a></td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
 </form>
 {$friendList->render()|raw}
 <script>
@@ -142,7 +142,7 @@
                         send(result.lastOpenid,result.page)
                     }
                     if(result.status==2){
-                      //  layer.close(index);
+                        //  layer.close(index);
                         layer.alert('同步完成', {
                             skin: 'layui-layer-lan'
                             ,closeBtn: 0
@@ -160,7 +160,7 @@
                 })
             }
             $('#synselect').click(function () {
-               var openids=[];
+                var openids=[];
                 $("input[name='openid']:checked").each(function (key,value) {
                     openids[key]=$(this).val();
                 })
