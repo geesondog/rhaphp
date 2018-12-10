@@ -37,7 +37,7 @@ CREATE TABLE `rh_admin` (
   `password` varchar(64) NOT NULL COMMENT '密码',
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1：正常2：禁用',
   `ip` varchar(16) DEFAULT '' COMMENT '登录 IP',
-  `last_time` int(10) DEFAULT '' COMMENT '最后登录时间',
+  `last_time` int(10) DEFAULT '0' COMMENT '最后登录时间',
   `rand_str` varchar(180) NOT NULL COMMENT '密码附加字符',
   `admin_id` int(11) NOT NULL DEFAULT '0' COMMENT '超级管理 ID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -52,8 +52,8 @@ CREATE TABLE `rh_material` (
   `content` mediumtext COMMENT '文本素材内容',
   `detail` text COMMENT '图文素材详情',
   `link` varchar(255) DEFAULT '' COMMENT '图文链接',
-  `create_time` int(10) DEFAULT '' COMMENT '创建时间',
-  `update_time` int(10) DEFAULT '' COMMENT '更新时间',
+  `create_time` int(10) DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(10) DEFAULT '0' COMMENT '更新时间',
   `media_id` varchar(120) DEFAULT '' COMMENT '媒体 ID',
   `from_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:本地1：公众号',
   `path` varchar(500) DEFAULT '' COMMENT '资源路径'
@@ -113,7 +113,7 @@ CREATE TABLE `rh_member_wealth_record` (
   `mpid` int(11) NOT NULL DEFAULT '0' COMMENT '公众号标识',
   `score` int(11) NOT NULL DEFAULT '0' COMMENT '积分',
   `money` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '金额',
-  `time` int(10) DEFAULT '' COMMENT '时间',
+  `time` int(10) DEFAULT '0' COMMENT '时间',
   `type` tinyint(1) NOT NULL COMMENT '1为积分，2金额',
   `remark` varchar(255) DEFAULT '' COMMENT '备注'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -123,7 +123,7 @@ CREATE TABLE `rh_menu` (
   `pid` int(5) NOT NULL COMMENT '上级ID',
   `name` varchar(50) NOT NULL COMMENT '菜单名称',
   `url` varchar(180) NOT NULL COMMENT 'Url函数地址',
-  `sort` int(5) DEFAULT '' COMMENT '排序',
+  `sort` int(5) DEFAULT '0' COMMENT '排序',
   `icon` varchar(180) DEFAULT '' COMMENT '图标',
   `child` varchar(5) DEFAULT '',
   `shows` varchar(5) DEFAULT ''
@@ -242,7 +242,7 @@ CREATE TABLE `rh_miniapp_user` (
   `openid` varchar(64) NOT NULL COMMENT 'openid',
   `nickname` varchar(50) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '昵称',
   `avatarurl` varchar(255) DEFAULT '' COMMENT '头像',
-  `gender` tinyint(1) DEFAULT '' COMMENT '性别',
+  `gender` tinyint(1) DEFAULT '0' COMMENT '性别',
   `relname` varchar(50) DEFAULT '' COMMENT '真实姓名',
   `signature` text COMMENT '个性签名',
   `mobile` varchar(15) DEFAULT '' COMMENT '手机号',
@@ -290,10 +290,10 @@ CREATE TABLE `rh_mp_friends` (
   `openid` varchar(64) NOT NULL COMMENT 'openid',
   `nickname` varchar(50) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '昵称',
   `headimgurl` varchar(255) DEFAULT '' COMMENT '头像',
-  `sex` tinyint(1) DEFAULT '' COMMENT '性别',
+  `sex` tinyint(1) DEFAULT '0' COMMENT '性别',
   `subscribe` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否关注',
-  `subscribe_time` int(10) DEFAULT '' COMMENT '关注时间',
-  `unsubscribe_time` int(10) DEFAULT '' COMMENT '取消关注时间',
+  `subscribe_time` int(10) DEFAULT '0' COMMENT '关注时间',
+  `unsubscribe_time` int(10) DEFAULT '0' COMMENT '取消关注时间',
   `relname` varchar(50) DEFAULT '' COMMENT '真实姓名',
   `signature` text COMMENT '个性签名',
   `mobile` varchar(15) DEFAULT '' COMMENT '手机号',
@@ -364,8 +364,8 @@ CREATE TABLE `rh_mp_rule` (
   `keyword` varchar(80) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '关键词内容',
   `type` varchar(50) DEFAULT '' COMMENT '触发类型：text,addon,images,news,voice,music,video',
   `event` varchar(50) DEFAULT '' COMMENT '特殊事件如:关注、取关等',
-  `entry_id` int(10) DEFAULT '' COMMENT '功能入口ID',
-  `reply_id` int(10) DEFAULT '' COMMENT '自动回复ID',
+  `entry_id` int(10) DEFAULT '0' COMMENT '功能入口ID',
+  `reply_id` int(10) DEFAULT '0' COMMENT '自动回复ID',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态(1开户:0关闭)'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='公众号响应规则';
 
@@ -404,25 +404,25 @@ CREATE TABLE `rh_jobs` (
   `payload` longtext NOT NULL,
   `attempts` tinyint(3) UNSIGNED NOT NULL,
   `reserved` tinyint(3) UNSIGNED NOT NULL,
-  `reserved_at` int(10) UNSIGNED DEFAULT '',
+  `reserved_at` int(10) UNSIGNED DEFAULT '0',
   `available_at` int(10) UNSIGNED NOT NULL,
   `created_at` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='队列任务表';
 
 CREATE TABLE `rh_qrcode` (
   `id` int(10) UNSIGNED NOT NULL COMMENT '主键',
-  `mpid` int(10) DEFAULT '' COMMENT '公众号标识',
-  `scene_id` int(32) DEFAULT '' COMMENT '场景值ID',
+  `mpid` int(10) DEFAULT '0' COMMENT '公众号标识',
+  `scene_id` int(32) DEFAULT '0' COMMENT '场景值ID',
   `scene_name` varchar(255) DEFAULT '' COMMENT '场景名称',
   `keyword` varchar(255) DEFAULT '' COMMENT '关联关键词',
   `qr_type` char(32) DEFAULT '0' COMMENT '二维码类型',
   `scene_str` varchar(255) DEFAULT '' COMMENT '场景值字符串',
-  `expire` int(10) DEFAULT '' COMMENT '过期时间',
+  `expire` int(10) DEFAULT '0' COMMENT '过期时间',
   `ticket` varchar(150) DEFAULT '' COMMENT '二维码Ticket',
   `short_url` varchar(255) DEFAULT '' COMMENT '二维码短地址',
   `qrcode_url` text NOT NULL COMMENT '二维码原始地址',
   `url` varchar(255) DEFAULT '' COMMENT '二维码图片解析后的地址',
-  `create_time` int(10) DEFAULT '' COMMENT '二维码创建时间',
+  `create_time` int(10) DEFAULT '0' COMMENT '二维码创建时间',
   `scan_count` int(11) NOT NULL DEFAULT '0' COMMENT '扫码次数',
   `gz_count` int(11) NOT NULL DEFAULT '0' COMMENT '关注数量'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -446,7 +446,7 @@ CREATE TABLE `rh_redpack` (
   `money` decimal(10,2) NOT NULL COMMENT '红包金额',
   `nick_name` varchar(255) DEFAULT '' COMMENT '提供方名称',
   `send_name` varchar(255) DEFAULT '' COMMENT '发送者名称',
-  `create_time` int(10) DEFAULT '' COMMENT '创建时间',
+  `create_time` int(10) DEFAULT '0' COMMENT '创建时间',
   `addon` varchar(60) DEFAULT '' COMMENT '应用扩展标识',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态1：正常0：过期'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
