@@ -12,6 +12,7 @@ namespace app\admin\controller;
 
 use app\common\model\Addons;
 use think\Db;
+use think\exception\ErrorException;
 use think\facade\Config;
 use think\facade\Cookie;
 use think\facade\Env;
@@ -31,6 +32,7 @@ class Appstore extends Base
             $this->user = $user;
             $this->token = $user['token'];
         }
+        set_time_limit(0);
     }
 
     public function index($type = 1, $cate = 0, $page = 1, $title = '')
@@ -88,34 +90,38 @@ class Appstore extends Base
     public function download()
     {
         $data = input();
-        $url = self::$baseUrl . "publics/getAppInfo";
-        $result = json_decode(httpPost($url, ['id' => $data['app_id']]), true);
-        if (empty($result)) return json(['errcode' => -1, 'errmsg' => '没有找到些应用']);
-        if (!isset($result['type_id']) && empty($result['type_id'])) return json(['errcode' => -1, 'errmsg' => '类型不符，无法继续完成']);
-        if ($result['type_id'] == 1) {
-            $installPath = 'addons/';
-        } elseif ($result['type_id'] == 2) {
-            $installPath = 'miniapp/';
-        }
-        $appInstallPath = Env::get('root_path') . $installPath . $result['name'] . DS;
-        if (file_exists($appInstallPath)) return json(['errcode' => -1, 'errmsg' => $result['name'] . '目录已经存在或者您已经安装过《' . $result['title'] . '》，如果您要重新安装，请先卸载此应用']);
-        $url = self::$baseUrl . 'Business/download';
-        $data['token'] = $this->token;
-        $result2 = httpPost($url, $data);
-        if ($result2 == false) return json(['errcode' => -1, 'errmsg' => '服务出错，请稍后再试']);
-        $temFile = Env::get('runtime_path') . getRandChar(16) . '.tmp';
-        file_put_contents($temFile, $result2);
-        $zip = new \ZipArchive;
-        $res = $zip->open($temFile);
-        if ($res === TRUE) {
-            $zip->extractTo(Env::get('root_path') . $installPath);
-            $zip->close();
-            return json(['errcode' => 0, 'errmsg' => '下载成功，正在跳转安装界面。。。', 'type' => $result['type_id']]);
-        } else {
-            if ($result = json_decode($result2, true)) {
-                return json($result);
+        try {
+            $url = self::$baseUrl . "publics/getAppInfo";
+            $result = json_decode(httpPost($url, ['id' => $data['app_id']]), true);
+            if (empty($result)) return json(['errcode' => -1, 'errmsg' => '没有找到些应用']);
+            if (!isset($result['type_id']) && empty($result['type_id'])) return json(['errcode' => -1, 'errmsg' => '类型不符，无法继续完成']);
+            if ($result['type_id'] == 1) {
+                $installPath = 'addons/';
+            } elseif ($result['type_id'] == 2) {
+                $installPath = 'miniapp/';
             }
-            return json(['errcode' => -1, 'errmsg' => '解压失败，请检查是否有写入权限']);
+            $appInstallPath = Env::get('root_path') . $installPath . $result['name'] . DS;
+            if (file_exists($appInstallPath)) return json(['errcode' => -1, 'errmsg' => $result['name'] . '目录已经存在或者您已经安装过《' . $result['title'] . '》，如果您要重新安装，请先卸载此应用']);
+            $url = self::$baseUrl . 'Business/download';
+            $data['token'] = $this->token;
+            $result2 = httpPost($url, $data);
+            if ($result2 == false) return json(['errcode' => -1, 'errmsg' => '服务出错，请稍后再试']);
+            $temFile = Env::get('runtime_path') . getRandChar(16) . '.tmp';
+            file_put_contents($temFile, $result2);
+            $zip = new \ZipArchive;
+            $res = $zip->open($temFile);
+            if ($res === TRUE) {
+                $zip->extractTo(Env::get('root_path') . $installPath);
+                $zip->close();
+                return json(['errcode' => 0, 'errmsg' => '下载成功，正在跳转安装界面。。。', 'type' => $result['type_id']]);
+            } else {
+                if ($result = json_decode($result2, true)) {
+                    return json($result);
+                }
+                return json(['errcode' => -1, 'errmsg' => '解压失败，请检查是否有写入权限']);
+            }
+        }catch (ErrorException $exception){
+            return json(['errcode' => -1, 'errmsg' => $exception->getMessage()]);
         }
 
     }
