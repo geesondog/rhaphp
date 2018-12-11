@@ -39,7 +39,7 @@ class member extends Base
                     $this->assign('data', $memberList);
                     break;
                 case 'group':
-                    $list = Db::name('member_group')->where(['mpid'=>$this->mid])->order('up_score ASC,up_money ASC,discount ASC')->select();
+                    $list = Db::name('member_group')->where(['mpid'=>$this->mid])->order('level ASC')->select();
                     if ($to == 'updateGroup' && input('id')) {
                         $group = Db::name('member_group')->where([
                             'mpid' => $this->mid,
