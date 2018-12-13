@@ -297,7 +297,7 @@ class Entr
     public function keyword($keyword, $msg = [])
     {
         $rule = Db::name('mp_rule')->where(['mpid' => $this->mid, 'keyword' => $keyword, 'status' => '1'])
-            ->where('event', 'null')
+            ->where('event', '')
             ->order('id Desc')->find();
         if (!empty($rule)) {
             switch ($rule['type']) {//text,addon,images,news,voice,music,video
