@@ -127,21 +127,24 @@ class Material extends Model
 
     public function getMaterialList($type = 'image', $mpid = '', $from_type = 1, $page = 10)
     {
-        if($from_type==0 && input('type') =='image'){
+        if ($from_type == 0 && input('type') == 'image') {
             $model = new Picture();
-            $material =  $model->where('mpid',$mpid)
-                ->where('type',1)
+            $material = $model->where('mpid', $mpid)
+                ->where('type', 1)
                 ->field('picture as url')
                 ->order('id DESC')
                 ->paginate($page);
-            foreach ($material as $key=>$value){
-                    $material[$key]['url']=getHostDomain().DS.$value['url'];
+            foreach ($material as $key => $value) {
+                if (strpos($value['url'], 'http') !== false) {
+                    $material[$key]['url'] = $value['url'];
+                } else {
+                    $material[$key]['url'] = getHostDomain() . DS . $value['url'];
+                }
             }
             return $material;
-        }else{
+        } else {
             return $this->where(['type' => $type, 'mpid' => $mpid, 'from_type' => $from_type])->order('create_time DESC')->paginate($page);
         }
-
     }
 
     /**
