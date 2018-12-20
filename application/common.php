@@ -1456,7 +1456,7 @@ function getStrings($array = [])
  */
 function getHttpType()
 {
-    return $type = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https://' : 'http://';
+    return \think\facade\Request::scheme().'://';
 }
 
 /**
