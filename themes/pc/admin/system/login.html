@@ -60,7 +60,7 @@
 
 <script>
 
-    layui.use('form', function () {
+    layui.use(['form','layer'], function () {
         (function () {
             var isIE = function () {
                 var U = navigator.userAgent,
@@ -83,7 +83,23 @@
                             location.href = "{:url('mp/Mp/index')}";
                         });
                     } else {
-                        layer.alert(obj.msg);
+                        layer.open({
+                          title: '提示'
+                          ,content: obj.msg
+                          ,btn: ['确认',]
+                          ,success: function(layero, index){
+                            this.enterEsc = function(event){
+                              if(event.keyCode === 13){
+                                layer.close(index);
+                                return false; //阻止系统默认回车事件
+                              }
+                            };
+                            $(document).on('keydown', this.enterEsc);   //监听键盘事件，关闭层
+                          }
+                          ,end: function(){
+                            $(document).off('keydown', this.enterEsc);  //解除键盘关闭事件
+                          }
+                        });
                     }
                 },
                 "json"
