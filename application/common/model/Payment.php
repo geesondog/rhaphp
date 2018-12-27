@@ -75,7 +75,7 @@ class Payment extends Model
     }
 
     /**
-     * 统一下单 表态方法 注意参数有简化
+     * 统一下单 静态方法 注意参数有简化
      * @param string $member_id
      * @param string $mid
      * @param string $money

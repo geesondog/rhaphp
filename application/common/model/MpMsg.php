@@ -20,7 +20,7 @@ class MpMsg extends Model
 
     public function messageListByGroup($mid,$status=0)
     {
-        $msgList = $this->where(['status' => $status, 'mpid' => $mid])->field('openid,count(msg_id) as msg_total')->group('openid')->paginate(15);
+        $msgList = $this->where(['status' => $status, 'mpid' => $mid])->field('openid,count(msg_id) as msg_total')->group('openid')->order('msg_id DESC')->paginate(15);
         foreach ($msgList as $key => $val) {
             $msgContent = $this->where(['openid' => $val['openid']])->order('msg_id DESC')->field('type,content,create_time as time')->find();
             switch ($msgContent['type']) {

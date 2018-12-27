@@ -1152,15 +1152,10 @@ class Mp extends Base
                         'apiclient_key' => '',
                         'setting_name' => '',
                     ];
-//                    if (empty($result)) {
-//                        $config = $arr1;
-//                    } else {
-//                        $config = diffArrayValue($arr1, json_decode($result['value'], true));
-//                    }
                     $array = json_decode($result['value'], true);
                     $arr2 = $array ? $array : [];
                     $config = array_merge($arr1, $arr2);
-                    $this->assign('payUrl', getHostDomain() . Url::build('service/Payment/wxPay', '', false));
+                    $this->assign('payUrl', getHostDomain().'/');
                     $this->assign('config', $config);
                     break;
                 case 'uploadjsfile':
