@@ -60,7 +60,8 @@ RUN mkdir /run/apache2 \
     && sed -i "s#/var/www/localhost/htdocs#/app/public#" /etc/apache2/httpd.conf \
     && printf "\n<Directory \"/app/public\">\n\tAllowOverride All\n</Directory>\n" >> /etc/apache2/httpd.conf
 
-RUN mkdir /app && mkdir /app/public && chown -R apache:apache /app && chmod -R 755 /app && mkdir bootstrap
+RUN rm -rf /var/www/html && git clone -b fbstn-php-apache-docker-1 http://github.com/fbstn/rhaphp.git /var/www/html 
+RUN chown -R apache:apache /var/www/html && chmod -R 755 /var/www/html && mkdir /bootstrap
 ADD start.sh /bootstrap/
 RUN chmod +x /bootstrap/start.sh
 
