@@ -425,7 +425,9 @@ class Entr
 
             }
         }
-        $rule = Db::name('mp_rule')->where(['mpid' => $this->mid, 'event' => 'subscribe'])->find();
+        //QQ1833596 下面这一行，不能仅限subscribe
+        //$rule = Db::name('mp_rule')->where(['mpid' => $this->mid, 'event' => 'subscribe'])->find();
+        $rule = Db::name('mp_rule')->where(['mpid' => $this->mid, 'event' => $type])->find();
         if (!empty($rule)) {
             if ($rule['keyword']) {
                 $this->keyword($rule['keyword'], $msg);
