@@ -1,1 +1,19 @@
-/*可以在这里添加你自己的css*/
+img {
+    max-width: 100%;
+}
+body {
+    overflow-y: scroll !important;
+}
+.view {
+    word-break: break-all;
+    height: 450px !important;
+}
+.vote_area {
+    display: block;
+}
+.vote_iframe {
+    background-color: transparent;
+    border: 0 none;
+    height: 100%;
+}
+#edui1_imagescale{display:none !important;}
