@@ -454,7 +454,7 @@ abstract class Builder
                 $array[] = $key . ' ' . $exp . ' :' . $name;
             }
 
-            $whereStr = '(' . implode($array, ' ' . strtoupper($logic) . ' ') . ')';
+            $whereStr = '(' . implode(' ' . strtoupper($logic) . ' ', $array) . ')';
         } else {
             $whereStr = $key . ' ' . $exp . ' ' . $value;
         }
@@ -647,6 +647,8 @@ abstract class Builder
         // IN 查询
         if ($value instanceof \Closure) {
             $value = $this->parseClosure($query, $value, false);
+        } elseif ($value instanceof Expression) {
+            $value = $value->getValue();
         } else {
             $value = array_unique(is_array($value) ? $value : explode(',', $value));
 
