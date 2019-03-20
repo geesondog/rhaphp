@@ -78,7 +78,7 @@ class Friends extends Base
         $next_openid = isset($IN['next_openid']) ? $IN['next_openid'] : null;
         $wechatObj = getWechatActiveObj();
         $table = config('database.prefix') . 'syn_openid';
-        $sql = "DELETE FROM {$table} WHERE openid IN (SELECT * FROM(SELECT openid FROM {$table} WHERE mpid = {$this->mid}  GROUP BY openid HAVING COUNT(openid) > 1) AS b) AND id NOT IN (SELECT * FROM (SELECT MIN(id) FROM {$table} WHERE mpid = {$this->mid}  GROUP BY openid HAVING COUNT(openid) > 1) AS c)";
+        $sql = "DELETE FROM {$table} WHERE openid IN (SELECT * FROM(SELECT openid FROM {$table} WHERE mpid = ".intval($this->mid)." GROUP BY openid HAVING COUNT(openid) > 1) AS b) AND id NOT IN (SELECT * FROM (SELECT MIN(id) FROM {$table} WHERE mpid = ".intval($this->mid)."  GROUP BY openid HAVING COUNT(openid) > 1) AS c)";
         Db::execute($sql);
         $opneidTotal = Db::name('syn_openid')->where('mpid', '=', $this->mid)
             ->distinct(true)
