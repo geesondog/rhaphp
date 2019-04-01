@@ -18,8 +18,14 @@ class Show
      */
     public function image($url = '')
     {
+        if (strpos($url, 'http') === false || strpos($url, 'http') != 0) {
+            exit('非法协议');
+        }
         $url = urldecode($url);
         if (!empty($Arr = explode('wx_fmt=', $url))) {
+            if (empty($Arr[0])) {
+                exit('非法资源');
+            }
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -32,9 +38,9 @@ class Show
                 'jpg' => 'image/jpeg',
                 'png' => 'image/png',
             );
-            if(isset($Arr[1]) && key_exists($Arr[1],$types)){
+            if (isset($Arr[1]) && key_exists($Arr[1], $types)) {
                 $type = $types[$Arr[1]];
-            }else{
+            } else {
                 $type = 'image/jpeg';
             }
             header("Content-type: " . $type);
