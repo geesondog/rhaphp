@@ -5,17 +5,9 @@
 
 交流社区：https://ask.rhaphp.com/
 
-高级群：672313914(快速回应)
-
-普通群：204201861(允许扯谈) 已满
-
-普通群：807073009(允许扯谈) 
-
 进入公众号看演示
 
 ![](https://raw.githubusercontent.com/geesondog/rhaphp/master/public/static/images/rhaphp_qrcode.jpg)
-
-![](https://raw.githubusercontent.com/geesondog/rhaphp/master/public/static/images/qq2.JPG)
 
 ![](https://raw.githubusercontent.com/geesondog/rhaphp/master/public/static/images/qq1.JPG)
 
