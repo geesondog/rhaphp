@@ -1777,6 +1777,8 @@ class Mp extends Base
             $wxObj = getWechatActiveObj($this->mid);
             $result = $wxObj->sendGroupMassMessage($data);
             if ($result && isset($result['errcode']) && $result['errcode'] == 0) {
+                Db::name('media_news')->where(['mid' => $this->mid, 'news_id' => $news_id])
+                    ->update(['status_type'=>3]);
                 ajaxMsg(1, '群发成功');
             } else {
                 ajaxMsg(0, '群发失败，错误码：' . $wxObj->errCode . ' 错误内容：' . $wxObj->errMsg);
