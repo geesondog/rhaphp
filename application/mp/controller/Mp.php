@@ -996,6 +996,7 @@ class Mp extends Base
         $mid = Session::get('mid');
         $list = Db::name('mp_menu')
             ->where(['mp_id' => $mid, 'pindex' => 0])
+            ->order('sort ASC')
             ->select();
 
         $data = [];
@@ -1004,6 +1005,7 @@ class Mp extends Base
             foreach ($list as $key => $item) {
                 $list[$key]['sub'] = Db::name('mp_menu')
                     ->where(['mp_id' => $mid, 'pindex' => $item['index']])
+                    ->order('sort ASC')
                     ->select();
             }
             $data['list'] = $list;
