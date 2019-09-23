@@ -34,7 +34,7 @@ class Material extends Model
                     return false;
                 }
                 break;
-            case 'mews':
+            case 'news':
                 if (!$this->where(['title' => $data['title'], 'mpid' => $data['mpid'], 'type' => $type])->find()) {
                     return $this->allowField(true)->insert($data);
                 } else {
