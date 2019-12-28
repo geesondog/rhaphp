@@ -166,7 +166,7 @@ class Upload {
             $_array = explode('/', $saveName);
             $Name = end($_array);
 
-            if ($PictureInfo = Picture::get(['name' => $Name])) {//若有重复，则返回图片
+            if ($PictureInfo = Picture::get(['name' => $Name,'mpid'=>$this->mid])) {//若有重复，则返回图片
                 $res = [
                     'code' => 0,
                     'data' => [
