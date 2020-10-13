@@ -35,9 +35,9 @@ class App extends Base
         if (!session('mpInfo')) {
             $this->error('请先进入公众号，再操作', url('mp/index/mplist'));
         }
+        $model = new Addons();
         if ($type == 'index') {
-            $model = new Addons();
-            $result = Db::name('addons')->where('status', 1)->select();
+            $result = $model->where('status', 1)->select();
             foreach ($result as $key => $value) {
                 $upgrade_sql_file = ADDON_PATH . $value['addon'] . '/upgrade.sql';
                 if (is_file($upgrade_sql_file)) {
@@ -57,7 +57,6 @@ class App extends Base
             $F = opendir($addonPath);
             $addons = [];
             if ($F) {
-                $model = new Addons();
                 while (($file = readdir($F)) !== false) {
                     if ($file != '.' && $file != '..') {
                         if ($addonByFile = $model->getAddonByFile($file)) {
@@ -71,7 +70,7 @@ class App extends Base
             }
             $this->assign('addons', $addons);
         }
-        $apps = Db::name('addons')->where('status', 1)->select();
+        $apps = $model->where('status', 1)->select();
         $this->assign('apps', $apps);
         $this->assign('type', $type);
         $this->assign('menu_title', '公众号应用管理');
