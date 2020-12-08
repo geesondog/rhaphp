@@ -98,6 +98,8 @@ class Entr
                                         ->where(['scene_id' => $result['scene_id']])
                                         ->setInc('gz_count');
                                 }
+								//QQ1833596 以下这段代码在$this->subscribe($msgData)中重复，这里可以不用
+								/*
                                 $friendInfo = getFriendInfoForApi(getOrSetOpenid());
                                 $friendInfo['tagid_list'] = json_encode($friendInfo['tagid_list']);
                                 $friendModel = new MpFriends();
@@ -110,6 +112,7 @@ class Entr
                                         $friendModel->save($friendInfo, ['mpid' => $this->mid, 'openid' => getOrSetOpenid()]);
                                     }
                                 }
+								*/
                                 $this->qrcode($result, $msgData);
                             }
                         }
@@ -422,7 +425,9 @@ class Entr
 
             }
         }
-        $rule = Db::name('mp_rule')->where(['mpid' => $this->mid, 'event' => 'subscribe'])->find();
+        //QQ1833596 下面这一行，不能仅限subscribe
+        //$rule = Db::name('mp_rule')->where(['mpid' => $this->mid, 'event' => 'subscribe'])->find();
+        $rule = Db::name('mp_rule')->where(['mpid' => $this->mid, 'event' => $type])->find();
         if (!empty($rule)) {
             if ($rule['keyword']) {
                 $this->keyword($rule['keyword'], $msg);
